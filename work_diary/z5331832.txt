@@ -1,5 +1,5 @@
 Week 1
-We formed the group and decided the group name. Then we discussed which project we want to develop. We discussed the project background and feasibility.  Finally, we chose wait management system. Otherwise, we opened the account for Jira. As a backend developer I start to learn the framework and database  system we used.
+We formed the group and decided the group name. Then we discussed which project we want to develop. We discussed the project background and feasibility.\ Finally, we chose wait management system. Otherwise, we opened the account for Jira. As a backend developer I start to learn the framework and database\  system we used.
 
 Week 2
-We joined the github group. We had serveral meetings to discuss the project details. We devided the work of the project prototype. We chose Figma as the   tool of drawing the prototype of web pages. As a backend developer, I start to initi a Flask project and keep learning and I tried to write some simple   examples about the operations of CRUD.
+We joined the github group. We had serveral meetings to discuss the project details. We devided the work of the project prototype. We chose Figma as the\   tool of drawing the prototype of web pages. As a backend developer, I start to initi a Flask project and keep learning and I tried to write some simple\   examples about the operations of CRUD.
