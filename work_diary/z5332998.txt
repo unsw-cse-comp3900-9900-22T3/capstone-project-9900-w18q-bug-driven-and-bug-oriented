@@ -1,0 +1,5 @@
+Week 1
+I found group member and named our group. Then we choose the wait management system as our project. Also, we brainstorm requirements of this project. All of us sign up and join the Jira. The leader assign task for us, I am a front-end developer. As the only person with front-end development experience, I decided the technology stack which we would use and guide others.
+
+Week 2
+We wrote user story and design the UI of our project. My task is to design the part of customers. I analyzed what the customers need and design the UI on the Figma. Also, I assisted to write the prototype, described technology stack of front-end. We held several meetings to discuss the logic between pages.
