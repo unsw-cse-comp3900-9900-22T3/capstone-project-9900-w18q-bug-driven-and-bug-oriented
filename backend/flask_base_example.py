@@ -9,9 +9,9 @@ import json
 app = Flask(__name__)
 
 class Config(object):
-    user = "root"
-    password = "hyt135565"
-    database = "wait_management_system"
+    user = "root" # 改成自己的root
+    password = "hyt135565" # 改成自己的password
+    database = "wait_management_system" # 改成自己的数据库名
     # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:12345678@database-1.cysrs8uipk4l.ap-southeast-2.rds
     # .amazonaws.com:3306/COMP9900test"
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:hyt135565@localhost:3306/test_database" #连接数据库方式，上面是连云数据库的方式
