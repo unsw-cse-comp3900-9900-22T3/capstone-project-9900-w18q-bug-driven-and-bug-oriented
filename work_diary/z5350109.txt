@@ -1,0 +1,9 @@
+week1
+discuss on topic selection
+topic background survey
+study on webpage prototype and front-end technologh
+
+week2
+anayze the wait stuff function in the project
+write related user stories
+design UI for wait stuff
