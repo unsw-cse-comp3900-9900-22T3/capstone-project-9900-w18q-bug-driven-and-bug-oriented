@@ -9,14 +9,14 @@ import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
-const Home: React.FC<{}> = () => {
+const Staff: React.FC<{}> = () => {
   const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={theme}>
-      <div>home page</div>
+      <div>Staff page</div>
     </ThemeProvider>
   );
 };
 
-export default Home;
+export default Staff;

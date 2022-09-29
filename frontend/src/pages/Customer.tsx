@@ -14,6 +14,7 @@ const Customer: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>Customer page</div>
+      
     </ThemeProvider>
   );
 };
