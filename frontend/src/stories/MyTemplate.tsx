@@ -13,8 +13,8 @@ interface ListProps {
 
 }
 
-
-export default function Template({
+// 别忘了修改函数名
+export default function MyTemplate({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   props1 = '',
   props2 = '',
