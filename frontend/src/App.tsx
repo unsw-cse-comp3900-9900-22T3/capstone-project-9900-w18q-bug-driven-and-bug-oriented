@@ -18,7 +18,7 @@ function App() {
       <Box sx={{background:'grey'}}> nav bar
       <Button onClick={() => navigate('/')}> home </Button>
       <Button onClick={() => navigate('/staff')}> staff </Button>
-      <Button onClick={() => navigate('/customer')}> customer </Button>
+      <Button onClick={() => navigate('/customer/:id')}> customer </Button>
       <Button onClick={() => navigate('/kitchen')}> kitechen </Button>
       <Button onClick={() => navigate('/manager')}> manager </Button>
       <Button onClick={() => navigate('/waiter')}> waiter </Button>
@@ -28,8 +28,8 @@ function App() {
         <Route path="/staff" element={<Staff />} />
         <Route path="/kitchen" element={<Kitchen />} />
         <Route path="/kitchen/:id" element={<KitchenOrder />} />
-        <Route path="/customer" element={<Customer />} />
-        <Route path="/customer/:category" element={<CustomerCategory />} />
+        <Route path="/customer/:id" element={<Customer />} />
+        <Route path="/customer/:id/:category" element={<CustomerCategory />} />
         <Route path="/manager" element={<Manager />} />
         <Route path="/waiter" element={<Waiter />} />
       </Routes>
