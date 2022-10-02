@@ -10,4 +10,13 @@ pip install -r requirements.txt
 Running the project
 ~~~~~
 python3 server_app.py
-~~~~
+~~~~~
+
+Amazon RDS for MySQL
+~~~~~
+terminal node: bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com
+port: 3306
+user name: admin
+password: z12345678
+~~~~~
+Notice: You can't access to database if your IP address is not added into AWS Security Group!!!
