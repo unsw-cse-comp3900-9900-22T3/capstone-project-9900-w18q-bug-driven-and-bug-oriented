@@ -1,47 +1,45 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button } from "@mui/material";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Button, Typography } from "@mui/material";
 
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
-
+  name?: string;
   confirm?: boolean;
-  isStaff?: boolean;
   //预留空函数
   doSomething?: (params: any) => any;
+
 }
 
-
-export default function OrderNowButton({
+// 别忘了修改函数名
+export default function BigButton({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
+  name = '',
   confirm = true,
-  isStaff = true,
   doSomething,
+
   ...props
 }: ListProps) {
   return (
     <>
-      {isStaff && (
-        <Button onClick={doSomething} color='warning' sx={{ width: '100%', height: 60, borderRadius: 2, fontWeight: 'bold' }}>
-          I'm Staff
-        </Button>
-      )}
-      {(!confirm && !isStaff) && (
+      {!confirm && (
         <Button disabled sx={{ width: '100%', background: '#EEECF6', color: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2 }}>
-          Order now<ArrowForwardIcon />
+          {name}
         </Button>
       )}
-      {(confirm && !isStaff) && (
+      {confirm && (
         <Button onClick={doSomething} variant="contained" sx={{
           width: '100%', '&:hover': {
             backgroundColor: '#8475B0',
           }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2
         }}>
-          Order now<ArrowForwardIcon />
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+            {name}
+          </Typography>
         </Button>
       )}
+
     </>
   );
 }

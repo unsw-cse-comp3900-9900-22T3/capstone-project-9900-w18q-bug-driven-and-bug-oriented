@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import KeyIcon from '@mui/icons-material/Key';
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
@@ -23,6 +24,9 @@ export default function ButtonIcon({
       </Box>)}
       {name === 'diner' && (<Box sx={{ display: 'flex', backgroundColor: '#EEECF6', fontWeight: 'bold', color: '#503E9D', width: 60, height: 60, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
         <PermIdentityIcon sx={{ width: 35, height: 35 }} />
+      </Box>)}
+      {name === 'key' && (<Box sx={{ display: 'flex', backgroundColor: '#EEECF6', fontWeight: 'bold', color: '#503E9D', width: 60, height: 60, borderRadius: 4, justifyContent: 'center', alignItems: 'center' }}>
+        <KeyIcon sx={{ width: 35, height: 35 }} />
       </Box>)}
     </>
   );

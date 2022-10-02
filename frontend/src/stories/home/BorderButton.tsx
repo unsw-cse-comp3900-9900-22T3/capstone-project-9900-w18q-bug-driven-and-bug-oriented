@@ -8,7 +8,7 @@ interface ListProps {
   number?: string;
   selected?: boolean;
   //预留空函数
-  doSomething: (params: any) => any;
+  doSomething?: (params: any) => any;
 
 }
 
@@ -18,30 +18,18 @@ export default function BorderButton({
   number = '1',
   selected = false,
   doSomething,
-
   ...props
 }: ListProps) {
-  const [isSelect, setIsSelect] = useState(false);
-  const func = (e:any) => {
-    if (isSelect){
-      setIsSelect(false)
-    } else {
-      setIsSelect(true)
-    }
-    if (!selected){
-      setIsSelect(false)
-    }
-    doSomething(e)
-  };
+
   return (
     <>
-      {!isSelect && (
-        <Button disableRipple onClick={(e)=>func(e) } sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
+      {!selected && (
+        <Button disableRipple onClick={doSomething} sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
           {number}
         </Button>
       )}
-      {isSelect && (
-        <Button disableRipple onClick={(e)=>func(e)} sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#503E9D' }}>
+      {selected && (
+        <Button disableRipple onClick={doSomething} sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#503E9D' }}>
           {number}
         </Button>
       )}
