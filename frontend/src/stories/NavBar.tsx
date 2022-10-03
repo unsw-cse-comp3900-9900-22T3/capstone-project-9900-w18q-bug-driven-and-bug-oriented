@@ -125,6 +125,16 @@ export default function NavBar({
         </Box>
       )}
 
+      {role == 'bill' && (
+        <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
+            Customer
+          </Typography>
+        
+
+        </Box>
+      )}
+
     </>
   );
 }

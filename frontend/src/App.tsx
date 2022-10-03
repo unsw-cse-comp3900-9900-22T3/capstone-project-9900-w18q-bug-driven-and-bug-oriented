@@ -3,6 +3,7 @@ import './App.css';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home"
 import Customer from "./pages/Customer"
+import CustomerBill from './pages/CustomerBill';
 import Kitchen from "./pages/Kitchen"
 import Manager from "./pages/Manager"
 import Waiter from './pages/Waiter';
@@ -35,6 +36,7 @@ function App() {
         <Route path="/kitchen" element={<Kitchen />} />
         <Route path="/kitchen/:id" element={<KitchenOrder />} />
         <Route path="/customer/:id/:id" element={<Customer />} />
+        <Route path="/customer/:id/bill" element={<CustomerBill />} />
         <Route path="/manager" element={<Manager />} />
         <Route path="/manager/category" element={<ManagerCategory />} />
         <Route path="/manager/key" element={<ManagerKey />} />
