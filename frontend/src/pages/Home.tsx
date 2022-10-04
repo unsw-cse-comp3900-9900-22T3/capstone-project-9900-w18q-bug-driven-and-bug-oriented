@@ -54,7 +54,7 @@ const Home: React.FC<{}> = () => {
 
   const goToOrder = (table:any, diner:any) => {
     console.log('select success', 'table=', table, 'diner=', diner)
-    navigate('/customer/:id')
+    navigate('/customer/123/hot')
   }
 
   const selectDiner = (e: any) => {

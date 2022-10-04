@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
-  Button,
   createTheme,
   ThemeProvider,
 } from "@mui/material";
@@ -26,15 +25,14 @@ const obj = [
   },
 ]
 
-const Customer: React.FC<{}> = () => {
+const CustomerBill: React.FC<{}> = () => {
   const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{height:'100vh', display:'flex', flexDirection:'row'}}>
-      <NavBar role='customer' id={id} obj={obj} />
-      <div>Customer page</div>
-      <Button sx={{height:30}} onClick={()=>navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
+      <NavBar role='bill'  />
+      <div>CustomerBill page</div>
       </Box>
 
       
@@ -42,4 +40,4 @@ const Customer: React.FC<{}> = () => {
   );
 };
 
-export default Customer;
+export default CustomerBill;

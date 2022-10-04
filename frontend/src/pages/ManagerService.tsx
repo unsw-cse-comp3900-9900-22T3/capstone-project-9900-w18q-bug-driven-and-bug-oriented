@@ -10,18 +10,18 @@ import NavBar from "../stories/NavBar";
 
 const theme = createTheme();
 
-const Manager: React.FC<{}> = () => {
+const ManagerService: React.FC<{}> = () => {
   const navigate = useNavigate();
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <NavBar role='manager' />
-        <div>Manager page</div>
+        <div>ManagerService page</div>
       </Box>
 
     </ThemeProvider>
   );
 };
 
-export default Manager;
+export default ManagerService;
