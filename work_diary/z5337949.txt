@@ -1,0 +1,10 @@
+week 1:
+Determine project topic
+Research on current wait systems
+
+week 2:
+Design system prototype(kitchen staff) by Figma
+Discuss system architecture
+Configure development environment
+
+week 3:
