@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Modal from '@mui/material/Modal';
 
 import dishImg from "../../static/chickenGrill.jpg"
 
@@ -58,6 +59,11 @@ export default function DishCard({
 
   ...props
 }: ListProps) {
+  
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  
   return (
     <>
     <Card sx={{ maxWidth: 410, borderRadius: 5 }}>
@@ -69,12 +75,15 @@ export default function DishCard({
         alt="chicken grill"
       />
 
-      <CardContent>
+      <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
 
-        <Typography gutterBottom variant="h6" component="div" display="inline">
+        <Box sx={{display: 'flex'}}>
+        <Typography gutterBottom variant="h6" component="div" >
           Chicken Grill
         </Typography>
+        </Box>
 
+        <Box sx={{display: 'flex'}}>
         <Box
           sx={{
             minWidth: 50,
@@ -83,7 +92,6 @@ export default function DishCard({
             backgroundColor: '#EEECF5',
             color: '#503E9D',
             textAlign: 'center',
-            display: 'inline',
             p: 0.5,
             m:0.5,
           }}
@@ -97,26 +105,106 @@ export default function DishCard({
             backgroundColor: '#EEECF5',
             color: '#503E9D',
             textAlign: 'center',
-            display: 'inline',
             p: 0.5,
             m:0.5,
           }}
         >
             $ {props2} 
         </Box>
-      
+        </Box>
 
       </CardContent>
 
-      <CardActions>
+      <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
       <ThemeProvider theme={theme}>
+          <Box sx={{display: 'flex',mx:1}}>
           <Button 
             size="small"
             variant="contained"
             color='neutral'
+            onClick={handleOpen}
             >
             Select
           </Button>
+          
+          
+          <Modal
+            open={open}
+            onClose={handleClose}
+          >
+            <Box sx={{ 
+              position: 'absolute' as 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }} >
+            <Card sx={{ maxWidth: 410, borderRadius: 5 }}>
+      
+      <CardMedia
+        component="img"
+        height="140"
+        image = {dishImg}
+        alt="chicken grill"
+      />
+
+      <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
+
+        <Box sx={{display: 'flex'}}>
+        <Typography gutterBottom variant="h6" component="div" >
+          Chicken Grill
+        </Typography>
+        </Box>
+
+        <Box sx={{display: 'flex'}}>
+        <Box
+          sx={{
+            minWidth: 50,
+            //height: 300,
+            borderRadius: 2,
+            backgroundColor: '#EEECF5',
+            color: '#503E9D',
+            textAlign: 'center',
+            p: 0.5,
+            m:0.5,
+          }}
+          >{props1} Cal</Box>
+  
+        <Box
+          sx={{
+            minWidth: 50,
+            //height: 300,
+            borderRadius: 2,
+            backgroundColor: '#EEECF5',
+            color: '#503E9D',
+            textAlign: 'center',
+            p: 0.5,
+            m:0.5,
+          }}
+        >
+            $ {props2} 
+        </Box>
+        </Box>
+
+      </CardContent>
+
+      <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
+      <ThemeProvider theme={theme}>
+          <Box sx={{display: 'flex',mx:1}}>
+          <Button 
+            size="small"
+            variant="contained"
+            color='neutral'
+            onClick={handleOpen}
+            >
+            Select
+          </Button>
+          </Box>
+        </ThemeProvider>
+      </CardActions>
+    </Card>
+            </Box>
+          </Modal>
+          </Box>
       </ThemeProvider>
       </CardActions>
     </Card>
