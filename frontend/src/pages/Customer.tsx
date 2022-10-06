@@ -191,7 +191,10 @@ const Customer: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-        <NavBar role='customer' id={id} obj={obj} />
+        <Box>
+          <NavBar role='customer' id={id} obj={obj} />
+        </Box>
+
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
           <Box sx={{ display: 'flex', height: '100%', alignItems: 'center' }} >
             <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>

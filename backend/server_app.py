@@ -56,10 +56,10 @@ class Services(Base):  # The structure of category table
     __tablename__ = "service"
 
     id = db.Column(db.INT, primary_key=True, autoincrement=True)
-    table = db.Column(db.String(45), nullable=False)
+    table = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime)
-    status = db.Column(db.String(45), nullable=False, default=0)
+    status = db.Column(db.INT, nullable=False, default=0)
 
 
 class Category(Base):  # The structure of category table
@@ -93,8 +93,8 @@ class Orders(Base):
 
     orderId = db.Column(db.INT, primary_key=True, autoincrement=True)
     orderTime = db.Column(db.DateTime)
-    table = db.Column(db.String(45), nullable=False)
-    diner = db.Column(db.String(45), nullable=False)
+    table = db.Column(db.INT, nullable=False)
+    diner = db.Column(db.INT, nullable=False)
     status = db.Column(db.String(45), nullable=False, default="wait")
     isPay = db.Column(db.Integer, nullable=False, default=0)
     payTime = db.Column(db.DateTime)
@@ -129,12 +129,12 @@ def model_to_dict(result):
         raise TypeError('Type error of parameter')
 
 
-def transfer_string(original_dict):
-    if original_dict:
-        for dicts in original_dict:
-            for keys in dicts:
-                dicts[keys] = str(dicts[keys])
-    return original_dict
+# def transfer_string(original_dict):
+#     if original_dict:
+#         for dicts in original_dict:
+#             for keys in dicts:
+#                 dicts[keys] = str(dicts[keys])
+#     return original_dict
 
 
 @app.route('/staff', methods=["POST"])  # login interface
@@ -162,11 +162,11 @@ def login():
         order_post.save()  # 往order表里加数据
         last_order = Orders.query.order_by(Orders.orderId.desc()).first()  # 取出表里最后一条数据
         print(model_to_dict(last_order))
-        return_json = {"role": "customer", "orderId": str(model_to_dict(last_order)["orderId"]), "message": "success"}
+        return_json = {"role": "customer", "orderId": model_to_dict(last_order)["orderId"], "message": "success"}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
-@app.route('/customer/<int:order_id>/hot', methods=["GET"])
+@app.route('/customer/<int:order_id>', methods=["GET"])
 def hot_dishes(order_id):
     order_id_post = int(order_id)
     print(order_id_post)
@@ -175,15 +175,15 @@ def hot_dishes(order_id):
     for line in hot_dish_dict:
         line.pop("last_modified")
         line.pop("id")
-    hot_dish_dict = transfer_string(hot_dish_dict)
+    # hot_dish_dict = transfer_string(hot_dish_dict)
     print(hot_dish_dict)
     category_post = Category.query.all()
     category_post = model_to_dict(category_post)
     for line in category_post:
         line.pop("id")
         line.pop("last_modified")
-    category_post = transfer_string(category_post)
-    return_json = {"orderId": str(order_id_post), "item list": hot_dish_dict, "category list": category_post}
+    # category_post = transfer_string(category_post)
+    return_json = {"orderId": order_id_post, "itemList": hot_dish_dict, "categoryList": category_post}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -196,8 +196,8 @@ def category_dishes(order_id, category_id):
     for line in dishes_dict:
         line.pop("id")
         line.pop("last_modified")
-    dishes_dict = transfer_string(dishes_dict)
-    return_json = {"item list": dishes_dict}
+    # dishes_dict = transfer_string(dishes_dict)
+    return_json = {"itemList": dishes_dict}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
