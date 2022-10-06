@@ -11,7 +11,7 @@ import OrderBar from "../stories/customer/orderBar/OrderBar";
 
 
 const theme = createTheme();
-const id = '123';
+
 const obj = [
   {
     categoryId: '1',
@@ -74,6 +74,7 @@ const person = 3;
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
+  const [id, setId] = useState('');  
   const [oldOrder, setOldOrder] = useState<any>([]);
   const [newOrder, setNewOrder] = useState<any>([]);
   const [totalOrder, setTotalOrder] = useState<any>([]);
@@ -83,10 +84,15 @@ const Customer: React.FC<{}> = () => {
   const [ceilingOfCal, setCeilingOfCal] = useState(500 * person);
 
   //读取老订单
-  // useEffect(() => {
-  //   const order = haveOrder
-  //   setOldOrder(order);
-  // }, [])
+  useEffect(() => {
+    // const order = haveOrder;
+    // setOldOrder(order);
+    // set id 
+    const arr = location.pathname.split('/');
+    setId(arr[2]);
+
+  }, [])
+
 
 
   // 增加item

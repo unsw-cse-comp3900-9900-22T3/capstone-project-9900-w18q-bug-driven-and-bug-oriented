@@ -28,7 +28,7 @@ function App() {
       <Button onClick={() => navigate('/customer/123/hot')}> customer </Button>
       <Button onClick={() => navigate('/kitchen')}> kitechen </Button>
       <Button onClick={() => navigate('/manager')}> manager </Button>
-      <Button onClick={() => navigate('/waiter')}> waiter </Button>
+      <Button onClick={() => navigate('/wait')}> waiter </Button>
       </Box>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -43,7 +43,7 @@ function App() {
         <Route path="/manager/menu" element={<ManagerMenu />} />
         <Route path="/manager/order" element={<ManagerOrder />} />
         <Route path="/manager/service" element={<ManagerService />} />
-        <Route path="/waiter" element={<Waiter />} />
+        <Route path="/wait" element={<Waiter />} />
       </Routes>
 
     </div>

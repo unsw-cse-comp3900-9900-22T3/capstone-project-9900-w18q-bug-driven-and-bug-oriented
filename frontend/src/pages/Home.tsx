@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
+  Button,
   Container,
   createTheme,
   Grid,
@@ -13,6 +14,7 @@ import { height } from "@mui/system";
 import ButtonIcon from "../stories/home/ButtonIcon";
 import BorderButton from "../stories/home/BorderButton";
 import OrderNowButton from "../stories/home/OrderNowButton";
+import { checkLogin } from "../api/login";
 
 const theme = createTheme();
 
@@ -44,6 +46,22 @@ const Home: React.FC<{}> = () => {
   const [table, setTable] = useState('');
   const [diner, setDiner] = useState('');
 
+  const getMessage = async () => {
+    const message = await checkLogin({
+      staff: null,
+      key: null,
+      table: table,
+      diner: diner
+    });
+    if (message.data.message === 'success') {
+      console.log('select success', 'table=', table, 'diner=', diner);
+      console.log(message.data);
+      navigate(`/customer/${message.data.orderId}/hot`)
+    }
+  };
+
+
+
   const selectTable = (e: any) => {
     if (table == e) {
       setTable('')
@@ -52,10 +70,6 @@ const Home: React.FC<{}> = () => {
     }
   };
 
-  const goToOrder = (table:any, diner:any) => {
-    console.log('select success', 'table=', table, 'diner=', diner)
-    navigate('/customer/123/hot')
-  }
 
   const selectDiner = (e: any) => {
     if (diner == e) {
@@ -84,7 +98,7 @@ const Home: React.FC<{}> = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderTopRightRadius: 10,
-            borderBottomRightRadius:10,
+            borderBottomRightRadius: 10,
           }}
         />
         <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -157,16 +171,16 @@ const Home: React.FC<{}> = () => {
               <Box >
                 <Box sx={{ marginBottom: 2 }}>
                   {(diner && table) && (
-                    <OrderNowButton doSomething={()=>goToOrder(table,diner)} isStaff={false} confirm={true} />
+                    <OrderNowButton doSomething={() => getMessage()} isStaff={false} confirm={true} />
                   )}
                   {(!diner || !table) && (
                     <OrderNowButton isStaff={false} confirm={false} />
                   )}
                 </Box>
                 <Box>
-                   <OrderNowButton doSomething={() => navigate('/staff')} isStaff={true} />
+                  <OrderNowButton doSomething={() => navigate('/staff')} isStaff={true} />
                 </Box>
-               
+
               </Box>
 
             </Box>

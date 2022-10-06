@@ -19,10 +19,11 @@ import StaffSelectButton from "../stories/home/StaffSelectButton";
 import Kitchen from "./Kitchen";
 import BigButton from "../stories/home/BigButton";
 import ButtonIcon from "../stories/home/ButtonIcon";
+import { checkLogin } from "../api/login";
 
 const theme = createTheme();
 
-const correctKey = '123'
+
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -42,6 +43,27 @@ const Staff: React.FC<{}> = () => {
   const handleClick = () => {
     setOpen(true);
   };
+
+
+  const getMessage = async () => {
+    const message = await checkLogin({
+      staff: staff,
+      key: key,
+      table: '',
+      diner: ''
+    });
+    console.log('message', message);
+    if (message.data.message === 'Login success') {
+      console.log('login success');
+      navigate(`/${message.data.staff}`);
+    } else {
+      console.log('error key');
+      handleClick();
+    }
+  };
+
+
+
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -63,15 +85,15 @@ const Staff: React.FC<{}> = () => {
     }
   };
 
-  const checkKey = (e: any) => {
-    if (e === correctKey) {
-      console.log('go to', staff);
-      navigate(`/${staff}`);
-    } else {
-      console.log('error key');
-      handleClick()
-    }
-  };
+  // const checkKey = (e: any, correctKey:any) => {
+  //   if (e === correctKey) {
+  //     console.log('go to', staff);
+  //     navigate(`/${staff}`);
+  //   } else {
+  //     console.log('error key');
+  //     handleClick()
+  //   }
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -127,10 +149,10 @@ const Staff: React.FC<{}> = () => {
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'waiter') && (
-                    <StaffSelectButton doSomething={() => selectStaff('waiter')} role='wait staff' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' selected />
                   )}
                   {(staff !== 'waiter') && (
-                    <StaffSelectButton doSomething={() => selectStaff('waiter')} role='wait staff' />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
@@ -189,7 +211,7 @@ const Staff: React.FC<{}> = () => {
                 </Box>
                 <Box sx={{ marginTop: 10 }}>
                   {key && (
-                    <BigButton name='Log in' confirm doSomething={() => checkKey(key)} />
+                    <BigButton name='Log in' confirm doSomething={() => getMessage()} />
                   )}
                   {!key && (
                     <BigButton name='Log in' confirm={false} />
