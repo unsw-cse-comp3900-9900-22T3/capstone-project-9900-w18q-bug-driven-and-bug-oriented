@@ -8,8 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 interface ListProps {
   //问号是说可有可无
   obj?: {
-    categoryId?: string;
-    categoryName?: string;
+    category_id?: string;
+    category_name?: string;
   }[];
   show?: string;
   role?: string;
@@ -53,13 +53,13 @@ export default function NavBar({
               return (
                 <>
                   {
-                    location.pathname !== `/customer/${id}/${objs.categoryId}` && (
-                      <NavButton item='category' selected={false} name={objs.categoryName} doSomething={() => navigate(`/customer/${id}/${objs.categoryId}`)} />
+                    location.pathname !== `/customer/${id}/${objs.category_id}` && (
+                      <NavButton item='category' selected={false} name={objs.category_name} doSomething={() => navigate(`/customer/${id}/${objs.category_id}`)} />
                     )
                   }
                   {
-                    location.pathname === `/customer/${id}/${objs.categoryId}` && (
-                      <NavButton item='category' selected name={objs.categoryName} />
+                    location.pathname === `/customer/${id}/${objs.category_id}` && (
+                      <NavButton item='category' selected name={objs.category_name} />
                     )
                   }
                 </>

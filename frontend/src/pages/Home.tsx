@@ -46,7 +46,7 @@ const Home: React.FC<{}> = () => {
   const [table, setTable] = useState('');
   const [diner, setDiner] = useState('');
 
-  const getMessage = async () => {
+  const goToOrder = async () => {
     const message = await checkLogin({
       staff: null,
       key: null,
@@ -171,7 +171,7 @@ const Home: React.FC<{}> = () => {
               <Box >
                 <Box sx={{ marginBottom: 2 }}>
                   {(diner && table) && (
-                    <OrderNowButton doSomething={() => getMessage()} isStaff={false} confirm={true} />
+                    <OrderNowButton doSomething={() => goToOrder()} isStaff={false} confirm={true} />
                   )}
                   {(!diner || !table) && (
                     <OrderNowButton isStaff={false} confirm={false} />

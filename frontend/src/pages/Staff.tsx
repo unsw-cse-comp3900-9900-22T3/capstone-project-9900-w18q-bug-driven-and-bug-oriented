@@ -45,7 +45,7 @@ const Staff: React.FC<{}> = () => {
   };
 
 
-  const getMessage = async () => {
+  const gotToStaff = async () => {
     const message = await checkLogin({
       staff: staff,
       key: key,
@@ -211,7 +211,7 @@ const Staff: React.FC<{}> = () => {
                 </Box>
                 <Box sx={{ marginTop: 10 }}>
                   {key && (
-                    <BigButton name='Log in' confirm doSomething={() => getMessage()} />
+                    <BigButton name='Log in' confirm doSomething={() => gotToStaff()} />
                   )}
                   {!key && (
                     <BigButton name='Log in' confirm={false} />

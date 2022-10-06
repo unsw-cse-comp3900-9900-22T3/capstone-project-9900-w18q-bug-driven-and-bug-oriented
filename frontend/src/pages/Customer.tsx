@@ -8,22 +8,23 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
+import { getCustomerInit } from "../api/customer";
 
 
 const theme = createTheme();
 
 const obj = [
   {
-    categoryId: '1',
-    categoryName: 'meat'
+    category_id: '1',
+    category_name: 'meat'
   },
   {
-    categoryId: '2',
-    categoryName: 'vegetable'
+    category_id: '2',
+    category_name: 'vegetable'
   },
   {
-    categoryId: '3',
-    categoryName: 'drink'
+    category_id: '3',
+    category_name: 'drink'
   },
 ]
 
@@ -75,7 +76,10 @@ const person = 3;
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [id, setId] = useState('');  
+  const [nav, setNav] = useState<any>([]);
+
   const [oldOrder, setOldOrder] = useState<any>([]);
+
   const [newOrder, setNewOrder] = useState<any>([]);
   const [totalOrder, setTotalOrder] = useState<any>([]);
   const [numberOfItem, setNumberOfItem] = useState(0);
@@ -90,10 +94,15 @@ const Customer: React.FC<{}> = () => {
     // set id 
     const arr = location.pathname.split('/');
     setId(arr[2]);
-
+    getInit(arr[2]);
   }, [])
 
+  const getInit = async (e:any) => {
+    const message = await getCustomerInit(e);
+    console.log('message', message);
+    setNav(message.categoryList);
 
+  };
 
   // 增加item
   const addItem = (input:
@@ -198,7 +207,7 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={obj} />
+          <NavBar role='customer' id={id} obj={nav} />
         </Box>
 
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
