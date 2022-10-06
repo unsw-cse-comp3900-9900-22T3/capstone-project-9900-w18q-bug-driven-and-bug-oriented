@@ -172,6 +172,7 @@ def login():
 @app.route('/customer/<int:order_id>', methods=["GET"])
 def hot_dishes(order_id):
     order_id_post = int(order_id)
+    diner_post = Orders.query.get_or_404(order_id_post).diner
     print(order_id_post)
     hot_dish_dict = Menuitem.query.order_by(Menuitem.orderTimes.desc()).limit(9)
     hot_dish_dict = model_to_dict(hot_dish_dict)
@@ -186,7 +187,7 @@ def hot_dishes(order_id):
         line.pop("id")
         line.pop("last_modified")
     # category_post = transfer_string(category_post)
-    return_json = {"orderId": order_id_post, "itemList": hot_dish_dict, "categoryList": category_post}
+    return_json = {"orderId": order_id_post, "diner": diner_post, "itemList": hot_dish_dict, "categoryList": category_post}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
