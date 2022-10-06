@@ -20,6 +20,13 @@ interface ListProps {
   //预留空函数
   doSomething?: (params: any) => any;
 
+  dishId?: string;
+  dishName?: string;
+  description?: string;
+  ingredients?: string;
+  calories?: string;
+  price?: string;
+  picture?: string;
 }
 
 const theme = createTheme({
@@ -57,193 +64,235 @@ export default function DishCard({
   props3 = true,
   doSomething,
 
+  dishId = '123',
+  dishName = 'Chicken Grill',
+  description = 'It is one of the mot iconic and well-recognized fast food out there.',
+  ingredients = 'Meat, vegetable',
+  calories = '20',
+  price = '16.66',
+  picture = '',
+
   ...props
 }: ListProps) {
   
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+    setDishTryNum(dishNum);
+  };
   const handleClose = () => setOpen(false);
-  
+
+  const [dishNum, setDishNum] = React.useState(0);
+
+  const [dishTryNum, setDishTryNum] = React.useState(0);
+  const addTryDish = () => setDishTryNum(dishTryNum + 1);
+  const delTryDish = () => { (dishTryNum >= 1) && (setDishTryNum(dishTryNum - 1))};
+
+  const selectDishNum = () => {
+    setDishNum(dishTryNum);
+    setOpen(false)
+  };
+
   return (
     <>
-    <Card variant="outlined" sx={{ maxWidth: 410, borderRadius: 5, border: 0 }}>
-      
-      <CardMedia
-        component="img"
-        height="180"
-        image = {dishImg}
-        alt="chicken grill"
-      />
-
-      <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
-
-        <Box sx={{display: 'flex'}}>
-        <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-          Chicken Grill
-        </Typography>
+      {dishNum !== 0 && (
+        <Box sx={{ 
+          height: 50, 
+          width: 50, 
+          backgroundColor: '#FB6D3A', 
+          color: '#fff', 
+          borderRadius: 10, 
+          fontWeight: 'bold', 
+          fontSize: 20,
+          display:'flex', justifyContent: 'center', alignItems: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 400,
+          zIndex: 'modal', }}>
+          {dishNum}
         </Box>
+      )}
 
-        <Box sx={{display: 'flex'}}>
-        <Box
-          sx={{
-            minWidth: 50,
-            //height: 300,
-            borderRadius: 2,
-            backgroundColor: '#EEECF5',
-            color: '#503E9D',
-            textAlign: 'center',
-            p: 0.5,
-            m: 0.5,
-            fontWeight: 'bold',
-          }}
-          >{props1} Cal</Box>
-  
-        <Box
-          sx={{
-            minWidth: 50,
-            borderRadius: 2,
-            backgroundColor: '#EEECF5',
-            color: '#503E9D',
-            textAlign: 'center',
-            p: 0.5,
-            m: 0.5,
-            fontWeight: 'bold',
-          }}
-        >
-            $ {props2} 
-        </Box>
-        </Box>
+      <Card variant="outlined" sx={{ width: 410, borderRadius: 5, border: 0 }}>
+        
+        <CardMedia
+          component="img"
+          height="180"
+          image = {dishImg}
+          alt = {dishName}
+        />
 
-      </CardContent>
+        <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
 
-      <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
-      <ThemeProvider theme={theme}>
-          <Box sx={{display: 'flex', mx:1}}>
-          <Button 
-            size="small"
-            variant="contained"
-            color='neutral'
-            onClick={handleOpen}
-            sx={{borderRadius: 2}}
-            >
-            Select
-          </Button>
-          
-          
-          <Modal
-            open={open}
-            onClose={handleClose}
-          >
-            <Box sx={{ 
-              position: 'absolute' as 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-            }} >
-            <Card sx={{ maxWidth: 720, borderRadius: 5 }}>
-      
-              <CardMedia
-                component="img"
-                height="420"
-                image = {dishImg}
-                alt="chicken grill"
-              />
-
-      <CardContent>
-      <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <Box sx={{display: 'flex'}}>
-          <Typography gutterBottom variant="h6" component="div" sx={{fontWeight: 'bold'}}>
-            Chicken Grill
+          <Box sx={{display: 'flex'}}>
+          <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+            {dishName}
           </Typography>
-        </Box>
-
-        <Box 
-          sx={{
-            display: 'flex',
-            minWidth: 50,
-            //height: 300,
-            borderRadius: 2,
-            backgroundColor: '#EEECF5',
-            color: '#503E9D',
-            textAlign: 'center',
-            p: 0.5,
-            m: 0.5,
-            fontWeight: 'bold',
-          }}>
-          {props1}Cal
-        </Box>
-      </Box>
-
-      <Box sx={{my:0.5}}>
-        <Typography  variant="body1" component="div" >
-          $ {props2}
-        </Typography>
-      </Box>
-
-      <Box sx={{my:0.5}}>
-        <Typography  variant="body1" component="div" sx={{display: 'inline'}} >
-          <Typography sx={{fontWeight: 'bold'}}>Ingredient:</Typography> 
-          <Typography> Meat, vegetable </Typography>
-        </Typography>
-      </Box>
-
-      <Box sx={{mt:0.5}}>
-        <Typography  variant="body1" component="div" >
-          It is one of the mot iconic and well-recognized fast food out there.
-        </Typography>
-      </Box>
-
-      </CardContent>
-
-      <CardActions sx={{display: 'flex', justifyContent: 'space-between', ml: 1}}>
-          <ThemeProvider theme={theme}>
-            
-          <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold'}}>
-              <Box
-                onClick={() => {alert("-")}}
-                sx={{m: 1, fontSize:22}}
-              >
-                -
-              </Box>
-              <Box
-                //onClick={handleOpen}
-                sx={{m: 1, fontSize:16}}
-              >
-                1
-              </Box>
-              <Box
-                //onClick={handleOpen}
-                sx={{m: 1, fontSize:22}}
-              >
-                +
-              </Box>
           </Box>
-            
-            
+
+          <Box sx={{display: 'flex'}}>
+            <Box
+              sx={{
+                minWidth: 50,
+                borderRadius: 2,
+                backgroundColor: '#EEECF5',
+                color: '#503E9D',
+                textAlign: 'center',
+                p: 0.5,
+                m: 0.5,
+                fontWeight: 'bold',
+              }}
+              >{calories} Cal
+            </Box>
+    
+            <Box
+              sx={{
+                minWidth: 50,
+                borderRadius: 2,
+                backgroundColor: '#EEECF5',
+                color: '#503E9D',
+                textAlign: 'center',
+                p: 0.5,
+                m: 0.5,
+                fontWeight: 'bold',
+              }}
+            >
+                $ {price} 
+            </Box>
+          </Box>
+
+        </CardContent>
+
+        <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
+          <ThemeProvider theme={theme}>
             <Box sx={{display: 'flex', mx:1}}>
               <Button 
                 size="small"
                 variant="contained"
                 color='neutral'
                 onClick={handleOpen}
-                sx={{borderRadius: 2, px:3}}
-                >
+                sx={{borderRadius: 2}}
+              >
                 Select
               </Button>
-            </Box>
+            
+              <Modal
+                open={open}
+                onClose={handleClose}
+              >
+                <Box sx={{ 
+                  position: 'absolute' as 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }} >
+                  <Card sx={{ maxWidth: 720, borderRadius: 5 }}>
+            
+                    <CardMedia
+                      component="img"
+                      height="420"
+                      image = {dishImg}
+                      alt="chicken grill"
+                    />
 
+                    <CardContent>
+                      <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+
+                        <Box sx={{display: 'flex'}}>
+                          <Typography gutterBottom variant="h6" component="div" sx={{fontWeight: 'bold'}}>
+                            {dishName}
+                          </Typography>
+                        </Box>
+
+                        <Box 
+                          sx={{
+                            display: 'flex',
+                            minWidth: 50,
+                            borderRadius: 2,
+                            backgroundColor: '#EEECF5',
+                            color: '#503E9D',
+                            textAlign: 'center',
+                            p: 0.5,
+                            m: 0.5,
+                            fontWeight: 'bold',
+                          }}>
+                          {calories}Cal
+                        </Box>
+
+                      </Box>
+
+                      <Box sx={{my:0.5}}>
+                        <Typography  variant="body1" component="div" >
+                          $ {price}
+                        </Typography>
+                      </Box>
+
+                      <Box sx={{my:0.5, display: 'inline'}}>
+                        <Typography  variant="body1" component="div" >
+                          <span style={{fontWeight: "bold"}}>Ingredient:</span > 
+                          <span > {ingredients} </span >
+                        </Typography>
+                      </Box>
+
+                      <Box sx={{mt:0.5}}>
+                        <Typography  variant="body1" component="div" >
+                          {description}
+                        </Typography>
+                      </Box>
+
+                    </CardContent>
+
+                    <CardActions sx={{display: 'flex', justifyContent: 'space-between', ml: 1}}>
+                      
+                      <ThemeProvider theme={theme}>
+                        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold'}}>
+                          
+                          <Box
+                            onClick={delTryDish}
+                            sx={{m: 1, fontSize:22}}
+                          >
+                            -
+                          </Box>
+
+                          <Box
+                            sx={{m: 1, fontSize:16}}
+                          >
+                            {dishTryNum}
+                          </Box>
+
+                          <Box
+                            onClick={addTryDish}
+                            sx={{m: 1, fontSize:22}}
+                          >
+                            +
+                          </Box>
+
+                        </Box>
+                
+                
+                        <Box sx={{display: 'flex', mx:1}}>
+                          <Button 
+                            size="small"
+                            variant="contained"
+                            color='neutral'
+                            onClick={selectDishNum}
+                            sx={{borderRadius: 2, px:3}}
+                            >
+                            Select
+                          </Button>
+                        </Box>
+
+                      </ThemeProvider>
+                    </CardActions>
+
+
+                  </Card>
+                </Box>
+              </Modal>
+            </Box>
           </ThemeProvider>
-      </CardActions>
-
-
-    </Card>
-            </Box>
-          </Modal>
-          </Box>
-      </ThemeProvider>
-      </CardActions>
-    </Card>
-
+        </CardActions>
+      </Card>
     </>
   );
 }
