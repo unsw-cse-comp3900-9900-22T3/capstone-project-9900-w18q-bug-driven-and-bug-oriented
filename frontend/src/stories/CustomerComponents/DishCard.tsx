@@ -66,11 +66,11 @@ export default function DishCard({
   
   return (
     <>
-    <Card sx={{ maxWidth: 410, borderRadius: 5 }}>
+    <Card variant="outlined" sx={{ maxWidth: 410, borderRadius: 5, border: 0 }}>
       
       <CardMedia
         component="img"
-        height="140"
+        height="180"
         image = {dishImg}
         alt="chicken grill"
       />
@@ -78,7 +78,7 @@ export default function DishCard({
       <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
 
         <Box sx={{display: 'flex'}}>
-        <Typography gutterBottom variant="h6" component="div" >
+        <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
           Chicken Grill
         </Typography>
         </Box>
@@ -93,20 +93,21 @@ export default function DishCard({
             color: '#503E9D',
             textAlign: 'center',
             p: 0.5,
-            m:0.5,
+            m: 0.5,
+            fontWeight: 'bold',
           }}
           >{props1} Cal</Box>
   
         <Box
           sx={{
             minWidth: 50,
-            //height: 300,
             borderRadius: 2,
             backgroundColor: '#EEECF5',
             color: '#503E9D',
             textAlign: 'center',
             p: 0.5,
-            m:0.5,
+            m: 0.5,
+            fontWeight: 'bold',
           }}
         >
             $ {props2} 
@@ -117,12 +118,13 @@ export default function DishCard({
 
       <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
       <ThemeProvider theme={theme}>
-          <Box sx={{display: 'flex',mx:1}}>
+          <Box sx={{display: 'flex', mx:1}}>
           <Button 
             size="small"
             variant="contained"
             color='neutral'
             onClick={handleOpen}
+            sx={{borderRadius: 2}}
             >
             Select
           </Button>
@@ -138,69 +140,102 @@ export default function DishCard({
               left: '50%',
               transform: 'translate(-50%, -50%)',
             }} >
-            <Card sx={{ maxWidth: 410, borderRadius: 5 }}>
+            <Card sx={{ maxWidth: 720, borderRadius: 5 }}>
       
-      <CardMedia
-        component="img"
-        height="140"
-        image = {dishImg}
-        alt="chicken grill"
-      />
+              <CardMedia
+                component="img"
+                height="420"
+                image = {dishImg}
+                alt="chicken grill"
+              />
 
-      <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
-
+      <CardContent>
+      <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
         <Box sx={{display: 'flex'}}>
-        <Typography gutterBottom variant="h6" component="div" >
-          Chicken Grill
+          <Typography gutterBottom variant="h6" component="div" sx={{fontWeight: 'bold'}}>
+            Chicken Grill
+          </Typography>
+        </Box>
+
+        <Box 
+          sx={{
+            display: 'flex',
+            minWidth: 50,
+            //height: 300,
+            borderRadius: 2,
+            backgroundColor: '#EEECF5',
+            color: '#503E9D',
+            textAlign: 'center',
+            p: 0.5,
+            m: 0.5,
+            fontWeight: 'bold',
+          }}>
+          {props1}Cal
+        </Box>
+      </Box>
+
+      <Box sx={{my:0.5}}>
+        <Typography  variant="body1" component="div" >
+          $ {props2}
         </Typography>
-        </Box>
+      </Box>
 
-        <Box sx={{display: 'flex'}}>
-        <Box
-          sx={{
-            minWidth: 50,
-            //height: 300,
-            borderRadius: 2,
-            backgroundColor: '#EEECF5',
-            color: '#503E9D',
-            textAlign: 'center',
-            p: 0.5,
-            m:0.5,
-          }}
-          >{props1} Cal</Box>
-  
-        <Box
-          sx={{
-            minWidth: 50,
-            //height: 300,
-            borderRadius: 2,
-            backgroundColor: '#EEECF5',
-            color: '#503E9D',
-            textAlign: 'center',
-            p: 0.5,
-            m:0.5,
-          }}
-        >
-            $ {props2} 
-        </Box>
-        </Box>
+      <Box sx={{my:0.5}}>
+        <Typography  variant="body1" component="div" sx={{display: 'inline'}} >
+          <Typography sx={{fontWeight: 'bold'}}>Ingredient:</Typography> 
+          <Typography> Meat, vegetable </Typography>
+        </Typography>
+      </Box>
+
+      <Box sx={{mt:0.5}}>
+        <Typography  variant="body1" component="div" >
+          It is one of the mot iconic and well-recognized fast food out there.
+        </Typography>
+      </Box>
 
       </CardContent>
 
-      <CardActions sx={{display: 'flex', justifyContent: 'flex-end'}}>
-      <ThemeProvider theme={theme}>
-          <Box sx={{display: 'flex',mx:1}}>
-          <Button 
-            size="small"
-            variant="contained"
-            color='neutral'
-            onClick={handleOpen}
-            >
-            Select
-          </Button>
+      <CardActions sx={{display: 'flex', justifyContent: 'space-between', ml: 1}}>
+          <ThemeProvider theme={theme}>
+            
+          <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold'}}>
+              <Box
+                onClick={() => {alert("-")}}
+                sx={{m: 1, fontSize:22}}
+              >
+                -
+              </Box>
+              <Box
+                //onClick={handleOpen}
+                sx={{m: 1, fontSize:16}}
+              >
+                1
+              </Box>
+              <Box
+                //onClick={handleOpen}
+                sx={{m: 1, fontSize:22}}
+              >
+                +
+              </Box>
           </Box>
-        </ThemeProvider>
+            
+            
+            <Box sx={{display: 'flex', mx:1}}>
+              <Button 
+                size="small"
+                variant="contained"
+                color='neutral'
+                onClick={handleOpen}
+                sx={{borderRadius: 2, px:3}}
+                >
+                Select
+              </Button>
+            </Box>
+
+          </ThemeProvider>
       </CardActions>
+
+
     </Card>
             </Box>
           </Modal>
