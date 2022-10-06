@@ -25,7 +25,7 @@ function App() {
       <Box sx={{background:'grey'}}> nav bar
       <Button onClick={() => navigate('/')}> home </Button>
       <Button onClick={() => navigate('/staff')}> staff </Button>
-      <Button onClick={() => navigate('/customer/123/hot')}> customer </Button>
+      <Button onClick={() => navigate('/customer/1/hot')}> customer </Button>
       <Button onClick={() => navigate('/kitchen')}> kitechen </Button>
       <Button onClick={() => navigate('/manager')}> manager </Button>
       <Button onClick={() => navigate('/wait')}> waiter </Button>

@@ -15,7 +15,7 @@ interface ListProps {
   role?: string;
   id?: string;
   //预留空函数
-  doSomething?: (params: any) => any;
+  doSomething: (params: any) => any;
 
 }
 
@@ -43,7 +43,7 @@ export default function NavBar({
           </Typography>
           <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {location.pathname !== `/customer/${id}/hot` && (
-              <NavButton item='hot' selected={false} doSomething={() => navigate(`/customer/${id}/hot`)} />
+              <NavButton item='hot' selected={false} doSomething={(e) => { navigate(`/customer/${id}/hot`); doSomething(e); }} />
             )}
             {location.pathname === `/customer/${id}/hot` && (
               <NavButton item='hot' selected />
@@ -54,7 +54,7 @@ export default function NavBar({
                 <>
                   {
                     location.pathname !== `/customer/${id}/${objs.category_id}` && (
-                      <NavButton item='category' selected={false} name={objs.category_name} doSomething={() => navigate(`/customer/${id}/${objs.category_id}`)} />
+                      <NavButton item='category' selected={false} name={objs.category_name} doSomething={(e) => { navigate(`/customer/${id}/${objs.category_id}`); doSomething(e); }} />
                     )
                   }
                   {
@@ -77,42 +77,42 @@ export default function NavBar({
           </Typography>
           <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {location.pathname !== `/manager` && (
-              <NavButton item='dashboard' selected={false} doSomething={() => navigate(`/manager`)} />
+              <NavButton item='dashboard' selected={false} doSomething={(e) => { navigate(`/manager`); doSomething(e); }} />
             )}
             {location.pathname === `/manager` && (
               <NavButton item='dashboard' selected />
             )}
 
             {location.pathname !== `/manager/category` && (
-              <NavButton name='Category' item='category' selected={false} doSomething={() => navigate(`/manager/category`)} />
+              <NavButton name='Category' item='category' selected={false} doSomething={(e) => { navigate(`/manager/category`); doSomething(e); }} />
             )}
             {location.pathname === `/manager/category` && (
               <NavButton name='category' item='category' selected />
             )}
 
             {location.pathname !== `/manager/menu` && (
-              <NavButton item='menu' selected={false} doSomething={() => navigate(`/manager/menu`)} />
+              <NavButton item='menu' selected={false} doSomething={(e) => { navigate(`/manager/menu`); doSomething(e); }} />
             )}
             {location.pathname === `/manager/menu` && (
               <NavButton item='menu' selected />
             )}
 
             {location.pathname !== `/manager/order` && (
-              <NavButton item='order' selected={false} doSomething={() => navigate(`/manager/order`)} />
+              <NavButton item='order' selected={false} doSomething={(e) => { navigate(`/manager/order`); doSomething(e); }} />
             )}
             {location.pathname === `/manager/order` && (
               <NavButton item='order' selected />
             )}
 
             {location.pathname !== `/manager/service` && (
-              <NavButton item='service' selected={false} doSomething={() => navigate(`/manager/service`)} />
+              <NavButton item='service' selected={false} doSomething={(e) => { navigate(`/manager/service`); doSomething(e); }} />
             )}
             {location.pathname === `/manager/service` && (
               <NavButton item='service' selected />
             )}
 
             {location.pathname !== `/manager/key` && (
-              <NavButton item='key' selected={false} doSomething={() => navigate(`/manager/key`)} />
+              <NavButton item='key' selected={false} doSomething={(e) => { navigate(`/manager/key`); doSomething(e) }} />
             )}
             {location.pathname === `/manager/key` && (
               <NavButton item='key' selected />
@@ -129,7 +129,7 @@ export default function NavBar({
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
             Customer
           </Typography>
-        
+
 
         </Box>
       )}

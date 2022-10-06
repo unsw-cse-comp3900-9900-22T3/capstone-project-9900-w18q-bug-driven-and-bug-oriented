@@ -30,12 +30,12 @@ const CustomerBill: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{height:'100vh', display:'flex', flexDirection:'row'}}>
-      <NavBar role='bill'  />
-      <div>CustomerBill page</div>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+        <NavBar role='bill' doSomething={() => { }} />
+        <div>CustomerBill page</div>
       </Box>
 
-      
+
     </ThemeProvider>
   );
 };

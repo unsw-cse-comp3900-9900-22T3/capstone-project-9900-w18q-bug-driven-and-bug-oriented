@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerInit } from "../api/customer";
+import { getCustomerCategory, getCustomerInit } from "../api/customer";
 
 
 const theme = createTheme();
@@ -75,8 +75,9 @@ const person = 3;
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const [id, setId] = useState('');  
+  const [id, setId] = useState('');
   const [nav, setNav] = useState<any>([]);
+  const [menu, setMenu] = useState<any>([]);
 
   const [oldOrder, setOldOrder] = useState<any>([]);
 
@@ -85,9 +86,9 @@ const Customer: React.FC<{}> = () => {
   const [numberOfItem, setNumberOfItem] = useState(0);
   const [price, setPrice] = useState(0);
   const [countOfCal, setCountOfCal] = useState(0);
-  const [ceilingOfCal, setCeilingOfCal] = useState(500 * person);
+  const [ceilingOfCal, setCeilingOfCal] = useState(0);
 
-  //读取老订单
+  //init
   useEffect(() => {
     // const order = haveOrder;
     // setOldOrder(order);
@@ -97,12 +98,29 @@ const Customer: React.FC<{}> = () => {
     getInit(arr[2]);
   }, [])
 
-  const getInit = async (e:any) => {
+  const getInit = async (e: any) => {
     const message = await getCustomerInit(e);
     console.log('message', message);
     setNav(message.categoryList);
+    setCeilingOfCal(message.diner * 500);
+    setMenu(message.itemList);
+  };
+
+  const getCategory = async () => {
+    const arr = location.pathname.split('/');
+    if (arr[3] !== 'hot') {
+      const message = await getCustomerCategory(arr[2], arr[3]);
+      console.log('message', message);
+      setMenu(message.itemList);
+    } else {
+      const message = await getCustomerInit(arr[2]);
+      console.log('message', message);
+      setMenu(message.itemList);
+    }
 
   };
+
+
 
   // 增加item
   const addItem = (input:
@@ -207,18 +225,20 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={nav} />
+          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
         </Box>
 
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
+          <div>{JSON.stringify(menu)}</div>
           <Box sx={{ display: 'flex', height: '100%', alignItems: 'center' }} >
+            
             <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
             <Button variant="contained" onClick={() => addItem(nextOrder)} sx={{ height: 30 }}> add item</Button>
             <Button variant="contained" onClick={() => addItem(nextOrder1)} sx={{ height: 30 }}> add item</Button>
             <Button onClick={() => removeItem(nextOrder)} sx={{ height: 30 }}> remove item</Button>
           </Box>
-
+          
           <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
 
             <OrderBar
