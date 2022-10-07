@@ -12,6 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 interface ListProps {
   //预留空函数
   doSomething?: (params: any) => any;
+  ifClick?: boolean;
+  lastClickTime?: Date;
 }
 
 export default function Template({
@@ -21,9 +23,32 @@ export default function Template({
 }: ListProps) {
   
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+
+  const [lastClickTime, setTime] = React.useState(0);
   
+
   const handleClick = () => {
-    setOpen(true);
+    setOpen(false);
+    setOpen2(false);
+
+    var nowTime = new Date();
+
+    if (lastClickTime === 0) {
+      setTime(nowTime.getTime());
+      setOpen(true);
+      return;
+    }
+
+    if ( nowTime.getTime() - lastClickTime > 30 * 1000 ) {
+      setTime(nowTime.getTime());
+      setOpen(true);
+      return;
+    }
+    else {
+      setOpen2(true);
+      return;
+    }
   };
 
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -32,6 +57,14 @@ export default function Template({
     }
     setOpen(false);
   };
+
+  const handleClose2 = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen2(false);
+  };
+  
   
   return (
     <>
@@ -46,9 +79,15 @@ export default function Template({
         Ask for help
       </Button>
       
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%'}}>
           Thanks for waiting! Waiter will come soon.
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={open2} autoHideDuration={5000} onClose={handleClose2}>
+        <Alert onClose={handleClose2} severity="info" sx={{ width: '100%'}}>
+          Waiter is coming!
         </Alert>
       </Snackbar>
 
