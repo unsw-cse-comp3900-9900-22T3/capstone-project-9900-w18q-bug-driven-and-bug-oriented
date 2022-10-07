@@ -9,7 +9,8 @@ import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 
-import dishImg from "../../static/chickenGrill.jpg"
+//import dishImg from "../../static/chickenGrill.jpg"
+import AddNumberBox from "./AddNumberBox";
 
 // 声明变量的数据格式
 interface ListProps {
@@ -27,6 +28,7 @@ interface ListProps {
   calories?: string;
   price?: string;
   picture?: string;
+  passDishNum?: (params: any) => any;
 }
 
 const theme = createTheme({
@@ -70,7 +72,9 @@ export default function DishCard({
   ingredients = 'Meat, vegetable',
   calories = '20',
   price = '16.66',
-  picture = '',
+  picture = 'chickenGrill.jpg',
+
+  passDishNum = () => {},
 
   ...props
 }: ListProps) {
@@ -85,13 +89,14 @@ export default function DishCard({
   const [dishNum, setDishNum] = React.useState(0);
 
   const [dishTryNum, setDishTryNum] = React.useState(0);
-  const addTryDish = () => setDishTryNum(dishTryNum + 1);
-  const delTryDish = () => { (dishTryNum >= 1) && (setDishTryNum(dishTryNum - 1))};
 
   const selectDishNum = () => {
     setDishNum(dishTryNum);
+    passDishNum(dishTryNum);
     setOpen(false)
   };
+
+  const dishImg = require('../../../static/chickenGrill.jpg');
 
   return (
     <>
@@ -245,30 +250,8 @@ export default function DishCard({
                     <CardActions sx={{display: 'flex', justifyContent: 'space-between', ml: 1}}>
                       
                       <ThemeProvider theme={theme}>
-                        <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold'}}>
-                          
-                          <Box
-                            onClick={delTryDish}
-                            sx={{m: 1, fontSize:22}}
-                          >
-                            -
-                          </Box>
-
-                          <Box
-                            sx={{m: 1, fontSize:16}}
-                          >
-                            {dishTryNum}
-                          </Box>
-
-                          <Box
-                            onClick={addTryDish}
-                            sx={{m: 1, fontSize:22}}
-                          >
-                            +
-                          </Box>
-
-                        </Box>
-                
+                        
+                        <AddNumberBox passNum={setDishTryNum} initialNum={dishNum} />
                 
                         <Box sx={{display: 'flex', mx:1}}>
                           <Button 
