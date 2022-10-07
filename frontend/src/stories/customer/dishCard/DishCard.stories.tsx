@@ -19,13 +19,11 @@ const Template: ComponentStory<typeof DishCard> = (args) => (
 
 export const Test = Template.bind({});
 Test.args = {
-  props1: "111",
-  props2: "222",
-  dishId: '123',
   dishName: 'Chicken Grill',
   description: 'It is one of the mot iconic and well-recognized fast food out there.',
   ingredients: 'Meat, vegetable',
   calories: '20',
   price: '16.66',
-  picture: '',
+  picture: 'dishImg/chickenGrill.jpg',
+  initDishNum: 0,
 };

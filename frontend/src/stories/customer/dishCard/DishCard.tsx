@@ -9,7 +9,6 @@ import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 
-//import dishImg from "../../static/chickenGrill.jpg"
 import AddNumberBox from "./AddNumberBox";
 
 // 声明变量的数据格式
@@ -28,6 +27,7 @@ interface ListProps {
   calories?: string;
   price?: string;
   picture?: string;
+  initDishNum?: number;
   passDishNum?: (params: any) => any;
 }
 
@@ -61,10 +61,6 @@ declare module '@mui/material/Button' {
 // 别忘了修改函数名
 export default function DishCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
-  doSomething,
 
   dishId = '123',
   dishName = 'Chicken Grill',
@@ -72,8 +68,8 @@ export default function DishCard({
   ingredients = 'Meat, vegetable',
   calories = '20',
   price = '16.66',
-  picture = 'chickenGrill.jpg',
-
+  picture = 'dishImg/chickenGrill.jpg',
+  initDishNum = 0,
   passDishNum = () => {},
 
   ...props
@@ -96,11 +92,9 @@ export default function DishCard({
     setOpen(false)
   };
 
-  const dishImg = require('../../../static/chickenGrill.jpg');
-
   return (
     <>
-      {dishNum !== 0 && (
+      {(dishNum !== 0 && dishNum) && (
         <Box sx={{ 
           height: 50, 
           width: 50, 
@@ -110,20 +104,38 @@ export default function DishCard({
           fontWeight: 'bold', 
           fontSize: 20,
           display:'flex', justifyContent: 'center', alignItems: 'center',
-          position: 'absolute',
-          top: 0,
-          left: 400,
-          zIndex: 'modal', }}>
+          position: 'relative',
+          zIndex: 15, 
+          ml:48,
+          }}>
           {dishNum}
         </Box>
       )}
 
-      <Card variant="outlined" sx={{ width: 410, borderRadius: 5, border: 0 }}>
+      {(dishNum === 0 || !dishNum ) && (
+        <Box sx={{ 
+          height: 50, 
+          width: 50, 
+          backgroundColor: '#fff', 
+          color: '#fff', 
+          borderRadius: 10, 
+          fontWeight: 'bold', 
+          fontSize: 20,
+          display:'flex', justifyContent: 'center', alignItems: 'center',
+          position: 'relative',
+          zIndex: 5, 
+          ml:48,
+          }}>
+         
+        </Box>
+      )}
+
+      <Card variant="outlined" sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt:-2.5 }}>
         
         <CardMedia
           component="img"
           height="180"
-          image = {dishImg}
+          image = {picture}
           alt = {dishName}
         />
 
@@ -196,7 +208,7 @@ export default function DishCard({
                     <CardMedia
                       component="img"
                       height="420"
-                      image = {dishImg}
+                      image = {picture}
                       alt="chicken grill"
                     />
 

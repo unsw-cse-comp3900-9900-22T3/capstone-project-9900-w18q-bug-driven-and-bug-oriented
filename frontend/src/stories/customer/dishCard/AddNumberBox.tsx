@@ -18,10 +18,6 @@ interface ListProps {
 // 别忘了修改函数名
 export default function AddNumberBox({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
-  doSomething,
 
   initialNum = 0,
   passNum = () => {},
@@ -39,7 +35,7 @@ export default function AddNumberBox({
                           
                           <Box
                             onClick={delTryDish}
-                            sx={{m: 1, fontSize:22}}
+                            sx={{m: 1, fontSize:22, ":hover":{cursor: 'pointer'}}}
                           >
                             -
                           </Box>
@@ -52,7 +48,7 @@ export default function AddNumberBox({
 
                           <Box
                             onClick={addTryDish}
-                            sx={{m: 1, fontSize:22}}
+                            sx={{m: 1, fontSize:22, ":hover":{cursor: 'pointer'}}}
                           >
                             +
                           </Box>
