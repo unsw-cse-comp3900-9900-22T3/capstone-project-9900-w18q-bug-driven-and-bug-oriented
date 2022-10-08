@@ -7,8 +7,6 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 interface ListProps {
   //预留空函数
   doSomething?: (params: any) => any;
-  ifClick?: boolean;
-  lastClickTime?: Date;
 }
 
 export default function Template({
