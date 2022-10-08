@@ -59,7 +59,7 @@ const nextOrder =
   title: 'Szechuan Dan Dan Noodles',
   calorie: 288,
   cost: 15.9,
-  dishNumber: 2,
+  dishNumber: 5,
 }
 
 const nextOrder0 =
@@ -304,8 +304,6 @@ const Customer: React.FC<{}> = () => {
             <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
             <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button>
-            <Button variant="contained" onClick={() => editItem(nextOrder1)} sx={{ height: 30 }}> add item</Button>
-            <Button onClick={() => editItem(nextOrder0)} sx={{ height: 30 }}> remove item</Button>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
