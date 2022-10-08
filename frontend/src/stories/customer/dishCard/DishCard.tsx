@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 import AddNumberBox from "./AddNumberBox";
 
@@ -28,7 +30,7 @@ interface ListProps {
   price?: string;
   picture?: string;
   initDishNum?: number;
-  passDishNum?: (params: any) => any;
+  passObj?: (params: any) => any;
 }
 
 const theme = createTheme({
@@ -70,7 +72,7 @@ export default function DishCard({
   price = '16.66',
   picture = 'dishImg/chickenGrill.jpg',
   initDishNum = 0,
-  passDishNum = () => {},
+  passObj = () => {},
 
   ...props
 }: ListProps) {
@@ -82,14 +84,21 @@ export default function DishCard({
   };
   const handleClose = () => setOpen(false);
 
-  const [dishNum, setDishNum] = React.useState(0);
+  const [dishNum, setDishNum] = React.useState(initDishNum);
 
   const [dishTryNum, setDishTryNum] = React.useState(0);
 
   const selectDishNum = () => {
     setDishNum(dishTryNum);
-    passDishNum(dishTryNum);
-    setOpen(false)
+    const obj = {
+      dish_id: dishId,
+      title: dishName,
+      calorie: calories,
+      cost: price,
+      dishNumber: dishTryNum,
+    };
+    passObj(obj);
+    setOpen(false);
   };
 
   return (
@@ -159,7 +168,7 @@ export default function DishCard({
                 m: 0.5,
                 fontWeight: 'bold',
               }}
-              >{calories} Cal
+              >{calories}Cal
             </Box>
     
             <Box
@@ -203,6 +212,12 @@ export default function DishCard({
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                 }} >
+                  <IconButton
+                    style={{ position: "absolute", top: "0", right: "0" }}
+                    onClick={handleClose}
+                  >
+                    <CloseIcon fontSize="large" />
+                  </IconButton>
                   <Card sx={{ maxWidth: 720, borderRadius: 5 }}>
             
                     <CardMedia
@@ -224,7 +239,7 @@ export default function DishCard({
                         <Box 
                           sx={{
                             display: 'flex',
-                            minWidth: 50,
+                            minWidth: 30,
                             borderRadius: 2,
                             backgroundColor: '#EEECF5',
                             color: '#503E9D',

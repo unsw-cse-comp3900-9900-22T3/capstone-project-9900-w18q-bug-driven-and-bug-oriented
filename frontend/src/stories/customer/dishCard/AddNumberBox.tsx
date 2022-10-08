@@ -27,7 +27,6 @@ export default function AddNumberBox({
   const [dishTryNum, setDishTryNum] = React.useState(initialNum);
   const addTryDish = () => {passNum(dishTryNum + 1); setDishTryNum(dishTryNum + 1); };
   const delTryDish = () => { if (dishTryNum >= 1) {passNum(dishTryNum - 1); setDishTryNum(dishTryNum - 1); }};
-  //passNum(initialNum);
 
   return (
     <>
