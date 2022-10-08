@@ -4,6 +4,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Visualization from "./dashboard.js";
 
 
 const theme = createTheme();
@@ -14,6 +15,7 @@ const Manager: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>Manager page</div>
+      <Visualization/>
     </ThemeProvider>
   );
 };
