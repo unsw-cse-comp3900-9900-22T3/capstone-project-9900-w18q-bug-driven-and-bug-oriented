@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   createTheme,
+  Grid,
   ThemeProvider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -10,24 +11,10 @@ import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
 import { getCustomerCategory, getCustomerInit } from "../api/customer";
 import { element } from "prop-types";
+import DishCard from "../stories/customer/dishCard/DishCard";
 
 
 const theme = createTheme();
-
-const obj = [
-  {
-    category_id: 1,
-    category_name: 'meat'
-  },
-  {
-    category_id: 2,
-    category_name: 'vegetable'
-  },
-  {
-    category_id: 3,
-    category_name: 'drink'
-  },
-]
 
 const haveOrder = [
   {
@@ -62,26 +49,6 @@ const nextOrder =
   dishNumber: 5,
 }
 
-const nextOrder0 =
-{
-  dish_id: 11,
-  title: 'Szechuan Dan Dan Noodles',
-  calorie: 288,
-  cost: 15.9,
-  dishNumber: 0,
-}
-
-const nextOrder1 =
-{
-  dish_id: 5,
-  title: 'meat',
-  calorie: 40,
-  cost: 5,
-  dishNumber: 1,
-}
-
-
-const person = 3;
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -94,9 +61,17 @@ const Customer: React.FC<{}> = () => {
   const [newOrder, setNewOrder] = useState<any>([]);
   const [totalOrder, setTotalOrder] = useState<any>([]);
   const [numberOfItem, setNumberOfItem] = useState(0);
-  const [cost, setCost] = useState(0);
+  const [price, setPrice] = useState(0);
   const [countOfCal, setCountOfCal] = useState(0);
   const [ceilingOfCal, setCeilingOfCal] = useState(0);
+  const [newEdit, setNewEdit] = useState<any>({
+    dish_id: -999,
+    title: '',
+    calorie: 0,
+    cost: 0,
+    dishNumber: 0,
+  });
+
 
   //init
   useEffect(() => {
@@ -123,17 +98,12 @@ const Customer: React.FC<{}> = () => {
     if (arr[3] !== 'hot') {
       const message = await getCustomerCategory(arr[2], arr[3]);
       console.log('message', message);
-      setMenu(message.itemList);
-      resetMenu(newOrder,message.itemList);
-
+      resetMenu(newOrder, message.itemList);
     } else {
       const message = await getCustomerInit(arr[2]);
       console.log('message', message);
-      setMenu(message.itemList);
-      resetMenu(newOrder,message.itemList);
-
+      resetMenu(newOrder, message.itemList);
     }
-
   };
 
 
@@ -157,8 +127,8 @@ const Customer: React.FC<{}> = () => {
       const newMenu = [...input2];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e.dish_id === o.dish_id) {
-            o.dishNumber = e.dishNumber;
+          if (e?.dish_id === o?.dish_id) {
+            o.dishNumber = e?.dishNumber;
           }
         });
       });
@@ -167,14 +137,13 @@ const Customer: React.FC<{}> = () => {
       const newMenu = [...menu];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e.dish_id === o.dish_id) {
-            o.dishNumber = e.dishNumber;
+          if (e?.dish_id === o?.dish_id) {
+            o.dishNumber = e?.dishNumber;
           }
         });
       });
       setMenu(newMenu);
     }
-
   };
 
 
@@ -188,12 +157,11 @@ const Customer: React.FC<{}> = () => {
       dishNumber: number;
     }) => {
     const order = [...newOrder];
-    console.log('herehhhhhhh', input);
     let flag = true;
     let index = 0;
     let i = 0;
     order.map((element) => {
-      if (element.dish_id === input.dish_id) {
+      if (element?.dish_id === input?.dish_id) {
         i = index;
 
         flag = false;
@@ -203,47 +171,13 @@ const Customer: React.FC<{}> = () => {
     if (flag) {
       order.push(input);
     } else {
-      order[i].dishNumber = input.dishNumber;
+      order[i].dishNumber = input?.dishNumber;
     }
     setNewOrder(order);
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
   };
 
-
-  // 减少item
-  // const removeItem = (input:
-  //   {
-  //     dish_id: number;
-  //     title: string;
-  //     calorie: number;
-  //     cost: number;
-  //     dishNumber: number;
-  //   }) => {
-  //   const order = [...newOrder];
-  //   let flag = false;
-  //   let index = 0;
-  //   let i = -1;
-  //   order.map((element) => {
-  //     if (element.dish_id === input.dish_id) {
-  //       i = index;
-  //       if (element.dishNumber <= 1) {
-  //         flag = true;
-  //       }
-  //     }
-  //     index += 1;
-  //   });
-  //   if (flag) {
-  //     // order?.splice(i, 1);
-  //     order[i].dishNumber = 0;
-  //     setNumberOfItem(numberOfItem - 1);
-  //   } else if (i > -1) {
-  //     order[i].dishNumber -= 1;
-  //     setNumberOfItem(numberOfItem - 1);
-  //   }
-  //   setNewOrder(order);
-  //   resetMenu(order);
-  // };
 
   // 提交订单函数
   const confirmSubmit = (e: any) => {
@@ -257,14 +191,20 @@ const Customer: React.FC<{}> = () => {
     // console.log('totalOrder', totalOrder);
     console.log('new order', newOrder);
     let n = 0
-    newOrder.map((e:any)=>{
-      n += e.dishNumber
+    newOrder.map((e: any) => {
+      n += e?.dishNumber
     });
     setNumberOfItem(n);
     console.log('menu', menu);
   }, [newOrder, oldOrder]);
 
+// update new item
+  useEffect(() => {
+    console.log('new add', newEdit);
+    editItem(newEdit);
+  }, [newEdit]);
 
+  // update price and cal
   useEffect(() => {
     console.log('totalOrder', totalOrder);
     let tempcost = 0;
@@ -276,12 +216,11 @@ const Customer: React.FC<{}> = () => {
       cost: number;
       dishNumber: number;
     }) => {
-      tempcost = tempcost + e.cost * e.dishNumber;
-      tempCal = tempCal + e.calorie * e.dishNumber;
+      tempcost = tempcost + e?.cost * e?.dishNumber;
+      tempCal = tempCal + e?.calorie * e?.dishNumber;
     });
-    setCost(tempcost);
+    setPrice(tempcost);
     setCountOfCal(tempCal);
-
   }, [totalOrder]);
 
 
@@ -292,18 +231,34 @@ const Customer: React.FC<{}> = () => {
           <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          {menu.map((item: any) => {
+        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1500 }} >
+          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", }} >
+            <Grid container spacing={3} sx={{ display: 'flex', m: 10, ml: 20 }}>
+              {menu.map((item: any) => {
 
-            return (
-              <div>{JSON.stringify(item)}</div>
-            )
-          })}
-          <Box sx={{ display: 'flex', height: '100%', alignItems: 'center' }} >
+                return (
+                  <Grid item xs={4}>
+                    <DishCard
+                      dishId={item.dish_id}
+                      dishName={item.title}
+                      description={item.description}
+                      ingredients={item.ingredient}
+                      calories={item.calorie}
+                      price={item.cost}
+                      // picture={'dishImg/chickenGrill.jpg'}
+                      initDishNum={item.dishNumber}
+                      passObj={setNewEdit}
+                    />
+                    {/* <div>{JSON.stringify(item)}</div> */}
+                  </Grid>
+                )
+              })}
+            
 
-            <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
+            </Grid>
+            {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
-            <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button>
+            <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button> */}
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
@@ -312,7 +267,7 @@ const Customer: React.FC<{}> = () => {
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
               canSubmit={(numberOfItem >= 1) ? true : false}
               number={numberOfItem}
-              price={cost}
+              price={price}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
               submitFunc={() => confirmSubmit(newOrder)} />

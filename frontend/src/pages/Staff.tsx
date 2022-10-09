@@ -20,6 +20,7 @@ import Kitchen from "./Kitchen";
 import BigButton from "../stories/home/BigButton";
 import ButtonIcon from "../stories/home/ButtonIcon";
 import { checkLogin } from "../api/login";
+import DishCard from "../stories/customer/dishCard/DishCard";
 
 const theme = createTheme();
 
@@ -97,7 +98,6 @@ const Staff: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-
       <Grid container component="main" sx={{ height: "100vh", minWidth: 1100, minHeight: 1000 }}>
       <Snackbar 
       open={open} 
