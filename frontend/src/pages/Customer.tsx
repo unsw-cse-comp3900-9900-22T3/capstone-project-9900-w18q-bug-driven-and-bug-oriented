@@ -18,21 +18,21 @@ const theme = createTheme();
 
 const haveOrder = [
   {
-    dish_id: 1,
+    dishId: 1,
     title: 'meat',
     calorie: 50,
     cost: 10,
     dishNumber: 1,
   },
   {
-    dish_id: 2,
+    dishId: 2,
     title: 'vegetable',
     calorie: 40,
     cost: 5,
     dishNumber: 1,
   },
   {
-    dish_id: 3,
+    dishId: 3,
     title: 'rice',
     calorie: 48,
     cost: 3,
@@ -42,7 +42,7 @@ const haveOrder = [
 
 const nextOrder =
 {
-  dish_id: 11,
+  dishId: 11,
   title: 'Szechuan Dan Dan Noodles',
   calorie: 288,
   cost: 15.9,
@@ -65,7 +65,7 @@ const Customer: React.FC<{}> = () => {
   const [countOfCal, setCountOfCal] = useState(0);
   const [ceilingOfCal, setCeilingOfCal] = useState(0);
   const [newEdit, setNewEdit] = useState<any>({
-    dish_id: -999,
+    dishId: -999,
     title: '',
     calorie: 0,
     cost: 0,
@@ -110,14 +110,14 @@ const Customer: React.FC<{}> = () => {
   // reload menu
   const resetMenu = (input1:
     {
-      dish_id: number;
+      dishId: number;
       title: string;
       calorie: number;
       cost: number;
       dishNumber: number;
     }[], input2?:
       {
-        dish_id: number;
+        dishId: number;
         title: string;
         calorie: number;
         cost: number;
@@ -127,7 +127,7 @@ const Customer: React.FC<{}> = () => {
       const newMenu = [...input2];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e?.dish_id === o?.dish_id) {
+          if (e?.dishId === o?.dishId) {
             o.dishNumber = e?.dishNumber;
           }
         });
@@ -137,7 +137,7 @@ const Customer: React.FC<{}> = () => {
       const newMenu = [...menu];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e?.dish_id === o?.dish_id) {
+          if (e?.dishId === o?.dishId) {
             o.dishNumber = e?.dishNumber;
           }
         });
@@ -150,7 +150,7 @@ const Customer: React.FC<{}> = () => {
   // 修改item
   const editItem = (input:
     {
-      dish_id: number;
+      dishId: number;
       title: string;
       calorie: number;
       cost: number;
@@ -161,7 +161,7 @@ const Customer: React.FC<{}> = () => {
     let index = 0;
     let i = 0;
     order.map((element) => {
-      if (element?.dish_id === input?.dish_id) {
+      if (element?.dishId === input?.dishId) {
         i = index;
 
         flag = false;
@@ -210,7 +210,7 @@ const Customer: React.FC<{}> = () => {
     let tempcost = 0;
     let tempCal = 0;
     totalOrder.map((e: {
-      dish_id: string;
+      dishId: string;
       title: string;
       calorie: number;
       cost: number;
@@ -239,7 +239,7 @@ const Customer: React.FC<{}> = () => {
                 return (
                   <Grid item xs={3}>
                     <DishCard
-                      dishId={item.dish_id}
+                      dishId={item.dishId}
                       dishName={item.title}
                       description={item.description}
                       ingredients={item.ingredient}

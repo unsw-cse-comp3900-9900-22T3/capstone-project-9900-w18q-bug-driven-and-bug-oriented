@@ -15,10 +15,6 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
-  name?: string;
-  selected?: boolean;
-  item?: string;
-
   //预留空函数
   doSomething?: (params: any) => any;
 
@@ -27,43 +23,25 @@ interface ListProps {
 // 别忘了修改函数名
 export default function Logout({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  name = '',
-  selected = false,
-  item = '',
-  doSomething,
 
+  doSomething,
   ...props
 }: ListProps) {
   return (
     <>
-      {(item === 'logout' && !selected) && (
-        <Box sx={{
-          width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
-          '&:hover': {
-
-            cursor: 'pointer'
-          },
-        }}>
-          <KeyboardBackspaceIcon sx={{ color: '#ffffff', height: 40, width: 40, marginLeft: 2 }} />
-          <Typography variant="h6" sx={{ color: '#ffffff', margin: 0.5, marginLeft: 2 }}>
-          Log out
-          </Typography>
-        </Box>
-      )}
-      {(item === 'logout' && selected) && (
-        <Box onClick={doSomething} sx={{
-          width: 270, height: 60, display: 'flex', flexDirection: 'row', alignItems: 'center', borderRadius: 3
-          , '&:hover': {
-            backgroundColor: '#F6F9FC',
-            cursor: 'pointer'
-          }
-        }}>
-          <KeyboardBackspaceIcon sx={{ color: '#626264', height: 40, width: 40, marginLeft: 2 }} />
-          <Typography variant="h6" sx={{ color: '#626264', margin: 0.5, marginLeft: 2 }}>
+      <Button onClick={doSomething} variant="contained" sx={{
+        height: 45, width: 200, backgroundColor: '#503E9D', borderRadius: 3, '&:hover': {
+          backgroundColor: '#8475B0',
+        }
+      }}>
+        <Box sx={{ display: 'flex' }}>
+          <KeyboardBackspaceIcon sx={{ color: '#ffffff' }} />
+          <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 2, fontSize: 16 }}>
             Log out
           </Typography>
         </Box>
-      )}
+
+      </Button>
     </>
   );
 }

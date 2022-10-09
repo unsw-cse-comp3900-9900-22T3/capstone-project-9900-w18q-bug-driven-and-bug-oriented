@@ -93,7 +93,7 @@ export default function DishCard({
   const selectDishNum = () => {
     setDishNum(dishTryNum);
     const obj = {
-      dish_id: dishId,
+      dishId: dishId,
       title: dishName,
       calorie: calories,
       cost: price,
@@ -104,8 +104,7 @@ export default function DishCard({
     // setEditFlag(true);
   };
 
-  useEffect(() => {
-    
+  useEffect(() => {   
     setDishNum(0);
   }, [initDishNum]);
 

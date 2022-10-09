@@ -20,7 +20,5 @@ const Template: ComponentStory<typeof Logout> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  name: "logout",
-  selected: false,
-  item: 'logout',
+
 };
