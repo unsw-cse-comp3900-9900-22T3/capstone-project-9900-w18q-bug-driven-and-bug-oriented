@@ -154,7 +154,7 @@ export default function NavButton({
         </Box>
       )}
 
-{(item === 'order' && !selected) && (
+      {(item === 'order' && !selected) && (
         <Box onClick={doSomething} sx={{
           width: 270, height: 60, display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 3
           , '&:hover': {
@@ -191,7 +191,7 @@ export default function NavButton({
             </Typography>
           </Box>
 
-          {number !== 0 && (
+          {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#ffffff', display: 'flex', color: '#503E9D', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>
@@ -272,7 +272,7 @@ export default function NavButton({
             </Typography>
           </Box>
 
-          {number !== 0 && (
+          {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#503E9D', display: 'flex', color: '#ffffff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>
@@ -294,7 +294,7 @@ export default function NavButton({
             </Typography>
           </Box>
 
-          {number !== 0 && (
+          {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#ffffff', display: 'flex', color: '#503E9D', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>
@@ -316,7 +316,7 @@ export default function NavButton({
               Items
             </Typography>
           </Box>
-          {number !== 0 && (
+          {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#503E9D', display: 'flex', color: '#ffffff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>
@@ -337,7 +337,7 @@ export default function NavButton({
               Items
             </Typography>
           </Box>
-          {number !== 0 && (
+          {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#ffffff', display: 'flex', color: '#503E9D', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>

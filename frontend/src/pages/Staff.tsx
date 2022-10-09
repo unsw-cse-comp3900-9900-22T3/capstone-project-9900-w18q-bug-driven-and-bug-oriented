@@ -148,10 +148,10 @@ const Staff: React.FC<{}> = () => {
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
-                  {(staff == 'waiter') && (
+                  {(staff == 'wait') && (
                     <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' selected />
                   )}
-                  {(staff !== 'waiter') && (
+                  {(staff !== 'wait') && (
                     <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' />
                   )}
                 </Box>
