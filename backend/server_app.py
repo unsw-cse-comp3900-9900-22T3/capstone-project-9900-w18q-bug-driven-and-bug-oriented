@@ -1,29 +1,25 @@
 import os
 import shutil
-
 import pymysql
 import datetime
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, request, Response, jsonify
 from flask_restx import Resource, Api, reqparse, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import json
 from flask_cors import CORS
+from itertools import groupby
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')  # 解决跨域问题
 
 
 class Config(object):
-    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:pang123@localhost:3306/wait_management"
+    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:hyt135565@localhost:3306/test_database"
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management" #连接数据库方式，连云数据库的方式
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
     # app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = False
-
-    BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    MEDIA_ROOT = os.path.join(BASE_DIR, "COMP9900/static/picture")  # 这里要修改，改成项目的结构路径！！！
-
 
 app.config.from_object(Config)
 db = SQLAlchemy(app)
@@ -57,8 +53,8 @@ class Services(Base):  # The structure of category table
 
     id = db.Column(db.INT, primary_key=True, autoincrement=True)
     table = db.Column(db.Integer, nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime)
+    startTime = db.Column(db.DateTime, nullable=False)
+    endTime = db.Column(db.DateTime)
     status = db.Column(db.INT, nullable=False, default=0)
 
 
@@ -66,18 +62,18 @@ class Category(Base):  # The structure of category table
     __tablename__ = "category"
 
     id = db.Column(db.INT, primary_key=True, autoincrement=True)
-    category_id = db.Column(db.INT, nullable=False)
-    category_name = db.Column(db.String(255), nullable=False)
-    last_modified = db.Column(db.DateTime, nullable=False)
+    categoryId = db.Column(db.INT, nullable=False)
+    categoryName = db.Column(db.String(255), nullable=False)
+    lastModified = db.Column(db.DateTime, nullable=False)
 
 
 class Menuitem(Base):
-    __tablename__ = "menu_items"
+    __tablename__ = "menuItems"
 
     id = db.Column(db.INT, primary_key=True, autoincrement=True)
-    dish_id = db.Column(db.INT, nullable=False)
-    categoryID = db.Column(db.Integer)
-    category_name = db.Column(db.String(255))
+    dishId = db.Column(db.INT, nullable=False)
+    categoryId = db.Column(db.Integer)
+    categoryName = db.Column(db.String(255))
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255))
     ingredient = db.Column(db.String(255))
@@ -85,7 +81,7 @@ class Menuitem(Base):
     picture = db.Column(db.String(255))
     calorie = db.Column(db.Float, default=0)
     orderTimes = db.Column(db.Integer)
-    last_modified = db.Column(db.DateTime, nullable=False)
+    lastModified = db.Column(db.DateTime, nullable=False)
 
 
 class Orders(Base):
@@ -102,7 +98,7 @@ class Orders(Base):
 
 
 class Orderitem(Base):
-    __tablename__ = "order_items"
+    __tablename__ = "orderItems"
 
     itemIndex = db.Column(db.INT, primary_key=True, autoincrement=True)
     dishId = db.Column(db.INT, nullable=False)
@@ -127,14 +123,6 @@ def model_to_dict(result):
     except BaseException as e:
         print(e.args)
         raise TypeError('Type error of parameter')
-
-
-# def transfer_string(original_dict):
-#     if original_dict:
-#         for dicts in original_dict:
-#             for keys in dicts:
-#                 dicts[keys] = str(dicts[keys])
-#     return original_dict
 
 
 @app.route('/staff', methods=["POST"])  # login interface
@@ -166,7 +154,74 @@ def login():
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
-@app.route('/customer/<int:order_id>', methods=["GET"])
+@app.route('/customer/<int:order_id>', methods=["POST"])  # order submit interface
+def order_submit(order_id):
+    objects = []
+    transfer_data = json.loads(json.dumps(request.get_json()))  # json格式传过来的信息
+    target_order = Orders.query.get_or_404(order_id) # 得到目标订单，订单必须已在数据库中
+    return_json = {"orderId": order_id} # 返回json样式
+    if target_order.orderTime == None: # 只有orderTime为空，才能写入当前时间，如果不为空，不能改，会破坏点单的顺序
+        Orders.query.filter_by(orderId=order_id).update({Orders.orderTime: datetime.now()})
+        db.session.commit()
+    if target_order.status == "Completed": # 如果当前订单显示completed，又有加菜的单子进来，要把状态改成processing
+        Orders.query.filter_by(orderId=order_id).update({Orders.status: "Processing"})
+        for dish in transfer_data["orderList"]:
+            if int(dish["number"]) > 1: # 如果显示该dish点的数量超过1，那就要生成多条数据
+                for i in range(0, int(dish["number"])):
+                    item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
+                    objects.append(item_post)
+            else: # 如果显示该dish点的数量为1，那就要生成1条数据
+                item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
+                objects.append(item_post)
+        db.session.add_all(objects) # 多条dish的数据一起插入数据表中
+        db.session.commit()
+    else:
+        for dish in transfer_data["orderList"]:
+            if int(dish["number"]) > 1:
+                for i in range(0, int(dish["number"])):
+                    item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
+                    objects.append(item_post)
+            else:
+                item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
+                objects.append(item_post)
+        db.session.add_all(objects)
+        db.session.commit()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/customer/<int:order_id>', methods=["GET"])  # get order interface
+def get_order_detail(order_id):
+    return_json = []
+    target_order = Orders.query.get_or_404(order_id).orderitems # 获得该orderId下所有dishes
+    target_order = model_to_dict(target_order)
+    dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"])) # 排序
+    dish_group = groupby(dish_sort, key=lambda x: x["dishId"]) # 按照dishId聚类
+    for key, group in dish_group:
+        dish_info = model_to_dict(Menuitem.query.get(key))
+        dish_info.pop("id") # 舍弃id
+        dish_info.pop("lastModified") # 舍弃修改时间
+        dish_info["dishNumber"] = len(list(group)) # 点的dish的数量
+        return_json.append(dish_info)
+    return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
+
+
+@app.route('/customer/<int:order_id>/bill', methods=["GET"])  # get bill interface，逻辑和get order detail 一样
+def get_bill(order_id):
+    return_json = []
+    target_order = Orders.query.get_or_404(order_id).orderitems
+    target_order = model_to_dict(target_order)
+    dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))
+    dish_group = groupby(dish_sort, key=lambda x: x["dishId"])
+    for key, group in dish_group:
+        dish_info = model_to_dict(Menuitem.query.get(key))
+        dish_info.pop("id")
+        dish_info.pop("lastModified")
+        dish_info["dishNumber"] = len(list(group))
+        return_json.append(dish_info)
+    return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
+
+
+@app.route('/customer/<int:order_id>/hot', methods=["GET"])
 def hot_dishes(order_id):
     order_id_post = int(order_id)
     diner_post = Orders.query.get_or_404(order_id_post).diner
@@ -174,17 +229,15 @@ def hot_dishes(order_id):
     hot_dish_dict = Menuitem.query.order_by(Menuitem.orderTimes.desc()).limit(9)
     hot_dish_dict = model_to_dict(hot_dish_dict)
     for line in hot_dish_dict:
-        line.pop("last_modified")
+        line.pop("lastModified")
         line.pop("id")
         line["dishNumber"] = 0
-    # hot_dish_dict = transfer_string(hot_dish_dict)
     print(hot_dish_dict)
     category_post = Category.query.all()
     category_post = model_to_dict(category_post)
     for line in category_post:
         line.pop("id")
-        line.pop("last_modified")
-    # category_post = transfer_string(category_post)
+        line.pop("lastModified")
     return_json = {"orderId": order_id_post, "diner": diner_post, "itemList": hot_dish_dict, "categoryList": category_post}
     return Response(json.dumps(return_json), mimetype="application/json")
 
@@ -193,13 +246,12 @@ def hot_dishes(order_id):
 def category_dishes(order_id, category_id):
     order_id_post = int(order_id)
     category_id_post = int(category_id)
-    dishes_dict = Menuitem.query.filter_by(categoryID=category_id_post).all()
+    dishes_dict = Menuitem.query.filter_by(categoryId=category_id_post).all()
     dishes_dict = model_to_dict(dishes_dict)
     for line in dishes_dict:
         line.pop("id")
-        line.pop("last_modified")
+        line.pop("lastModified")
         line["dishNumber"] = 0
-    # dishes_dict = transfer_string(dishes_dict)
     return_json = {"itemList": dishes_dict}
     return Response(json.dumps(return_json), mimetype="application/json")
 
@@ -226,24 +278,28 @@ def add_category():
     if Category_name in category_name_list:
         return {"code": 1, "msg": "Already in category_table"}
     else:
-        category = Category(category_id=category_id_max_cur, category_name=Category_name, last_modified=datetime.now())
+        category = Category(categoryId=category_id_max_cur, categoryName=Category_name, lastModified=datetime.now())
         category.save()
         return {"code": 0}
 
 
-def upload_picture(original_local_pitcture_address):  # 图片转存功能
-    end_name = original_local_pitcture_address.rsplit('.')[-1]  # 判定图片的文件格式
+def upload_picture(original_local_picture_address):  # 图片转存功能
+    end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
     if end_name not in ["jpg", "png", "jpeg"]:
         return {"msg": "the format is not a valid picture"}
-
-    all_files = os.listdir("static/picture")  # 读取这个路径下的文件
-    print(len(all_files))
-    MEDIA = Config.MEDIA_ROOT  # 需要存储的路径
-    filename = str('img{}'.format(str(len(all_files) + 1))) + "." + end_name  # 生成新的文件名，避免重复
-    img_path = os.path.join("static/picture", filename)  # 拼接转存路径和新的文件名
-    print(img_path)
-    shutil.copy(original_local_pitcture_address, img_path)  # 把旧路径下的文件复制到新的路径下
-    return img_path  # 返回新的路径
+    all_files = os.listdir("../frontend/public/dishImg")  # 读取这个路径下的文件
+    file_list = []
+    for file in all_files:
+        file = file[3:]
+        file_num = file[:-4]
+        file_list.append(int(file_num))
+    cur_file_num = max(file_list) + 1
+    filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
+    img_path = os.path.join("../frontend/public/dishImg", filename)  # 拼接转存路径和新的文件名
+    print("img_path: ", img_path)
+    shutil.copy(original_local_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    img_path_post = img_path[18:]
+    return img_path_post  # 返回新的路径
 
 
 @app.route('/add_menuitem', methods=["GET", "POST"])  # 添加新的菜品
@@ -256,7 +312,7 @@ def add_menuitem():
         post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
         category_name_post = post_data["category_name"]
         print(category_name_post)
-        category_line = Category.query.filter_by(category_name=category_name_post).first()
+        category_line = Category.query.filter_by(categoryName=category_name_post).first()
         category_line = model_to_dict(category_line)
         print(category_line)
         category_id_post = int(category_line["category_id"])
@@ -266,10 +322,11 @@ def add_menuitem():
         ingredient_post = str(post_data["ingredient"])
         cost_post = float(post_data["cost"])
         calorie_post = float(post_data["calorie"])
+
         picture_post = str(post_data["picture"])  # post上来的图片的原路径
         print(picture_post)
         picture_post_address = upload_picture(picture_post)  # 图片的转存功能，返回的是转存后的路径
-        print(picture_post_address)
+        print("img_path_post: ", picture_post_address)
 
         dish_id_list = []
         dish_list = Menuitem.query.all()
@@ -284,10 +341,10 @@ def add_menuitem():
             print(dish_id_list)
             dish_id_max_cur = max(dish_id_list) + 1
 
-        menu_item_post = Menuitem(dish_id=dish_id_max_cur, categoryID=category_id_post,
-                                  category_name=category_name_post, title=title_post, description=description_post,
-                                  ingredient=ingredient_post, cost=cost_post, calorie=calorie_post,
-                                  last_modified=datetime.now())
+        menu_item_post = Menuitem(dishId=dish_id_max_cur, categoryId=category_id_post,
+                                  categoryName=category_name_post, title=title_post, description=description_post,
+                                  ingredient=ingredient_post, cost=cost_post, picture=picture_post_address,
+                                  calorie=calorie_post, lastModified=datetime.now())
         # menu_item_post.save()
         return {"code": 0}
 
