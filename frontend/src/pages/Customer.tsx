@@ -89,7 +89,7 @@ const Customer: React.FC<{}> = () => {
     const message = await getCustomerInit(e);
     console.log('message', message);
     setNav(message.categoryList);
-    setCeilingOfCal(message.diner * 4000);
+    setCeilingOfCal(message.diner * 2000);
     setMenu(message.itemList);
   };
 
@@ -198,7 +198,7 @@ const Customer: React.FC<{}> = () => {
     console.log('menu', menu);
   }, [newOrder, oldOrder]);
 
-// update new item
+  // update new item
   useEffect(() => {
     console.log('new add', newEdit);
     editItem(newEdit);
@@ -231,13 +231,13 @@ const Customer: React.FC<{}> = () => {
           <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1500 }} >
+        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1900 }} >
           <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", }} >
             <Grid container spacing={3} sx={{ display: 'flex', m: 10, ml: 20 }}>
               {menu.map((item: any) => {
 
                 return (
-                  <Grid item xs={4}>
+                  <Grid item xs={3}>
                     <DishCard
                       dishId={item.dish_id}
                       dishName={item.title}
@@ -267,7 +267,7 @@ const Customer: React.FC<{}> = () => {
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
               canSubmit={(numberOfItem >= 1) ? true : false}
               number={numberOfItem}
-              price={price}
+              price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
               submitFunc={() => confirmSubmit(newOrder)} />

@@ -147,7 +147,7 @@ export default function DishCard({
         </Box>
       )}
 
-      <Card variant="outlined" sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5}}>
+      <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border:0, zIndex: 10, position: 'relative', mt: -2.5}}>
 
         <CardMedia
           component="img"
@@ -202,7 +202,7 @@ export default function DishCard({
 
         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', mx: 1 }}>
+            <Box sx={{ display: 'flex', mx: 1, mt:-2, mb:2 }}>
               <Button
                 size="small"
                 variant="contained"
