@@ -245,7 +245,7 @@ const Customer: React.FC<{}> = () => {
                       ingredients={item.ingredient}
                       calories={item.calorie}
                       price={item.cost}
-                      // picture={'dishImg/chickenGrill.jpg'}
+                      picture={item.picture}
                       initDishNum={item.dishNumber}
                       passObj={setNewEdit}
                     />

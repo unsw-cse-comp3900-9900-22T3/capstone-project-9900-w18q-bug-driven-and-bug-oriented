@@ -15,8 +15,8 @@ CORS(app, resources=r'/*')  # 解决跨域问题
 
 
 class Config(object):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:pang123@localhost:3306/wait_management"
-    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management" #连接数据库方式，连云数据库的方式
+    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:pang123@localhost:3306/wait_management"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management" #连接数据库方式，连云数据库的方式
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
     # app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = False
