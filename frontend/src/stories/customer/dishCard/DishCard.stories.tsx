@@ -24,6 +24,6 @@ Test.args = {
   ingredients: 'Meat, vegetable',
   calories: '20',
   price: '16.66',
-  picture: 'dishImg/chickenGrill.jpg',
+  picture: '/dishImg/chickenGrill.jpg',
   initDishNum: 0,
 };
