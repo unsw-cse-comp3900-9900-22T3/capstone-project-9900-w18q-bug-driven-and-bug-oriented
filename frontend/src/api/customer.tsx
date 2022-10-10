@@ -8,7 +8,7 @@ interface input1 {
 }
 
 export const getCustomerInit = async (a: string) => {
-  const result = await apiClient.get(`/customer/${a}`)
+  const result = await apiClient.get(`/customer/${a}/hot`)
   return result.data;
 };
 

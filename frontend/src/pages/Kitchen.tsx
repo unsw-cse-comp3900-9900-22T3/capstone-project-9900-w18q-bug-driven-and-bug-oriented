@@ -20,11 +20,7 @@ const Kitchen: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>Kitchen page</div>
-      <Button onClick={()=>navigate("/kitchen/123")}>order</Button>
-      <DishCard initDishNum={0} passObj={setDishInfo1} picture={'dishImg/chickenGrill.jpg'}/>
-      <div>Dish info: {JSON.stringify(dishInfo1)}</div>
-      <DishCard initDishNum={0} passObj={setDishInfo2}/>
-      <div>Dish info: {JSON.stringify(dishInfo2)}</div>
+
     </ThemeProvider>
   );
 };
