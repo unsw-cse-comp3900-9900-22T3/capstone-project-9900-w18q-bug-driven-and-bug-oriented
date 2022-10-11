@@ -22,4 +22,52 @@ export const Test = Template.bind({});
 Test.args = {
   number: 1,
   shown: true,
+  oldOrder: [{
+    dishId: 1,
+    title: 'meat',
+    calorie: 50,
+    cost: 10,
+    dishNumber: 1,
+    picture: 'dishImg/img1.png'
+  },
+  {
+    dishId: 2,
+    title: 'vegetable',
+    calorie: 40,
+    cost: 5,
+    dishNumber: 1,
+    picture: 'dishImg/img2.png'
+  },
+  {
+    dishId: 3,
+    title: 'rice',
+    calorie: 48,
+    cost: 3,
+    dishNumber: 1,
+    picture: 'dishImg/img2.png'
+  },],
+  newOrder: [{
+    dishId: 1,
+    title: 'meat',
+    calorie: 50,
+    cost: 10,
+    dishNumber: 1,
+    picture: 'dishImg/img1.png'
+  },
+  {
+    dishId: 2,
+    title: 'vegetable',
+    calorie: 40,
+    cost: 5,
+    dishNumber: 1,
+    picture: 'dishImg/img2.png'
+  },
+  {
+    dishId: 3,
+    title: 'rice',
+    calorie: 48,
+    cost: 3,
+    dishNumber: 1,
+    picture: 'dishImg/img2.png'
+  },],
 };

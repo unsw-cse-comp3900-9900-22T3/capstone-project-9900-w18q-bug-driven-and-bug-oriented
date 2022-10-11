@@ -16,3 +16,8 @@ export const getCustomerCategory = async (a: string, b:string) => {
   const result = await apiClient.get(`/customer/${a}/${b}`)
   return result.data;
 };
+
+export const getCustomerOrder = async (a: string) => {
+  const result = await apiClient.get(`/customer/${a}`)
+  return result.data;
+};

@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import OrderIcon from "./OrderIcon";
 import PriceTag from "./PriceTag";
 import CalorieTag from "./CalorieTag";
@@ -18,6 +18,23 @@ interface ListProps {
   //预留空函数
   orderFunc?: (params: any) => any;
   submitFunc: (params: any) => any;
+  oldOrder?:
+    {
+      dishId: number,
+      title: string,
+      calorie: number,
+      cost: number,
+      dishNumber: number,
+      picture:string
+    }[];
+  newOrder?:{
+    dishId: number,
+    title: string,
+    calorie: number,
+    cost: number,
+    dishNumber: number,
+    picture:string
+  }[];
 }
 
 // 别忘了修改函数名
@@ -31,20 +48,23 @@ export default function OrderBar({
   countOfCal = 0,
   orderFunc,
   submitFunc,
+  oldOrder,
+  newOrder,
 
   ...props
 }: ListProps) {
+
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent:'space-between', alignItems:'end' }}>
+    <Paper elevation={5} sx={{  width: '100%', display: 'flex', flexDirection: 'row', justifyContent:'space-between', alignItems:'end', height:95, borderRadius:3 }}>
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
-        <OrderIcon number={number} shown={haveItem} doSomething={orderFunc} />
+        <OrderIcon number={number} shown={haveItem} doSomething={orderFunc} newOrder={newOrder} oldOrder={oldOrder} />
         <PriceTag price={price} />
         <Box sx={{ margin: 3 }}>
           <CalorieTag ceiling={ceilingOfCal} count={countOfCal} />
         </Box>
       </Box>
       <SubmitButton shown={canSubmit} doSomething={submitFunc} />
-    </Box>
+    </Paper>
 
   );
 }
