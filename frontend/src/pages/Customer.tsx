@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit, getCustomerOrder } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
@@ -52,6 +52,15 @@ const nextOrder =
   dishNumber: 5,
 }
 
+const ord = {
+  "orderList" : [
+      {
+          "dishId" : 1,
+          "title": "Chicken Grill",
+          "dishNumber": 1
+      }
+  ]
+}
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -126,6 +135,28 @@ const Customer: React.FC<{}> = () => {
     setOldOrder(orderList);
   }
 
+  const postOrder = async () => {
+    const order = {
+      'orderList': new Array
+    }
+    newOrder.map((item:any)=>{
+      if (item.dishNumber !== 0) {
+        const e = 
+          {
+            "dishId" : item.dishId,
+            "title": item.title,
+            "dishNumber": item.dishNumber
+        }
+        order.orderList.push(e);
+      }
+    });
+
+    console.log('post', order);
+    const message = await postCustomerOrder(order, id);
+    console.log('now is', message);
+    window.location.reload();
+  }
+
 
   // reload menu
   const resetMenu = (input1:
@@ -196,20 +227,21 @@ const Customer: React.FC<{}> = () => {
     } else {
       order[i].dishNumber = input?.dishNumber;
     };
-    setNewOrder(order);
+    
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
     order.map((element,index) => {
       if (element?.dishNumber === 0 && index !== 0 ) {
         order.splice(index, 1);
       };
-    })    
+    });
+    setNewOrder(order);  
   };
 
   // 提交订单函数
-  const confirmSubmit = (e: any) => {
-    setNumberOfItem(0);
-  };
+  // const confirmSubmit = (e: any) => {
+  //   setNumberOfItem(0);
+  // };
 
   // 更新总订单
   useEffect(() => {
@@ -300,7 +332,7 @@ const Customer: React.FC<{}> = () => {
               price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
-              submitFunc={() => confirmSubmit(newOrder)} 
+              submitFunc={() => postOrder()} 
               newOrder={newOrder}
               oldOrder={oldOrder}
               />
