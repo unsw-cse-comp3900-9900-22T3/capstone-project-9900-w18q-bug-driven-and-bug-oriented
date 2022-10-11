@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
@@ -23,6 +23,7 @@ const haveOrder = [
     calorie: 50,
     cost: 10,
     dishNumber: 1,
+    picture:'dishImg/img1.png'
   },
   {
     dishId: 2,
@@ -30,6 +31,7 @@ const haveOrder = [
     calorie: 40,
     cost: 5,
     dishNumber: 1,
+    picture:'dishImg/img2.png'
   },
   {
     dishId: 3,
@@ -37,6 +39,7 @@ const haveOrder = [
     calorie: 48,
     cost: 3,
     dishNumber: 1,
+    picture:'dishImg/img2.png'
   },
 ]
 
@@ -55,9 +58,7 @@ const Customer: React.FC<{}> = () => {
   const [id, setId] = useState('');
   const [nav, setNav] = useState<any>([]);
   const [menu, setMenu] = useState<any>([]);
-
   const [oldOrder, setOldOrder] = useState<any>([]);
-
   const [newOrder, setNewOrder] = useState<any>([]);
   const [totalOrder, setTotalOrder] = useState<any>([]);
   const [numberOfItem, setNumberOfItem] = useState(0);
@@ -70,6 +71,7 @@ const Customer: React.FC<{}> = () => {
     calorie: 0,
     cost: 0,
     dishNumber: 0,
+    picture:'',
   });
 
 
@@ -81,8 +83,8 @@ const Customer: React.FC<{}> = () => {
     const arr = location.pathname.split('/');
     setId(arr[2]);
     getInit(arr[2]);
+    getOrder(arr[2]);
   }, [])
-
 
 
   const getInit = async (e: any) => {
@@ -106,6 +108,24 @@ const Customer: React.FC<{}> = () => {
     }
   };
 
+  const getOrder = async (e:any) => {
+    const message = await getCustomerOrder(e);
+    console.log('get order',message);
+    const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
+    message.itemList.map((e: any) => {
+      const item = {
+        dishId: e.dishId,
+        title: e.title,
+        calorie: e.calorie,
+        cost: e.cost,
+        dishNumber: e.dishNumber,
+        picture: e.picture,
+      };
+      orderList.push(item);
+    });
+    setOldOrder(orderList);
+  }
+
 
   // reload menu
   const resetMenu = (input1:
@@ -115,6 +135,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture:string;
     }[], input2?:
       {
         dishId: number;
@@ -122,6 +143,7 @@ const Customer: React.FC<{}> = () => {
         calorie: number;
         cost: number;
         dishNumber: number;
+        picture:string;
       }[]) => {
     if (input2) {
       const newMenu = [...input2];
@@ -155,6 +177,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture:string;
     }) => {
     const order = [...newOrder];
     let flag = true;
@@ -172,12 +195,16 @@ const Customer: React.FC<{}> = () => {
       order.push(input);
     } else {
       order[i].dishNumber = input?.dishNumber;
-    }
+    };
     setNewOrder(order);
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
+    order.map((element,index) => {
+      if (element?.dishNumber === 0 && index !== 0 ) {
+        order.splice(index, 1);
+      };
+    })    
   };
-
 
   // 提交订单函数
   const confirmSubmit = (e: any) => {
@@ -215,6 +242,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture:string;
     }) => {
       tempcost = tempcost + e?.cost * e?.dishNumber;
       tempCal = tempCal + e?.calorie * e?.dishNumber;
@@ -253,12 +281,14 @@ const Customer: React.FC<{}> = () => {
                   </Grid>
                 )
               })}
-            
 
+
+              
             </Grid>
             {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
             <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button> */}
+
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
@@ -270,7 +300,10 @@ const Customer: React.FC<{}> = () => {
               price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
-              submitFunc={() => confirmSubmit(newOrder)} />
+              submitFunc={() => confirmSubmit(newOrder)} 
+              newOrder={newOrder}
+              oldOrder={oldOrder}
+              />
 
 
           </Box>

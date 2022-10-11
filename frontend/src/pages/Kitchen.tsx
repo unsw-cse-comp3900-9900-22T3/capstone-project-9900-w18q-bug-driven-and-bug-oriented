@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Box,
   Button,
   createTheme,
   ThemeProvider,
@@ -11,6 +12,7 @@ import DishCard from "../stories/customer/dishCard/DishCard";
 const theme = createTheme();
 
 const Kitchen: React.FC<{}> = () => {
+
   const navigate = useNavigate();
 
   const [dishInfo1, setDishInfo1] = React.useState<any>({});
@@ -20,6 +22,8 @@ const Kitchen: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>Kitchen page</div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      </Box>
 
     </ThemeProvider>
   );
