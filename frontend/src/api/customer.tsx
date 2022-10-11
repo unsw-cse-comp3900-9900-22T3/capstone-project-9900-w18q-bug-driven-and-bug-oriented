@@ -21,3 +21,12 @@ export const getCustomerOrder = async (a: string) => {
   const result = await apiClient.get(`/customer/${a}`)
   return result.data;
 };
+
+export const postCustomerOrder = async (a: 
+  {'orderList':[
+    {'dishId':number},
+  ]
+}) => {
+  const result = await apiClient.get(`/customer/${a}`)
+  return result.data;
+};
