@@ -91,7 +91,7 @@ class Orders(Base):
     orderTime = db.Column(db.DateTime)
     table = db.Column(db.INT, nullable=False)
     diner = db.Column(db.INT, nullable=False)
-    status = db.Column(db.String(45), nullable=False, default="wait")
+    status = db.Column(db.String(45), nullable=False, default="Wait")
     isPay = db.Column(db.Integer, nullable=False, default=0)
     payTime = db.Column(db.DateTime)
     orderitems = db.relationship("Orderitem", backref='orders')
@@ -104,7 +104,7 @@ class Orderitem(Base):
     dishId = db.Column(db.INT, nullable=False)
     orderId = db.Column(db.INT, db.ForeignKey("orders.orderId"))
     itemTime = db.Column(db.DateTime)
-    status = status = db.Column(db.String(45), nullable=False, default="wait")
+    status = status = db.Column(db.String(45), nullable=False, default="Wait")
 
 
 # 数据库查询query转为字典格式
@@ -166,24 +166,28 @@ def order_submit(order_id):
     if target_order.status == "Completed": # 如果当前订单显示completed，又有加菜的单子进来，要把状态改成processing
         Orders.query.filter_by(orderId=order_id).update({Orders.status: "Processing"})
         for dish in transfer_data["orderList"]:
-            if int(dish["number"]) > 1: # 如果显示该dish点的数量超过1，那就要生成多条数据
-                for i in range(0, int(dish["number"])):
+            if int(dish["dishNumber"]) > 1: # 如果显示该dish点的数量超过1，那就要生成多条数据
+                for i in range(0, int(dish["dishNumber"])):
                     item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                     objects.append(item_post)
+                    Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1})
             else: # 如果显示该dish点的数量为1，那就要生成1条数据
                 item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                 objects.append(item_post)
+                Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1}) # 点的菜的点单数量加1
         db.session.add_all(objects) # 多条dish的数据一起插入数据表中
         db.session.commit()
     else:
         for dish in transfer_data["orderList"]:
-            if int(dish["number"]) > 1:
-                for i in range(0, int(dish["number"])):
+            if int(dish["dishNumber"]) > 1:
+                for i in range(0, int(dish["dishNumber"])):
                     item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                     objects.append(item_post)
+                    Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1})
             else:
                 item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                 objects.append(item_post)
+                Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1})
         db.session.add_all(objects)
         db.session.commit()
     return Response(json.dumps(return_json), mimetype="application/json")
@@ -197,11 +201,11 @@ def get_order_detail(order_id):
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"])) # 排序
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"]) # 按照dishId聚类
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.get(key))
-        dish_info.pop("id") # 舍弃id
-        dish_info.pop("lastModified") # 舍弃修改时间
-        dish_info["dishNumber"] = len(list(group)) # 点的dish的数量
-        return_json.append(dish_info)
+        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+        dish_info[0].pop("id") # 舍弃id
+        dish_info[0].pop("lastModified") # 舍弃修改时间
+        dish_info[0]["dishNumber"] = len(list(group)) # 点的dish的数量
+        return_json.append(dish_info[0])
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
@@ -213,11 +217,11 @@ def get_bill(order_id):
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"])
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.get(key))
-        dish_info.pop("id")
-        dish_info.pop("lastModified")
-        dish_info["dishNumber"] = len(list(group))
-        return_json.append(dish_info)
+        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+        dish_info[0].pop("id")  # 舍弃id
+        dish_info[0].pop("lastModified")  # 舍弃修改时间
+        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
+        return_json.append(dish_info[0])
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
