@@ -26,9 +26,11 @@ const Kitchen: React.FC<{}> = () => {
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       </Box>
 
-      <OrderDetailBOx />
+      <OrderDetailBOx passObj = {setDishInfo1}/>
+      <Box> {JSON.stringify(dishInfo1)} </Box>
 
-      <OrderDetailBOx />
+      <OrderDetailBOx passObj = {setDishInfo2}/>
+      <Box> {JSON.stringify(dishInfo2)}  </Box>
 
     </ThemeProvider>
   );
