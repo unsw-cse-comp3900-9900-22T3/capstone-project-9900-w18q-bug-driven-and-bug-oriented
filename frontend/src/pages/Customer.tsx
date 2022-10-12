@@ -23,7 +23,7 @@ const haveOrder = [
     calorie: 50,
     cost: 10,
     dishNumber: 1,
-    picture:'dishImg/img1.png'
+    picture: 'dishImg/img1.png'
   },
   {
     dishId: 2,
@@ -31,7 +31,7 @@ const haveOrder = [
     calorie: 40,
     cost: 5,
     dishNumber: 1,
-    picture:'dishImg/img2.png'
+    picture: 'dishImg/img2.png'
   },
   {
     dishId: 3,
@@ -39,7 +39,7 @@ const haveOrder = [
     calorie: 48,
     cost: 3,
     dishNumber: 1,
-    picture:'dishImg/img2.png'
+    picture: 'dishImg/img2.png'
   },
 ]
 
@@ -53,12 +53,12 @@ const nextOrder =
 }
 
 const ord = {
-  "orderList" : [
-      {
-          "dishId" : 1,
-          "title": "Chicken Grill",
-          "dishNumber": 1
-      }
+  "orderList": [
+    {
+      "dishId": 1,
+      "title": "Chicken Grill",
+      "dishNumber": 1
+    }
   ]
 }
 
@@ -80,7 +80,7 @@ const Customer: React.FC<{}> = () => {
     calorie: 0,
     cost: 0,
     dishNumber: 0,
-    picture:'',
+    picture: '',
   });
 
 
@@ -93,6 +93,7 @@ const Customer: React.FC<{}> = () => {
     setId(arr[2]);
     getInit(arr[2]);
     getOrder(arr[2]);
+    getCategory();
   }, [])
 
 
@@ -101,7 +102,7 @@ const Customer: React.FC<{}> = () => {
     console.log('message', message);
     setNav(message.categoryList);
     setCeilingOfCal(message.diner * 2000);
-    setMenu(message.itemList);
+    // setMenu(message.itemList);
   };
 
   const getCategory = async () => {
@@ -117,9 +118,9 @@ const Customer: React.FC<{}> = () => {
     }
   };
 
-  const getOrder = async (e:any) => {
+  const getOrder = async (e: any) => {
     const message = await getCustomerOrder(e);
-    console.log('get order',message);
+    console.log('get order', message);
     const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
     message.itemList.map((e: any) => {
       const item = {
@@ -139,13 +140,13 @@ const Customer: React.FC<{}> = () => {
     const order = {
       'orderList': new Array
     }
-    newOrder.map((item:any)=>{
+    newOrder.map((item: any) => {
       if (item.dishNumber !== 0) {
-        const e = 
-          {
-            "dishId" : item.dishId,
-            "title": item.title,
-            "dishNumber": item.dishNumber
+        const e =
+        {
+          "dishId": item.dishId,
+          "title": item.title,
+          "dishNumber": item.dishNumber
         }
         order.orderList.push(e);
       }
@@ -154,7 +155,8 @@ const Customer: React.FC<{}> = () => {
     console.log('post', order);
     const message = await postCustomerOrder(order, id);
     console.log('now is', message);
-    window.location.reload();
+    // navigate(`/customer/${id}/hot`);
+    navigate(0);
   }
 
 
@@ -166,7 +168,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }[], input2?:
       {
         dishId: number;
@@ -174,7 +176,7 @@ const Customer: React.FC<{}> = () => {
         calorie: number;
         cost: number;
         dishNumber: number;
-        picture:string;
+        picture: string;
       }[]) => {
     if (input2) {
       const newMenu = [...input2];
@@ -208,7 +210,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }) => {
     const order = [...newOrder];
     let flag = true;
@@ -227,15 +229,15 @@ const Customer: React.FC<{}> = () => {
     } else {
       order[i].dishNumber = input?.dishNumber;
     };
-    
+
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
-    order.map((element,index) => {
-      if (element?.dishNumber === 0 && index !== 0 ) {
+    order.map((element, index) => {
+      if (element?.dishNumber === 0 && index !== 0) {
         order.splice(index, 1);
       };
     });
-    setNewOrder(order);  
+    setNewOrder(order);
   };
 
   // 提交订单函数
@@ -274,7 +276,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }) => {
       tempcost = tempcost + e?.cost * e?.dishNumber;
       tempCal = tempCal + e?.calorie * e?.dishNumber;
@@ -315,7 +317,7 @@ const Customer: React.FC<{}> = () => {
               })}
 
 
-              
+
             </Grid>
             {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
@@ -332,10 +334,10 @@ const Customer: React.FC<{}> = () => {
               price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
-              submitFunc={() => postOrder()} 
+              submitFunc={() => postOrder()}
               newOrder={newOrder}
               oldOrder={oldOrder}
-              />
+            />
 
 
           </Box>

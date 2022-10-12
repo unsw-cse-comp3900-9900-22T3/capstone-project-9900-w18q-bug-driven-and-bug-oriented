@@ -30,3 +30,8 @@ export const postCustomerOrder = async (a:
   const result = await apiClient.post(`/customer/${id}`, JSON.stringify(a));
   return result.data;
 };
+
+export const getCustomerBill = async (a: string) => {
+  const result = await apiClient.get(`/customer/${a}/bill`)
+  return result.data;
+};
