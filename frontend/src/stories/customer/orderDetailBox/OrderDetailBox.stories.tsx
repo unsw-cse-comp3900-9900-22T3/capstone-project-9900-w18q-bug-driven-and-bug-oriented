@@ -20,9 +20,6 @@ const Template: ComponentStory<typeof OrderDetailBox> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  props1: "111",
-  props2: "222",
-  props3: true,
   dishName: 'Chicken Grill',
   description: 'It is one of the mot iconic and well-recognized fast food out there.',
   ingredients: 'Meat, vegetable',

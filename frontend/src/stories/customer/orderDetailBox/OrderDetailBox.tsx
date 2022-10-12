@@ -7,13 +7,6 @@ import AddNumberBox from "../dishCard/AddNumberBox";
 
 // 声明变量的数据格式
 interface ListProps {
-  //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
-  //预留空函数
-  doSomething?: (params: any) => any;
-
   dishId?: string;
   dishName?: string;
   description?: string;
@@ -28,11 +21,6 @@ interface ListProps {
 // 别忘了修改函数名
 export default function OrderDetailBox({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
-  doSomething,
-
   dishId = '123',
   dishName = 'Chicken Grill',
   description = 'It is one of the mot iconic and well-recognized fast food out there.',
@@ -45,11 +33,20 @@ export default function OrderDetailBox({
   ...props
 }: ListProps) {
 
-  const [dishNum, setDishNum] = React.useState(0);
+  const [dishNum, setDishNum] = React.useState(initDishNum);
 
-  React.useEffect(() => {
-    setDishNum(0);
-  }, [initDishNum]);
+  const changeDishNum = (newDishNum : number) => {
+    setDishNum(newDishNum);
+    const obj = {
+      dishId: dishId,
+      title: dishName,
+      calorie: calories,
+      cost: price,
+      dishNumber: newDishNum,
+      picture: picture,
+    };
+    passObj(obj);
+  };
 
   return (
     <>
@@ -74,7 +71,7 @@ export default function OrderDetailBox({
         </Box>
 
         <Box sx={{mt:5}}>
-          <AddNumberBox passNum={setDishNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
+          <AddNumberBox passNum={changeDishNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
         </Box>
       </Box>
 
