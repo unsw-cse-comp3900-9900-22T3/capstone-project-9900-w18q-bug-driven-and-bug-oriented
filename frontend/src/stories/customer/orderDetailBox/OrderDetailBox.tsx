@@ -1,6 +1,7 @@
 import { Box } from "@mui/system";
-import React from "react";
+import * as React from 'react';
 import { Button } from "@mui/material";
+
 
 import AddNumberBox from "../dishCard/AddNumberBox";
 
@@ -25,7 +26,7 @@ interface ListProps {
 }
 
 // 别忘了修改函数名
-export default function orderDetailBox({
+export default function OrderDetailBox({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   props1 = '',
   props2 = '',
@@ -43,6 +44,13 @@ export default function orderDetailBox({
   passObj = () => { },
   ...props
 }: ListProps) {
+
+  const [dishNum, setDishNum] = React.useState(0);
+
+  React.useEffect(() => {
+    setDishNum(0);
+  }, [initDishNum]);
+
   return (
     <>
       <Box display='flex' justifyContent='space-between' sx={{width:1320, height: 110, alignContent: 'center'}}>
@@ -55,7 +63,7 @@ export default function orderDetailBox({
               {dishName}
             </Box>
             <Box display='flex' sx={{m: 2}}>
-              <Box sx={{px: 1, py: 0.5}}>
+              <Box sx={{px: 0.5, py: 0.5}}>
                 ${price}
               </Box>
               <Box sx={{backgroundColor: '#ffe3d9', color: '#fb7140', mx: 2, px: 1, py: 0.5, borderRadius:2}}>
@@ -65,14 +73,11 @@ export default function orderDetailBox({
           </Box>
         </Box>
 
-        <Box display='flex' sx={{p: 1}}>
-          <AddNumberBox />
+        <Box sx={{mt:5}}>
+          <AddNumberBox passNum={setDishNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
         </Box>
       </Box>
 
-
-      <Button>{props2}</Button>
-      <div>{props3}</div>
     </>
   );
 }

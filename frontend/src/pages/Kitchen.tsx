@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import DishCard from "../stories/customer/dishCard/DishCard";
+import OrderDetailBOx from "../stories/customer/orderDetailBox/OrderDetailBox";
 
 const theme = createTheme();
 
@@ -24,6 +25,10 @@ const Kitchen: React.FC<{}> = () => {
       <div>Kitchen page</div>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       </Box>
+
+      <OrderDetailBOx />
+
+      <OrderDetailBOx />
 
     </ThemeProvider>
   );
