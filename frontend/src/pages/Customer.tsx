@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit, getCustomerOrder } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
@@ -23,7 +23,7 @@ const haveOrder = [
     calorie: 50,
     cost: 10,
     dishNumber: 1,
-    picture:'dishImg/img1.png'
+    picture: 'dishImg/img1.png'
   },
   {
     dishId: 2,
@@ -31,7 +31,7 @@ const haveOrder = [
     calorie: 40,
     cost: 5,
     dishNumber: 1,
-    picture:'dishImg/img2.png'
+    picture: 'dishImg/img2.png'
   },
   {
     dishId: 3,
@@ -39,7 +39,7 @@ const haveOrder = [
     calorie: 48,
     cost: 3,
     dishNumber: 1,
-    picture:'dishImg/img2.png'
+    picture: 'dishImg/img2.png'
   },
 ]
 
@@ -52,6 +52,15 @@ const nextOrder =
   dishNumber: 5,
 }
 
+const ord = {
+  "orderList": [
+    {
+      "dishId": 1,
+      "title": "Chicken Grill",
+      "dishNumber": 1
+    }
+  ]
+}
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -71,7 +80,7 @@ const Customer: React.FC<{}> = () => {
     calorie: 0,
     cost: 0,
     dishNumber: 0,
-    picture:'',
+    picture: '',
   });
 
 
@@ -84,6 +93,7 @@ const Customer: React.FC<{}> = () => {
     setId(arr[2]);
     getInit(arr[2]);
     getOrder(arr[2]);
+    getCategory();
   }, [])
 
 
@@ -92,7 +102,11 @@ const Customer: React.FC<{}> = () => {
     console.log('message', message);
     setNav(message.categoryList);
     setCeilingOfCal(message.diner * 2000);
-    setMenu(message.itemList);
+    // setMenu(message.itemList);
+  };
+
+  const askHelp = () => {
+    console.log('ask for help', id);
   };
 
   const getCategory = async () => {
@@ -108,9 +122,9 @@ const Customer: React.FC<{}> = () => {
     }
   };
 
-  const getOrder = async (e:any) => {
+  const getOrder = async (e: any) => {
     const message = await getCustomerOrder(e);
-    console.log('get order',message);
+    console.log('get order', message);
     const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
     message.itemList.map((e: any) => {
       const item = {
@@ -126,6 +140,29 @@ const Customer: React.FC<{}> = () => {
     setOldOrder(orderList);
   }
 
+  const postOrder = async () => {
+    const order = {
+      'orderList': new Array
+    }
+    newOrder.map((item: any) => {
+      if (item.dishNumber !== 0) {
+        const e =
+        {
+          "dishId": item.dishId,
+          "title": item.title,
+          "dishNumber": item.dishNumber
+        }
+        order.orderList.push(e);
+      }
+    });
+
+    console.log('post', order);
+    const message = await postCustomerOrder(order, id);
+    console.log('now is', message);
+    // navigate(`/customer/${id}/hot`);
+    navigate(0);
+  }
+
 
   // reload menu
   const resetMenu = (input1:
@@ -135,7 +172,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }[], input2?:
       {
         dishId: number;
@@ -143,7 +180,7 @@ const Customer: React.FC<{}> = () => {
         calorie: number;
         cost: number;
         dishNumber: number;
-        picture:string;
+        picture: string;
       }[]) => {
     if (input2) {
       const newMenu = [...input2];
@@ -177,7 +214,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }) => {
     const order = [...newOrder];
     let flag = true;
@@ -196,20 +233,21 @@ const Customer: React.FC<{}> = () => {
     } else {
       order[i].dishNumber = input?.dishNumber;
     };
-    setNewOrder(order);
+
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
-    order.map((element,index) => {
-      if (element?.dishNumber === 0 && index !== 0 ) {
+    order.map((element, index) => {
+      if (element?.dishNumber === 0 && index !== 0) {
         order.splice(index, 1);
       };
-    })    
+    });
+    setNewOrder(order);
   };
 
   // 提交订单函数
-  const confirmSubmit = (e: any) => {
-    setNumberOfItem(0);
-  };
+  // const confirmSubmit = (e: any) => {
+  //   setNumberOfItem(0);
+  // };
 
   // 更新总订单
   useEffect(() => {
@@ -242,7 +280,7 @@ const Customer: React.FC<{}> = () => {
       calorie: number;
       cost: number;
       dishNumber: number;
-      picture:string;
+      picture: string;
     }) => {
       tempcost = tempcost + e?.cost * e?.dishNumber;
       tempCal = tempCal + e?.calorie * e?.dishNumber;
@@ -256,7 +294,7 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
+          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1900 }} >
@@ -283,7 +321,7 @@ const Customer: React.FC<{}> = () => {
               })}
 
 
-              
+
             </Grid>
             {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
             <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
@@ -300,10 +338,10 @@ const Customer: React.FC<{}> = () => {
               price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
-              submitFunc={() => confirmSubmit(newOrder)} 
+              submitFunc={() => postOrder()}
               newOrder={newOrder}
               oldOrder={oldOrder}
-              />
+            />
 
 
           </Box>

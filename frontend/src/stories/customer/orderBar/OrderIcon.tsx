@@ -2,6 +2,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { Button, Divider, Fade, Menu, MenuItem, Paper, Popover, Popper, Typography } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from "react-router-dom";
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
@@ -51,6 +52,12 @@ export default function OrderIcon({
 
   const canBeOpen = open && Boolean(anchorEl);
   const id = canBeOpen ? 'transition-popper' : undefined;
+  const navigate = useNavigate();
+
+  const toBill = () => {
+    const arr = location.pathname.split('/');
+    navigate(`/customer/${arr[2]}/bill`);
+  };
 
   return (
     <>
@@ -120,7 +127,9 @@ export default function OrderIcon({
                 <Paper elevation={0} sx={{ width: 'calc(100vw - 320px)', height: 'calc(100vh - 95px)', display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{ m: 5, mt: 0 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
-                      <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>Your Order</Typography>
+                      <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
+                        Your Order
+                      </Typography>
                     </Box>
                     {(oldOrder?.length !== 0 && newOrder?.length !== 1) && (
                       <>
@@ -151,6 +160,7 @@ export default function OrderIcon({
                                   {(index !== newOrder.length - 1) && (
                                     <Divider sx={{ my: 2 }} />
                                   )}
+
                                 </>
                               )}
 
@@ -168,9 +178,33 @@ export default function OrderIcon({
                               {(index !== oldOrder.length - 1) && (
                                 <Divider sx={{ my: 2 }} />
                               )}
+
                             </>
                           )
                         })}
+                        <Divider sx={{
+                          mt: 5, backgroundColor: '#000000',
+                          mx: 5
+                        }}>
+                        </Divider>
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
+                              <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
+                                Thanks for your order!
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
+                              <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
+                                Check now? Click here: <Button onClick={() => toBill()}> bill</Button>
+                              </Typography>
+                            </Box>
+                          </Box>
+
+                        </Box>
+
+
+
                       </>
                     )}
                     {(oldOrder?.length === 0 && newOrder?.length !== 1) && (

@@ -20,7 +20,7 @@ const Manager: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='manager' doSomething={() => { }} />
+          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
         </Box>
 
 

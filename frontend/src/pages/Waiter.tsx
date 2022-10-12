@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import NavButton from "../stories/NavButton";
+import Logout from "../stories/Logout";
 
 
 const theme = createTheme();
@@ -49,6 +50,10 @@ const Waiter: React.FC<{}> = () => {
             {show === 'order' && (
               <NavButton item='order' selected number={numOfOrder} />
             )}
+          </Box>
+          <Box sx={{display:'flex', height:'100%',}}></Box>
+          <Box sx={{display:'flex', justifyContent:'center', alignItems:'end', mb:5}}>
+             <Logout/>
           </Box>
 
         </Box>

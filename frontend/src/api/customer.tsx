@@ -12,7 +12,7 @@ export const getCustomerInit = async (a: string) => {
   return result.data;
 };
 
-export const getCustomerCategory = async (a: string, b:string) => {
+export const getCustomerCategory = async (a: string, b: string) => {
   const result = await apiClient.get(`/customer/${a}/${b}`)
   return result.data;
 };
@@ -22,11 +22,16 @@ export const getCustomerOrder = async (a: string) => {
   return result.data;
 };
 
-export const postCustomerOrder = async (a: 
-  {'orderList':[
-    {'dishId':number},
-  ]
-}) => {
-  const result = await apiClient.get(`/customer/${a}`)
+export const postCustomerOrder = async (a:
+  {
+    'orderList': any
+  },
+  id: string) => {
+  const result = await apiClient.post(`/customer/${id}`, JSON.stringify(a));
+  return result.data;
+};
+
+export const getCustomerBill = async (a: string) => {
+  const result = await apiClient.get(`/customer/${a}/bill`)
   return result.data;
 };
