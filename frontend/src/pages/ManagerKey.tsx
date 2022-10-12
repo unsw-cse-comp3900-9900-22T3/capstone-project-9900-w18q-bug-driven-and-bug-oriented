@@ -16,7 +16,7 @@ const ManagerKey: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-        <NavBar role='manager' doSomething={()=>{}} />
+        <NavBar role='manager' doSomething={()=>{}} postRequest={() => { }} />
         
         <div>ManagerKey page</div>
       </Box>

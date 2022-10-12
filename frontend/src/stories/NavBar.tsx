@@ -19,6 +19,7 @@ interface ListProps {
   id?: string;
   //预留空函数
   doSomething: (params: any) => any;
+  postRequest: (params: any) => any;
 
 }
 
@@ -30,12 +31,14 @@ export default function NavBar({
   role = '',
   id = '',
   doSomething,
+  postRequest,
 
   ...props
 }: ListProps) {
 
   const location = useLocation();
   const navigate = useNavigate();
+
 
   return (
     <>
@@ -69,12 +72,12 @@ export default function NavBar({
               )
             })}
           </Box>
-          <Box sx={{display:'flex', height:'100%',}}></Box>
-          <Box sx={{display:'flex', justifyContent:'center', alignItems:'end', mb:3}}>
-             <AskHelpButton/>
+          <Box sx={{ display: 'flex', height: '100%', }}></Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 3 }}>
+            <AskHelpButton doSomething={postRequest} />
           </Box>
-          <Box sx={{display:'flex', justifyContent:'center', alignItems:'end', mb:10}}>
-             <Logout/>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
+            <Logout />
           </Box>
 
         </Box>
@@ -129,9 +132,9 @@ export default function NavBar({
             )}
 
           </Box>
-          <Box sx={{display:'flex', height:'100%',}}></Box>
-          <Box sx={{display:'flex', justifyContent:'center', alignItems:'end', mb:10}}>
-             <Logout/>
+          <Box sx={{ display: 'flex', height: '100%', }}></Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
+            <Logout />
           </Box>
 
         </Box>
@@ -142,11 +145,11 @@ export default function NavBar({
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
             Customer
           </Typography>
-          <Box sx={{display:'flex', height:'100%',}}></Box>
-          <Box sx={{display:'flex', justifyContent:'center', alignItems:'end', mb:10}}>
-             <Logout/>
+          <Box sx={{ display: 'flex', height: '100%', }}></Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 10 }}>
+            <Logout />
           </Box>
-         
+
 
         </Box>
       )}

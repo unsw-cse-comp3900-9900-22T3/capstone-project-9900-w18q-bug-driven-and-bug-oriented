@@ -6,7 +6,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 // 声明变量的数据格式
 interface ListProps {
   //预留空函数
-  doSomething?: (params: any) => any;
+  doSomething: (params: any) => any;
 }
 
 export default function Template({
@@ -14,14 +14,14 @@ export default function Template({
   doSomething,
   ...props
 }: ListProps) {
-  
+
   const [openInitWin, setOpenInitWin] = React.useState(false);
   const [openNoticeWin, setOpenNoticeWin] = React.useState(false);
 
   const [lastClickTime, setTime] = React.useState(0);
-  
 
-  const handleClick = () => {
+
+  const handleClick = (e: any) => {
     setOpenInitWin(false);
     setOpenNoticeWin(false);
 
@@ -30,12 +30,14 @@ export default function Template({
     if (lastClickTime === 0) {
       setTime(nowTime.getTime());
       setOpenInitWin(true);
+      doSomething(e);
       return;
     }
 
-    if ( nowTime.getTime() - lastClickTime > 30 * 1000 ) {
+    if (nowTime.getTime() - lastClickTime > 30 * 1000) {
       setTime(nowTime.getTime());
       setOpenInitWin(true);
+      doSomething(e);
       return;
     }
     else {
@@ -57,30 +59,43 @@ export default function Template({
     }
     setOpenNoticeWin(false);
   };
-  
-  
+
+
   return (
     <>
-      <Button 
-        sx={{ borderRadius: 3 }}
+      <Button
+        sx={{ borderRadius: 3, width: 250 }}
         variant="contained"
         color="warning"
         startIcon={<HelpOutlineIcon />}
         size="large"
         onClick={handleClick}
-        >
+      >
         Ask for help
       </Button>
-      
-      <Snackbar open={openInitWin} autoHideDuration={5000} onClose={handleCloseInitWin}>
-        <Alert onClose={handleCloseInitWin} severity="success" sx={{ width: '100%'}}>
+
+      <Snackbar open={openInitWin}
+        autoHideDuration={5000}
+        onClose={handleCloseInitWin}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseInitWin}
+          severity="success"
+          sx={{
+            width: '100%'
+          }}
+        >
           Thanks for waiting! Waiter will come soon.
         </Alert>
       </Snackbar>
 
-      <Snackbar open={openNoticeWin} autoHideDuration={5000} onClose={handleCloseNoticeWin}>
-        <Alert onClose={handleCloseNoticeWin} severity="info" sx={{ width: '100%'}}>
-          Waiter is coming!
+      <Snackbar open={openNoticeWin}
+        autoHideDuration={5000}
+        onClose={handleCloseNoticeWin}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseNoticeWin} severity="info" sx={{ width: '100%' }}>
+          Waiter is coming, please wait.
         </Alert>
       </Snackbar>
 

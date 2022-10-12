@@ -105,6 +105,10 @@ const Customer: React.FC<{}> = () => {
     // setMenu(message.itemList);
   };
 
+  const askHelp = () => {
+    console.log('ask for help', id);
+  };
+
   const getCategory = async () => {
     const arr = location.pathname.split('/');
     if (arr[3] !== 'hot') {
@@ -290,7 +294,7 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
+          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1900 }} >

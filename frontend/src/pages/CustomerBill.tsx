@@ -39,7 +39,7 @@ const CustomerBill: React.FC<{}> = () => {
     console.log('message', message);
     setBill(message.itemList);
     let cost = 0;
-    message.itemList.map((item: { cost: number; dishNumber: number; })=>{
+    message.itemList.map((item: { cost: number; dishNumber: number; }) => {
       cost = cost + item.cost * item.dishNumber;
     });
     setPrice(cost);
@@ -54,9 +54,9 @@ const CustomerBill: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='bill' doSomething={() => { }} />
+          <NavBar role='bill' doSomething={() => { }} postRequest={() => { }} />
         </Box>
-        
+
 
         <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center' }}>
           <Box sx={{ display: 'flex', m: 10, flexDirection: 'column' }}>
@@ -79,7 +79,7 @@ const CustomerBill: React.FC<{}> = () => {
               })}
               <Divider sx={{
                 mt: 5, backgroundColor: '#000000',
-                mx: 5, mb:3
+                mx: 5, mb: 3
               }}>
               </Divider>
               <Typography variant="h6" sx={{ display: 'flex', color: '#626264' }} >
@@ -87,11 +87,11 @@ const CustomerBill: React.FC<{}> = () => {
               </Typography>
               <Typography variant="h4" sx={{ display: 'flex', color: '#626264', justifyContent: 'right', m: 3 }} >
                 Total:
-                <Box sx={{display:'flex', ml:2}} >
-                  <Typography variant="h5" sx={{ display: 'flex', color: '#000000',mt:1 }} >
+                <Box sx={{ display: 'flex', ml: 2 }} >
+                  <Typography variant="h5" sx={{ display: 'flex', color: '#000000', mt: 1 }} >
                     $
                   </Typography>
-                  <Typography variant="h3" sx={{ display: 'flex', color: '#000000', mt:-1 }} >
+                  <Typography variant="h3" sx={{ display: 'flex', color: '#000000', mt: -1 }} >
                     {Number(price.toFixed(2))}
                   </Typography>
                 </Box>
