@@ -65,7 +65,7 @@ export default function Logout({
               backgroundColor: '#8475B0',
             }
           }}>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', ml:-2 }}>
               <KeyboardBackspaceIcon sx={{ color: '#ffffff' }} />
               <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 1, fontSize: 16 }}>
                 Log out
@@ -124,7 +124,7 @@ export default function Logout({
               backgroundColor: '#8475B0',
             }
           }}>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', ml:-2 }}>
               <KeyboardBackspaceIcon sx={{ color: '#ffffff' }} />
               <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 1, fontSize: 16 }}>
                 Back
