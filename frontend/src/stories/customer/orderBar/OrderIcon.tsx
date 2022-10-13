@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Divider, Fade, Menu, MenuItem, Paper, Popover, Popper, Typography } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from "react-router-dom";
+import OrderDetailBox from "../orderDetailBox/OrderDetailBox";
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
@@ -124,7 +125,7 @@ export default function OrderIcon({
           >
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={250}>
-                <Paper elevation={0} sx={{ width: 'calc(100vw - 320px)', height: 'calc(100vh - 95px)', display: 'flex', flexDirection: 'column' }}>
+                <Paper elevation={0} sx={{ width: 'calc(100vw - 320px)', height: 'calc(100vh - 95px)', display: 'flex', flexDirection: 'column', overflow: "auto" }}>
                   <Box sx={{ m: 5, mt: 0 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
                       <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
@@ -136,9 +137,21 @@ export default function OrderIcon({
                         {oldOrder?.map((item, index) => {
                           return (
                             <>
-                              <div>{JSON.stringify(item)}</div>
+                              <Box sx={{ mx: 5 }}>
+                                <OrderDetailBox
+                                  dishId={item.dishId}
+                                  dishName={item.title}
+                                  price={item.cost}
+                                  calories={item.calorie}
+                                  picture={item.picture}
+                                  status='submit'
+                                  initDishNum={item.dishNumber}
+                                />
+                              </Box>
+
+                              {/* <div>{JSON.stringify(item)}</div> */}
                               {(index !== oldOrder.length - 1) && (
-                                <Divider sx={{ my: 2 }} />
+                                <Divider sx={{ my: 2, mx: 4 }} />
                               )}
                             </>
                           )
@@ -156,10 +169,23 @@ export default function OrderIcon({
                             <>
                               {item.dishNumber !== 0 && (
                                 <>
-                                  <div>{JSON.stringify(item)}</div>
-                                  {(index !== newOrder.length - 1) && (
-                                    <Divider sx={{ my: 2 }} />
-                                  )}
+                                  <Box sx={{ mx: 5 }}>
+                                    <OrderDetailBox
+                                      dishId={item.dishId}
+                                      dishName={item.title}
+                                      price={item.cost}
+                                      calories={item.calorie}
+                                      picture={item.picture}
+                                      status='check'
+                                      initDishNum={item.dishNumber}
+                                      passObj={doSomething}
+                                    />
+                                    {/* <div>{JSON.stringify(item)}</div> */}
+                                    {(index !== newOrder.length - 1) && (
+                                      <Divider sx={{ my: 2, mx: 4 }} />
+                                    )}
+                                  </Box>
+
 
                                 </>
                               )}
@@ -174,11 +200,21 @@ export default function OrderIcon({
                         {oldOrder?.map((item, index) => {
                           return (
                             <>
-                              <div>{JSON.stringify(item)}</div>
-                              {(index !== oldOrder.length - 1) && (
-                                <Divider sx={{ my: 2 }} />
-                              )}
-
+                              <Box sx={{ mx: 5 }}>
+                                <OrderDetailBox
+                                  dishId={item.dishId}
+                                  dishName={item.title}
+                                  price={item.cost}
+                                  calories={item.calorie}
+                                  picture={item.picture}
+                                  status='submit'
+                                  initDishNum={item.dishNumber}
+                                />
+                                {/* <div>{JSON.stringify(item)}</div> */}
+                                {(index !== oldOrder.length - 1) && (
+                                  <Divider sx={{ my: 2, mx: 4 }} />
+                                )}
+                              </Box>
                             </>
                           )
                         })}
@@ -214,10 +250,23 @@ export default function OrderIcon({
                             <>
                               {item.dishNumber !== 0 && (
                                 <>
-                                  <div>{JSON.stringify(item)}</div>
-                                  {(index !== newOrder.length - 1) && (
-                                    <Divider sx={{ my: 2 }} />
-                                  )}
+                                  <Box sx={{ mx: 5 }}>
+                                    <OrderDetailBox
+                                      dishId={item.dishId}
+                                      dishName={item.title}
+                                      price={item.cost}
+                                      calories={item.calorie}
+                                      picture={item.picture}
+                                      status='check'
+                                      initDishNum={item.dishNumber}
+                                      passObj={doSomething}
+                                    />
+                                    {/* <div>{JSON.stringify(item)}</div> */}
+                                    {(index !== newOrder.length - 1) && (
+                                      <Divider sx={{ my: 2, mx: 4 }} />
+                                    )}
+                                  </Box>
+
                                 </>
                               )}
 
@@ -234,13 +283,8 @@ export default function OrderIcon({
                 </Paper>
               </Fade>
             )}
-
-
           </Popper>
-
-
         </Box>
-
       )}
 
       {!shown && (

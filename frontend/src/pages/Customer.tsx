@@ -341,6 +341,7 @@ const Customer: React.FC<{}> = () => {
               submitFunc={() => postOrder()}
               newOrder={newOrder}
               oldOrder={oldOrder}
+              orderFunc={setNewEdit}
             />
 
 

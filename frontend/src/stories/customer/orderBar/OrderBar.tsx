@@ -18,6 +18,7 @@ interface ListProps {
   //预留空函数
   orderFunc?: (params: any) => any;
   submitFunc: (params: any) => any;
+  editFunc?: (params: any) => any;
   oldOrder?:
     {
       dishId: number,
@@ -48,6 +49,7 @@ export default function OrderBar({
   countOfCal = 0,
   orderFunc,
   submitFunc,
+  editFunc,
   oldOrder,
   newOrder,
 
@@ -55,9 +57,9 @@ export default function OrderBar({
 }: ListProps) {
 
   return (
-    <Paper elevation={5} sx={{  width: '100%', display: 'flex', flexDirection: 'row', justifyContent:'space-between', alignItems:'end', height:95, borderRadius:3 }}>
+    <Paper elevation={5} sx={{  width: 'calc(100vw - 320px)', display: 'flex', flexDirection: 'row', justifyContent:'space-between', alignItems:'end', height:95, borderRadius:3 }}>
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
-        <OrderIcon number={number} shown={haveItem} doSomething={orderFunc} newOrder={newOrder} oldOrder={oldOrder} />
+        <OrderIcon number={number} shown={haveItem} doSomething={orderFunc} newOrder={newOrder} oldOrder={oldOrder}  />
         <PriceTag price={price} />
         <Box sx={{ margin: 3 }}>
           <CalorieTag ceiling={ceilingOfCal} count={countOfCal} />

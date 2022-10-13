@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import { getCustomerBill } from "../api/customer";
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import OrderDetailBox from "../stories/customer/orderDetailBox/OrderDetailBox";
 
 const theme = createTheme();
 const id = '123';
@@ -59,18 +60,27 @@ const CustomerBill: React.FC<{}> = () => {
 
 
         <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center' }}>
-          <Box sx={{ display: 'flex', m: 10, flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', m: 10, flexDirection: 'column', width:'100%' }}>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 5 }}>
               <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
                 Your Order
               </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: "auto",width:'100%' }}>
               {bill?.map((item: any, index: number) => {
                 return (
                   <>
-                    <div>{JSON.stringify(item)}</div>
+                    <OrderDetailBox
+                      dishId={item.dishId}
+                      dishName={item.title}
+                      price={item.cost}
+                      calories={item.calorie}
+                      picture={item.picture}
+                      status='bill'
+                      initDishNum={item.dishNumber}
+                    />
+                    {/* <div>{JSON.stringify(item)}</div> */}
                     {(index !== bill.length - 1) && (
                       <Divider sx={{ my: 2 }} />
                     )}
