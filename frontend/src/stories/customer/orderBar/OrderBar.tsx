@@ -61,7 +61,7 @@ export default function OrderBar({
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
         <OrderIcon number={number} shown={haveItem} doSomething={orderFunc} newOrder={newOrder} oldOrder={oldOrder}  />
         <PriceTag price={price} />
-        <Box sx={{ margin: 3 }}>
+        <Box sx={{ margin: 2.5 }}>
           <CalorieTag ceiling={ceilingOfCal} count={countOfCal} />
         </Box>
       </Box>
