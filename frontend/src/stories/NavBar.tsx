@@ -77,7 +77,7 @@ export default function NavBar({
             <AskHelpButton doSomething={postRequest} />
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
-            <Logout />
+            <Logout status="back"/>
           </Box>
 
         </Box>
@@ -134,7 +134,7 @@ export default function NavBar({
           </Box>
           <Box sx={{ display: 'flex', height: '100%', }}></Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
-            <Logout />
+            <Logout status="logout"/>
           </Box>
 
         </Box>
@@ -147,7 +147,7 @@ export default function NavBar({
           </Typography>
           <Box sx={{ display: 'flex', height: '100%', }}></Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 10 }}>
-            <Logout />
+            <Logout status="back"/>
           </Box>
 
 
