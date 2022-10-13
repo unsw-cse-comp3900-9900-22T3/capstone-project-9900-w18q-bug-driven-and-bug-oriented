@@ -63,7 +63,12 @@ export default function OrderBar({
   const [checked, setChecked] = React.useState(false);
 
   const handleChange = () => {
-    setChecked((prev) => !prev);
+    if (checked) {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    };
+    
   };
 
   const navigate = useNavigate();
@@ -75,7 +80,7 @@ export default function OrderBar({
   return (
     <Box sx={{ width: '100%', display:'flex',flexDirection:'column' }}>
       <Collapse in={checked}>
-        <Paper elevation={0} sx={{ width: '100%', height: 'calc(100vh - 95px)', display: 'flex', flexDirection: 'column', overflow: "auto" }}>
+        <Paper elevation={3} sx={{ width: '100%', height: 'calc(100vh - 135px)', display: 'flex', flexDirection: 'column', overflow: "auto", borderTopLeftRadius:15, borderTopRightRadius:15}}>
           <Box sx={{ m: 5, mt: 0 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
               <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
@@ -233,7 +238,7 @@ export default function OrderBar({
 
         </Paper>
       </Collapse>
-      <Paper elevation={5} sx={{ width: 'calc(100vw - 320px)', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'end', height: 95, borderRadius: 3 }}>
+      <Paper elevation={5} sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'end', height: 95, borderRadius: 3 }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
           <OrderIcon number={number} shown={haveItem} doSomething={handleChange} />
           <PriceTag price={price} />
