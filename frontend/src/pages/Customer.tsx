@@ -329,7 +329,7 @@ const Customer: React.FC<{}> = () => {
 
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position:'relative', zIndex:50 }}>
 
             <OrderBar
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
