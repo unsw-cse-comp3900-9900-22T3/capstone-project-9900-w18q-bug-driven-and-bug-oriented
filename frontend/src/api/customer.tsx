@@ -8,17 +8,17 @@ interface input1 {
 }
 
 export const getCustomerInit = async (a: string) => {
-  const result = await apiClient.get(`/customer/${a}/hot`)
+  const result = await apiClient.get(`/customer/${a}/hot`);
   return result.data;
 };
 
 export const getCustomerCategory = async (a: string, b: string) => {
-  const result = await apiClient.get(`/customer/${a}/${b}`)
+  const result = await apiClient.get(`/customer/${a}/${b}`);
   return result.data;
 };
 
 export const getCustomerOrder = async (a: string) => {
-  const result = await apiClient.get(`/customer/${a}`)
+  const result = await apiClient.get(`/customer/${a}`);
   return result.data;
 };
 
@@ -32,6 +32,6 @@ export const postCustomerOrder = async (a:
 };
 
 export const getCustomerBill = async (a: string) => {
-  const result = await apiClient.get(`/customer/${a}/bill`)
+  const result = await apiClient.get(`/customer/${a}/bill`);
   return result.data;
 };
