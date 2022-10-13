@@ -1,10 +1,11 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button, Divider, Fade, Menu, MenuItem, Paper, Popover, Popper, Typography } from "@mui/material";
+import { Button, Collapse, Divider, Fade, Menu, MenuItem, Paper, Popover, Popper, Slide, Typography } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from "react-router-dom";
 import OrderDetailBox from "../orderDetailBox/OrderDetailBox";
 import CheckBillButton from "./CheckBillButton";
+import { TransitionProps } from "@mui/material/transitions";
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
@@ -12,24 +13,10 @@ interface ListProps {
   shown?: boolean;
   //预留空函数
   doSomething?: (params: any) => any;
-  oldOrder?: {
-    dishId: number,
-    title: string,
-    calorie: number,
-    cost: number,
-    dishNumber: number,
-    picture: string
-  }[];
-  newOrder?: {
-    dishId: number,
-    title: string,
-    calorie: number,
-    cost: number,
-    dishNumber: number,
-    picture: string
-  }[];
 
 }
+
+
 
 // 别忘了修改函数名
 export default function OrderIcon({
@@ -37,8 +24,6 @@ export default function OrderIcon({
   number = 1,
   shown = false,
   doSomething,
-  oldOrder,
-  newOrder,
 
   ...props
 }: ListProps) {
@@ -47,19 +32,6 @@ export default function OrderIcon({
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen((previousOpen) => !previousOpen);
-  };
-
-  const canBeOpen = open && Boolean(anchorEl);
-  const id = canBeOpen ? 'transition-popper' : undefined;
-  const navigate = useNavigate();
-
-  const toBill = () => {
-    const arr = location.pathname.split('/');
-    navigate(`/customer/${arr[2]}/bill`);
-  };
 
   return (
     <>
@@ -107,187 +79,10 @@ export default function OrderIcon({
               backgroundColor: '#8475B0',
             }
           }}
-            aria-describedby={id}
-            onClick={handleClick}
+            onClick={doSomething}
           >
             <ShoppingCartIcon sx={{ color: '#ffffff', height: 70, width: 70 }} />
           </Button>
-          <Popper
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-
-            placement="top-start"
-
-            sx={{
-              zIndex: 20,
-            }}
-            transition
-          >
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={250}>
-                <Paper elevation={0} sx={{ width: 'calc(100vw - 320px)', height: 'calc(100vh - 95px)', display: 'flex', flexDirection: 'column', overflow: "auto" }}>
-                  <Box sx={{ m: 5, mt: 0 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
-                      <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
-                        Your Order
-                      </Typography>
-                    </Box>
-                    {(oldOrder?.length !== 0 && newOrder?.length !== 1) && (
-                      <>
-                        {oldOrder?.map((item, index) => {
-                          return (
-                            <>
-                              <Box sx={{ mx: 5 }}>
-                                <OrderDetailBox
-                                  dishId={item.dishId}
-                                  dishName={item.title}
-                                  price={item.cost}
-                                  calories={item.calorie}
-                                  picture={item.picture}
-                                  status='submit'
-                                  initDishNum={item.dishNumber}
-                                />
-                              </Box>
-
-                              {/* <div>{JSON.stringify(item)}</div> */}
-                              {(index !== oldOrder.length - 1) && (
-                                <Divider sx={{ my: 2, mx: 4 }} />
-                              )}
-                            </>
-                          )
-                        })}
-                        <Divider sx={{
-                          my: 5, "&::before, &::after": {
-                            borderColor: "#000000",
-                          },
-                          mx: 5
-                        }}>
-                          <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold' }} >Add dishes</Typography>
-                        </Divider>
-                        {newOrder?.map((item, index) => {
-                          return (
-                            <>
-                              {item.dishNumber !== 0 && (
-                                <>
-                                  <Box sx={{ mx: 5 }}>
-                                    <OrderDetailBox
-                                      dishId={item.dishId}
-                                      dishName={item.title}
-                                      price={item.cost}
-                                      calories={item.calorie}
-                                      picture={item.picture}
-                                      status='check'
-                                      initDishNum={item.dishNumber}
-                                      passObj={doSomething}
-                                    />
-                                    {/* <div>{JSON.stringify(item)}</div> */}
-                                    {(index !== newOrder.length - 1) && (
-                                      <Divider sx={{ my: 2, mx: 4 }} />
-                                    )}
-                                  </Box>
-
-
-                                </>
-                              )}
-
-                            </>
-                          )
-                        })}
-                      </>
-                    )}
-                    {(oldOrder?.length !== 0 && newOrder?.length === 1) && (
-                      <>
-                        {oldOrder?.map((item, index) => {
-                          return (
-                            <>
-                              <Box sx={{ mx: 5 }}>
-                                <OrderDetailBox
-                                  dishId={item.dishId}
-                                  dishName={item.title}
-                                  price={item.cost}
-                                  calories={item.calorie}
-                                  picture={item.picture}
-                                  status='submit'
-                                  initDishNum={item.dishNumber}
-                                />
-                                {/* <div>{JSON.stringify(item)}</div> */}
-                                {(index !== oldOrder.length - 1) && (
-                                  <Divider sx={{ my: 2, mx: 4 }} />
-                                )}
-                              </Box>
-                            </>
-                          )
-                        })}
-                        <Divider sx={{
-                          mt: 5, backgroundColor: '#000000',
-                          mx: 5
-                        }}>
-                        </Divider>
-                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                          <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
-                              <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
-                                Thanks for your order!
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
-                              <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
-                                Check now? Click here: 
-                                <Box sx={{mx:1}}>
-                                  <CheckBillButton doSomething={()=>toBill()}/>
-                                  </Box>
-                              </Typography>
-                            </Box>
-                          </Box>
-
-                        </Box>
-
-
-
-                      </>
-                    )}
-                    {(oldOrder?.length === 0 && newOrder?.length !== 1) && (
-                      <>
-                        {newOrder?.map((item, index) => {
-                          return (
-                            <>
-                              {item.dishNumber !== 0 && (
-                                <>
-                                  <Box sx={{ mx: 5 }}>
-                                    <OrderDetailBox
-                                      dishId={item.dishId}
-                                      dishName={item.title}
-                                      price={item.cost}
-                                      calories={item.calorie}
-                                      picture={item.picture}
-                                      status='check'
-                                      initDishNum={item.dishNumber}
-                                      passObj={doSomething}
-                                    />
-                                    {/* <div>{JSON.stringify(item)}</div> */}
-                                    {(index !== newOrder.length - 1) && (
-                                      <Divider sx={{ my: 2, mx: 4 }} />
-                                    )}
-                                  </Box>
-
-                                </>
-                              )}
-
-                            </>
-                          )
-                        })}
-                      </>
-                    )}
-
-
-
-                  </Box>
-
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
         </Box>
       )}
 

@@ -297,13 +297,14 @@ const Customer: React.FC<{}> = () => {
           <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1900 }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", }} >
-            <Grid container spacing={3} sx={{ display: 'flex', m: 10, ml: 20 }}>
+        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
+          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'center', ml: 17, mt: 5 }} >
+            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} sx={{ display: 'flex', height: '100%', width: '100%' }}>
+
               {menu.map((item: any) => {
 
                 return (
-                  <Grid item xs={3}>
+                  <Grid item xs={'auto'} >
                     <DishCard
                       dishId={item.dishId}
                       dishName={item.title}
@@ -323,13 +324,10 @@ const Customer: React.FC<{}> = () => {
 
 
             </Grid>
-            {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
-            <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
-            <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button> */}
 
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position:'relative', zIndex:50 }}>
+          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
 
             <OrderBar
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
