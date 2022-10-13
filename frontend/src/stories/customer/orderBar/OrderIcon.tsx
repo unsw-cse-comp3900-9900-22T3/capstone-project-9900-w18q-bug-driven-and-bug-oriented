@@ -4,6 +4,7 @@ import { Button, Divider, Fade, Menu, MenuItem, Paper, Popover, Popper, Typograp
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from "react-router-dom";
 import OrderDetailBox from "../orderDetailBox/OrderDetailBox";
+import CheckBillButton from "./CheckBillButton";
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
@@ -232,7 +233,10 @@ export default function OrderIcon({
                             </Box>
                             <Box sx={{ display: 'flex', justifyContent: 'left' }}>
                               <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
-                                Check now? Click here: <Button onClick={() => toBill()}> bill</Button>
+                                Check now? Click here: 
+                                <Box sx={{mx:1}}>
+                                  <CheckBillButton doSomething={()=>toBill()}/>
+                                  </Box>
                               </Typography>
                             </Box>
                           </Box>
