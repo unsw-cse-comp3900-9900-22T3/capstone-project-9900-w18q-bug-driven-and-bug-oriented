@@ -15,6 +15,7 @@ interface ListProps {
   price?: string;
   picture?: string;
   initDishNum?: number;
+  status?: string;
   passObj?: (params: any) => any;
 }
 
@@ -30,6 +31,7 @@ export default function OrderDetailBox({
   picture = '/dishImg/chickenGrill.jpg',
   initDishNum = 0,
   passObj = () => { },
+  status = 'check', //check, submit, bill
   ...props
 }: ListProps) {
 
@@ -63,16 +65,32 @@ export default function OrderDetailBox({
               <Box sx={{px: 0.5, py: 0.5}}>
                 ${price}
               </Box>
-              <Box sx={{backgroundColor: '#ffe3d9', color: '#fb7140', mx: 2, px: 1, py: 0.5, borderRadius:2}}>
-                {calories}Cal
-              </Box>
+              {  status !== 'bill' &&
+                (<Box sx={{backgroundColor: '#ffe3d9', color: '#fb7140', mx: 2, px: 1, py: 0.5, borderRadius:2}}>
+                  {calories}Cal
+                </Box>)
+              }
             </Box>
           </Box>
         </Box>
 
-        <Box sx={{mt:5}}>
-          <AddNumberBox passNum={changeDishNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
-        </Box>
+        { status === 'check' &&
+          (<Box sx={{mt: 4}}>
+            <AddNumberBox passNum={changeDishNum} initialNum={dishNum} />
+          </Box>)
+        }
+
+        { status === 'submit' &&
+          (<Box display='flex' sx={{mt: 4, mx: 4, fontSize: 16, fontWeight: 'bold'}}>
+            &times; {initDishNum}
+          </Box>)
+        }
+
+        { status === 'bill' &&
+          (<Box display='flex' sx={{mt: 4, mx: 4, fontSize: 16, fontWeight: 'bold'}}>
+            ${price} &times; {initDishNum}
+          </Box>)
+        }
       </Box>
 
     </>
