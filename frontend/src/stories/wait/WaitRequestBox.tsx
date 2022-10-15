@@ -8,17 +8,10 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 // 声明变量的数据格式
 interface ListProps {
-  //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
   //预留空函数
   doSomething: (params: any) => any;
 
-  itemIndex?: string
   table?: string
-  dishName?: string
-
   requestId?: string
   startTime?: Date
 }
@@ -50,16 +43,11 @@ const style = {
 // 别忘了修改函数名
 export default function WaitRequestBox({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
   doSomething,
 
-  itemIndex = '123456',
   table = '10',
-  dishName = 'Pizza',
-
   requestId = '654321',
+  startTime = new Date(),
   ...props
 }: ListProps) {
   
@@ -72,17 +60,19 @@ export default function WaitRequestBox({
   };
 
   const [progress, setProgress] = React.useState(0);
+  const [waitTime, setWaitTime] = React.useState(0);
   
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
-          return 0;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
+      setProgress(() => {
+        let diff = (new Date()).getTime() - startTime.getTime();
+        return Math.min(diff / (1000 * 60) * 10, 100);
       });
-    }, 500);
+      setWaitTime(() => {
+        let diff = (new Date()).getTime() - startTime.getTime();
+        return Math.trunc(diff / (1000 * 60));
+      });
+    }, 30 * 1000);
 
     return () => {
       clearInterval(timer);
@@ -107,7 +97,7 @@ export default function WaitRequestBox({
               Waiting time
             </Typography>
             <Typography variant="h5" fontWeight='bold'>
-              9 min
+              {waitTime} min
             </Typography>
           </Box>
         </Box>
@@ -139,13 +129,13 @@ export default function WaitRequestBox({
 
               <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 5, flexDirection: 'column' }}>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2}}  >
-                  Item confirm
+                  Request confirm
                 </Typography>
                 <Typography sx={{ textAlign: 'center' }} >
-                  Have you served the item?
+                  Have you finished customer's request?
                 </Typography>
                 <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
-                  Table {table} {dishName}
+                  Table {table}
                 </Typography>
               </Box>
 

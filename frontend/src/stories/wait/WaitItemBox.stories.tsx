@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof WaitItemBox> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  props1: "111",
-  props2: "222",
-  props3: true,
+  itemIndex: '123456',
+  table: '10',
+  dishName: 'Pizza',
 };
