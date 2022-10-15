@@ -21,6 +21,7 @@ class Config(object):
     # app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = False
 
+
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
@@ -92,6 +93,7 @@ class Orders(Base):
     table = db.Column(db.INT, nullable=False)
     diner = db.Column(db.INT, nullable=False)
     status = db.Column(db.String(45), nullable=False, default="Wait")
+    isRequest = db.Column(db.Integer, nullable=False, default=0)
     isPay = db.Column(db.Integer, nullable=False, default=0)
     payTime = db.Column(db.DateTime)
     orderitems = db.relationship("Orderitem", backref='orders')
@@ -125,6 +127,8 @@ def model_to_dict(result):
         raise TypeError('Type error of parameter')
 
 
+########################################################################################################################
+######################################### Login Module #################################################################
 @app.route('/staff', methods=["POST"])  # login interface
 def login():
     return_json = {}
@@ -154,28 +158,36 @@ def login():
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
+########################################################################################################################
+############################################   Login Module   ##########################################################
+
+
+########################################################################################################################
+##########################################   Customer Module   #########################################################
 @app.route('/customer/<int:order_id>', methods=["POST"])  # order submit interface
 def order_submit(order_id):
     objects = []
     transfer_data = json.loads(json.dumps(request.get_json()))  # json格式传过来的信息
-    target_order = Orders.query.get_or_404(order_id) # 得到目标订单，订单必须已在数据库中
-    return_json = {"orderId": order_id} # 返回json样式
-    if target_order.orderTime == None: # 只有orderTime为空，才能写入当前时间，如果不为空，不能改，会破坏点单的顺序
+    target_order = Orders.query.get_or_404(order_id)  # 得到目标订单，订单必须已在数据库中
+    return_json = {"orderId": order_id}  # 返回json样式
+    if target_order.orderTime == None:  # 只有orderTime为空，才能写入当前时间，如果不为空，不能改，会破坏点单的顺序
         Orders.query.filter_by(orderId=order_id).update({Orders.orderTime: datetime.now()})
         db.session.commit()
-    if target_order.status == "Completed": # 如果当前订单显示completed，又有加菜的单子进来，要把状态改成processing
+    if target_order.status == "Completed":  # 如果当前订单显示completed，又有加菜的单子进来，要把状态改成processing
         Orders.query.filter_by(orderId=order_id).update({Orders.status: "Processing"})
         for dish in transfer_data["orderList"]:
-            if int(dish["dishNumber"]) > 1: # 如果显示该dish点的数量超过1，那就要生成多条数据
+            if int(dish["dishNumber"]) > 1:  # 如果显示该dish点的数量超过1，那就要生成多条数据
                 for i in range(0, int(dish["dishNumber"])):
                     item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                     objects.append(item_post)
-                    Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1})
-            else: # 如果显示该dish点的数量为1，那就要生成1条数据
+                    Menuitem.query.filter_by(dishId=dish["dishId"]).update(
+                        {Menuitem.orderTimes: Menuitem.orderTimes + 1})
+            else:  # 如果显示该dish点的数量为1，那就要生成1条数据
                 item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                 objects.append(item_post)
-                Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1}) # 点的菜的点单数量加1
-        db.session.add_all(objects) # 多条dish的数据一起插入数据表中
+                Menuitem.query.filter_by(dishId=dish["dishId"]).update(
+                    {Menuitem.orderTimes: Menuitem.orderTimes + 1})  # 点的菜的点单数量加1
+        db.session.add_all(objects)  # 多条dish的数据一起插入数据表中
         db.session.commit()
     else:
         for dish in transfer_data["orderList"]:
@@ -183,7 +195,8 @@ def order_submit(order_id):
                 for i in range(0, int(dish["dishNumber"])):
                     item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                     objects.append(item_post)
-                    Menuitem.query.filter_by(dishId=dish["dishId"]).update({Menuitem.orderTimes: Menuitem.orderTimes + 1})
+                    Menuitem.query.filter_by(dishId=dish["dishId"]).update(
+                        {Menuitem.orderTimes: Menuitem.orderTimes + 1})
             else:
                 item_post = Orderitem(dishId=dish["dishId"], orderId=order_id, itemTime=datetime.now())
                 objects.append(item_post)
@@ -196,15 +209,15 @@ def order_submit(order_id):
 @app.route('/customer/<int:order_id>', methods=["GET"])  # get order interface
 def get_order_detail(order_id):
     return_json = []
-    target_order = Orders.query.get_or_404(order_id).orderitems # 获得该orderId下所有dishes
+    target_order = Orders.query.get_or_404(order_id).orderitems  # 获得该orderId下所有dishes
     target_order = model_to_dict(target_order)
-    dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"])) # 排序
-    dish_group = groupby(dish_sort, key=lambda x: x["dishId"]) # 按照dishId聚类
+    dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))  # 排序
+    dish_group = groupby(dish_sort, key=lambda x: x["dishId"])  # 按照dishId聚类
     for key, group in dish_group:
         dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
-        dish_info[0].pop("id") # 舍弃id
-        dish_info[0].pop("lastModified") # 舍弃修改时间
-        dish_info[0]["dishNumber"] = len(list(group)) # 点的dish的数量
+        dish_info[0].pop("id")  # 舍弃id
+        dish_info[0].pop("lastModified")  # 舍弃修改时间
+        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
         return_json.append(dish_info[0])
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
@@ -212,6 +225,8 @@ def get_order_detail(order_id):
 @app.route('/customer/<int:order_id>/bill', methods=["GET"])  # get bill interface，逻辑和get order detail 一样
 def get_bill(order_id):
     return_json = []
+    Orders.query.filter_by(orderId=order_id).update({Orders.isRequest: 1})  # 把isRequest的状态改成1
+    db.session.commit()
     target_order = Orders.query.get_or_404(order_id).orderitems
     target_order = model_to_dict(target_order)
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))
@@ -242,7 +257,8 @@ def hot_dishes(order_id):
     for line in category_post:
         line.pop("id")
         line.pop("lastModified")
-    return_json = {"orderId": order_id_post, "diner": diner_post, "itemList": hot_dish_dict, "categoryList": category_post}
+    return_json = {"orderId": order_id_post, "diner": diner_post, "itemList": hot_dish_dict,
+                   "categoryList": category_post}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -258,6 +274,115 @@ def category_dishes(order_id, category_id):
         line["dishNumber"] = 0
     return_json = {"itemList": dishes_dict}
     return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/customer/<int:order_id>/help', methods=["GET"])
+def ask_help(order_id):
+    table_no = Orders.query.get_or_404(order_id).table
+    print(table_no)
+    service_info = Services(table=table_no, startTime=datetime.now())
+    service_info.save()
+    return_json = {"message": "success"}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+########################################################################################################################
+############################################  Customer Module  #########################################################
+
+
+########################################################################################################################
+############################################   Wait Staff Module  ######################################################
+@app.route('/wait/request', methods=["GET"])
+def init_request():
+    uncompleted_services = Services.query.filter_by(status=0).all()
+    uncompleted_services = model_to_dict(uncompleted_services)
+    for line in uncompleted_services:
+        line.pop("endTime")
+        line.pop("status")
+        line["startTime"] = line["startTime"].strftime("%Y-%m-%d-%H:%M:%S")
+    return_json = {"requestsList": uncompleted_services}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/request/<int:request_id>', methods=["POST"])
+def request_finish(request_id):
+    Services.query.filter_by(id=request_id).update({Services.endTime: datetime.now(), Services.status: 1})
+    db.session.commit()
+    return_json = {"message": "success"}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/item', methods=["GET"])
+def get_uncompleted_order_item():
+    uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status != "Prepared")
+                                           .order_by(Orderitem.itemTime.asc()).all())
+    for line in uncompleted_order_item:
+        line["table"] = Orders.query.get_or_404(line["orderId"]).table
+        line.pop("orderId")
+        line.pop("status")
+        # line.pop("itemTime")
+        line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
+        line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
+        line.pop("dishId")
+    return_json = {"itemsList": uncompleted_order_item}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/item/<int:item_index>', methods=["POST"])
+def item_complete(item_index):
+    Orderitem.query.filter_by(itemIndex=item_index).update({Orderitem.status: "Prepared"})
+    db.session.commit()
+    return_json = {"message": "success"}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/order', methods=["GET"])
+def get_unpayed_order():
+    unpayed_order = model_to_dict(Orders.query.filter_by(isPay=0).order_by(Orders.orderTime.asc()).all())
+    for line in unpayed_order:
+        total_cost = 0
+        order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
+        for each_item in order_items:
+            total_cost += model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())[0]["cost"]
+        line["price"] = round(total_cost, 1)
+        line.pop("diner")
+        line.pop("payTime")
+        line.pop('status')
+        line.pop("isPay")
+        # line.pop("orderTime")
+        line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
+    return_json = {"orderList": unpayed_order}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/order/<int:order_id>', methods=["GET"])
+def get_order_detail_wait(order_id):
+    total_cost = 0
+    order_items = model_to_dict(Orders.query.get_or_404(order_id).orderitems)
+    for each_item in order_items:
+        total_cost += model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())[0]["cost"]
+    for line in order_items:
+        menu_item = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())
+        line["price"] = menu_item[0]["cost"]
+        line["dishName"] = menu_item[0]["title"]
+        line.pop("itemTime")
+        line.pop("itemIndex")
+        line.pop("dishId")
+        line.pop("orderId")
+    return_json = {"price": round(total_cost, 1), "itemList": order_items}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/wait/order/<int:order_id>', methods=["POST"])  # 是否需要isRequest也变成1的条件下才能付款？？？
+def confirm_pay_order(order_id):
+    Orders.query.filter_by(orderId=order_id).update({Orders.isPay: 1, Orders.payTime: datetime.now()})
+    db.session.commit()
+    return_json = {"message": "success"}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+########################################################################################################################
+#############################################   Wait Staff Module  #####################################################
 
 
 @app.route('/add_category', methods=["POST"])  # 添加新的类目
