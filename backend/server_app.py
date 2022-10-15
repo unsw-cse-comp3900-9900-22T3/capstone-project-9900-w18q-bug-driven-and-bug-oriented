@@ -11,6 +11,7 @@ from flask_cors import CORS
 from itertools import groupby
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy import func
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')  # 解决跨域问题
@@ -525,17 +526,26 @@ def update_items(order_id):
     index_post=int(post_data["itemIndex"])
     status_post =str(post_data["itemStatus"])
     db.session.query(Orderitem).filter(Orderitem.itemIndex==index_post).update({"status": status_post})
-    db.session.commit()
-    item_sql = """select allCount.acount,preCount.pcount from(select wait_management.orders.orderId,count(itemIndex)as acount from wait_management.orderItems join wait_management.orders on wait_management.orders.orderId=wait_management.orderItems.orderId where wait_management.orders.orderId="""+ str(order_id) +""")as allCount join(select wait_management.orders.orderId,count(itemIndex)as pcount from wait_management.orderItems join wait_management.orders on wait_management.orders.orderId=wait_management.orderItems.orderId where wait_management.orderItems.status="Prepared" and wait_management.orders.orderId="""+str(order_id)+""")as preCount on allCount.orderId=preCount.orderId"""
-    flag=0  # 标志位，判断是否需要更新order的status字段
-    with engine.connect() as conn:
-        result_proxy = conn.execute(item_sql)  # 返回值为ResultProxy类型
-        result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
-        if result[0][0]==result[0][1]:
-            flag=1
-    if flag==1:
+    db.session.commit()  # 更新item的status
+    
+    # 更新order的status
+    res_all=db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId==order_id).all()[0][0]
+    res_prepared=db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId==order_id).filter(Orderitem.status=="Prepared").all()[0][0]
+    res_processing=db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId==order_id).filter(Orderitem.status=="Processing").all()[0][0]
+    res_wait=db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId==order_id).filter(Orderitem.status=="Wait").all()[0][0]
+    
+    if res_all==res_prepared:
         db.session.query(Orders).filter(Orders.orderId==order_id).update({"status": "Completed"})
         db.session.commit()
+
+    if res_all==res_wait:
+        db.session.query(Orders).filter(Orders.orderId==order_id).update({"status": "Wait"})
+        db.session.commit()
+
+    if res_processing>0 and res_prepared<res_all:
+        db.session.query(Orders).filter(Orders.orderId==order_id).update({"status": "Processing"})
+        db.session.commit()
+        
     return {"orderId":order_id}
 
 
