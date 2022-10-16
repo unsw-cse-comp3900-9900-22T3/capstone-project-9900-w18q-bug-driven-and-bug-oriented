@@ -20,5 +20,5 @@ const Template: ComponentStory<typeof NextButton> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  type: "1",
+  type: "0",
 };

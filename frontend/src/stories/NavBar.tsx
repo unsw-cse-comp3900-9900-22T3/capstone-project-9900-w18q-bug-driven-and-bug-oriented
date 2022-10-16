@@ -57,7 +57,7 @@ export default function NavBar({
 
             {obj.map((objs) => {
               return (
-                <>
+                <React.Fragment key={objs.categoryId}>
                   {
                     location.pathname !== `/customer/${id}/${objs.categoryId}` && (
                       <NavButton item='category' selected={false} name={objs.categoryName} doSomething={(e) => { navigate(`/customer/${id}/${objs.categoryId}`); doSomething(e); }} />
@@ -68,7 +68,7 @@ export default function NavBar({
                       <NavButton item='category' selected name={objs.categoryName} />
                     )
                   }
-                </>
+                </React.Fragment>
               )
             })}
           </Box>
