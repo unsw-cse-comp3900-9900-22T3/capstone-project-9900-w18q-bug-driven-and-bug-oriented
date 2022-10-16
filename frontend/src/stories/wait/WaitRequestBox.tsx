@@ -40,6 +40,8 @@ const style = {
   pt: 2,
 };
 
+const waitTimeLimit = 2;
+
 //仅做测试用
 const dateToStr = (d: Date) => {
   let year = d.getFullYear().toString();
@@ -98,13 +100,13 @@ export default function WaitRequestBox({
         console.log(new Date().toTimeString());
         console.log(strToDate(startTime));
         console.log(diff);
-        return Math.min(diff / (1000 * 60) * 10, 100);
+        return Math.min(diff / (1000 * 60 * waitTimeLimit) * 100, 100);
       });
       setWaitTime(() => {
         let diff = (new Date()).getTime() - strToDate(startTime).getTime();
         return Math.trunc(diff / (1000 * 60));
       });
-    }, 30 * 1000);
+    }, waitTimeLimit * 60 * 1000 / 10);
 
     return () => {
       clearInterval(timer);
