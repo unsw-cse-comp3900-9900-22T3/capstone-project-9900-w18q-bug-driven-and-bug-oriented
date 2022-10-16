@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 import json
 from flask_cors import CORS
 from itertools import groupby
+from sqlalchemy import create_engine, func
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')  # 解决跨域问题
@@ -343,8 +345,16 @@ def get_unpayed_order():
         total_cost = 0
         order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
         for each_item in order_items:
-            total_cost += model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())[0]["cost"]
+            menu_item = model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())
+            total_cost += menu_item[0]["cost"]
+            each_item["price"] = menu_item[0]["cost"]
+            each_item["dishName"] = menu_item[0]["title"]
+            each_item.pop("itemTime")
+            each_item.pop("itemIndex")
+            each_item.pop("dishId")
+            # each_item.pop("orderId")
         line["price"] = round(total_cost, 1)
+        line["itemList"] = order_items
         line.pop("diner")
         line.pop("payTime")
         line.pop('status')
@@ -352,24 +362,6 @@ def get_unpayed_order():
         # line.pop("orderTime")
         line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
     return_json = {"orderList": unpayed_order}
-    return Response(json.dumps(return_json), mimetype="application/json")
-
-
-@app.route('/wait/order/<int:order_id>', methods=["GET"])
-def get_order_detail_wait(order_id):
-    total_cost = 0
-    order_items = model_to_dict(Orders.query.get_or_404(order_id).orderitems)
-    for each_item in order_items:
-        total_cost += model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())[0]["cost"]
-    for line in order_items:
-        menu_item = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())
-        line["price"] = menu_item[0]["cost"]
-        line["dishName"] = menu_item[0]["title"]
-        line.pop("itemTime")
-        line.pop("itemIndex")
-        line.pop("dishId")
-        line.pop("orderId")
-    return_json = {"price": round(total_cost, 1), "itemList": order_items}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -383,6 +375,83 @@ def confirm_pay_order(order_id):
 
 ########################################################################################################################
 #############################################   Wait Staff Module  #####################################################
+
+
+########################################################################################################################
+############################################   kitchen Staff Module  ###################################################
+engine = create_engine(
+    'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
+
+
+@app.route('/kitchen', methods=["GET", "POST"])
+def get_orders():
+    order_sql = """select allItem.orderId,allItem.`table`,allItem.orderTime,ifnull(waitItem.waitCount,0)as waitCount,allItem.`status`from(select wait_management.orders.orderId,wait_management.orders.`table`,wait_management.orders.orderTime,count(wait_management.orderItems.dishId)as allCount,wait_management.orders.`status`,(case when wait_management.orders.`status`='Wait'or wait_management.orders.`status`='Processing'then 0 when wait_management.orders.`status`='Completed'then 1 end)as srank from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId where DATE_FORMAT(wait_management.orders.orderTime,'%%Y-%%m-%%d')=DATE_FORMAT(now(),'%%Y-%%m-%%d')group by wait_management.orders.orderId)as allItem left join(select wait_management.orders.orderId,count(wait_management.orderItems.dishId)as waitCount from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId where DATE_FORMAT(wait_management.orders.orderTime,'%%Y-%%m-%%d')=DATE_FORMAT(now(),'%%Y-%%m-%%d')and wait_management.orderItems.`status`='Wait'group by wait_management.orders.orderId)as waitItem on allItem.orderId=waitItem.orderId order by allItem.srank,allItem.orderTime"""
+    with engine.connect() as conn:
+        result_proxy = conn.execute(order_sql)  # 返回值为ResultProxy类型
+        result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        res = pd.DataFrame(list(result), columns=['orderId', 'table', 'orderTime', 'waitCount', 'status'])  # 将结果转存为DF
+
+    if request.method == "GET":  # 默认返回排序后的order列表
+        return {"orderList": res.to_dict(orient='records')}
+
+    else:
+        post_data = json.loads(json.dumps(request.get_json()))  # 获取到status
+        status_post = str(post_data["orderStatus"])
+        filter_res = res[res['status'] == status_post]
+        return {"orderList": filter_res.to_dict(orient='records')}
+
+
+@app.route('/kitchen/<int:order_id>', methods=["GET"])
+def get_items(order_id):
+    table_time_sql = """select`table`,orderTime from wait_management.orders where orderId=""" + str(order_id)
+    item_sql = """select itemIndex,title,categoryName,`status`from(select wait_management.orderItems.itemIndex,wait_management.orderItems.`status`,wait_management.menuItems.title,wait_management.menuItems.categoryName,(case when wait_management.orderItems.`status`='Wait'then 0 when wait_management.orderItems.`status`='Processing'then 1 when wait_management.orderItems.`status`='Prepared'then 2 end)as srank,rank()over(order by wait_management.orderItems.itemTime)as trank from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId join wait_management.menuItems on wait_management.orderItems.dishId=wait_management.menuItems.dishId where wait_management.orders.orderId=""" + str(
+        order_id) + """)as items order by srank,trank"""
+    with engine.connect() as conn:
+        result_proxy = conn.execute(table_time_sql)  # 返回值为ResultProxy类型
+        table_time_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        result_proxy = conn.execute(item_sql)
+        item_result = result_proxy.fetchall()
+        item_res = pd.DataFrame(list(item_result), columns=['itemIndex', 'itemName', 'itemCategory', 'status'])
+    return {"tableNumber": table_time_result[0][0], "orderTime": table_time_result[0][1],
+            "itemList": item_res.to_dict(orient='records')}
+
+
+@app.route('/kitchen/<int:order_id>', methods=["POST"])
+def update_items(order_id):
+    post_data = json.loads(json.dumps(request.get_json()))  # 获取到status
+    index_post = int(post_data["itemIndex"])
+    status_post = str(post_data["itemStatus"])
+    db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"status": status_post})
+    db.session.commit()  # 更新item的status
+
+    # 更新order的status
+    res_all = \
+    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).all()[0][0]
+    res_prepared = \
+    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
+        Orderitem.status == "Prepared").all()[0][0]
+    res_processing = \
+    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
+        Orderitem.status == "Processing").all()[0][0]
+    res_wait = db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
+        Orderitem.status == "Wait").all()[0][0]
+
+    if res_all == res_prepared:
+        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Completed"})
+        db.session.commit()
+
+    if res_all == res_wait:
+        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Wait"})
+        db.session.commit()
+
+    if res_processing > 0 and res_prepared < res_all:
+        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Processing"})
+        db.session.commit()
+
+    return {"orderId": order_id}
+
+########################################################################################################################
+############################################   kitchen Staff Module  ###################################################
 
 
 @app.route('/add_category', methods=["POST"])  # 添加新的类目
