@@ -27,7 +27,7 @@ const Waiter: React.FC<{}> = () => {
   const [numOfRequest, setNumOfRequest] = useState(0)
   const [numOfItem, setNumOfItem] = useState(0)
   const [numOfOrder, setNumOfOrder] = useState(0)
-  const [order, setOrder] = useState({}[])
+  // const [order, setOrder] = useState({}[])
 
   const getRequest = async () => {
     const message = await getWaitRequest();
@@ -61,38 +61,42 @@ const Waiter: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
 
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
-        <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
-            Wait Staff
-          </Typography>
-          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {show !== 'request' && (
-              <NavButton item='request' selected={false} doSomething={() => setShow('request')} number={numOfRequest} />
-            )}
-            {show === 'request' && (
-              <NavButton item='request' selected number={numOfRequest} />
-            )}
+        <Box>
+          <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
+              Wait Staff
+            </Typography>
+            <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {show !== 'request' && (
+                <NavButton item='request' selected={false} doSomething={() => setShow('request')} number={numOfRequest} />
+              )}
+              {show === 'request' && (
+                <NavButton item='request' selected number={numOfRequest} />
+              )}
 
-            {show !== 'item' && (
-              <NavButton item='item' selected={false} doSomething={() => setShow('item')} number={numOfItem} />
-            )}
-            {show === 'item' && (
-              <NavButton item='item' selected number={numOfItem} />
-            )}
+              {show !== 'item' && (
+                <NavButton item='item' selected={false} doSomething={() => setShow('item')} number={numOfItem} />
+              )}
+              {show === 'item' && (
+                <NavButton item='item' selected number={numOfItem} />
+              )}
 
-            {show !== 'order' && (
-              <NavButton item='order' selected={false} doSomething={() => setShow('order')} number={numOfOrder} />
-            )}
-            {show === 'order' && (
-              <NavButton item='order' selected number={numOfOrder} />
-            )}
-          </Box>
-          <Box sx={{ display: 'flex', height: '100%', }}></Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
-            <Logout status="logout" />
+              {show !== 'order' && (
+                <NavButton item='order' selected={false} doSomething={() => setShow('order')} number={numOfOrder} />
+              )}
+              {show === 'order' && (
+                <NavButton item='order' selected number={numOfOrder} />
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', height: '100%', }}></Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
+              <Logout status="logout" />
+            </Box>
+
           </Box>
 
         </Box>
+
 
         {show === 'request' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -128,7 +132,7 @@ const Waiter: React.FC<{}> = () => {
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
             <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} sx={{ display: 'flex', height: '100%', width: '100%' }}>
 
-              {menu.map((item: any) => {
+              {/* {menu.map((item: any) => {
 
                 return (
                   <Grid item xs={'auto'} key={item.dishId}>
@@ -146,7 +150,7 @@ const Waiter: React.FC<{}> = () => {
 
                   </Grid>
                 )
-              })}
+              })} */}
 
 
 
