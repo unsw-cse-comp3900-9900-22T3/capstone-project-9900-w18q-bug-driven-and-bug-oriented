@@ -68,7 +68,7 @@ export default function OrderBar({
     } else {
       setChecked(true);
     };
-    
+
   };
 
   const navigate = useNavigate();
@@ -78,9 +78,9 @@ export default function OrderBar({
   };
 
   return (
-    <Box sx={{ width: '100%', display:'flex',flexDirection:'column' }}>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
       <Collapse in={checked}>
-        <Paper elevation={3} sx={{ width: '100%', height: 'calc(100vh - 135px)', display: 'flex', flexDirection: 'column', overflow: "auto", borderTopLeftRadius:15, borderTopRightRadius:15}}>
+        <Paper elevation={3} sx={{ width: '100%', height: 'calc(100vh - 135px)', display: 'flex', flexDirection: 'column', overflow: "auto", borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
           <Box sx={{ m: 5, mt: 0 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
               <Typography sx={{ p: 2, fontWeight: 'bold' }} variant='h3'>
@@ -91,7 +91,7 @@ export default function OrderBar({
               <>
                 {oldOrder?.map((item, index) => {
                   return (
-                    <>
+                    <React.Fragment key={item.dishId}>
                       <Box sx={{ mx: 5 }}>
                         <OrderDetailBox
                           dishId={item.dishId}
@@ -108,7 +108,7 @@ export default function OrderBar({
                       {(index !== oldOrder.length - 1) && (
                         <Divider sx={{ my: 2, mx: 4 }} />
                       )}
-                    </>
+                    </React.Fragment>
                   )
                 })}
                 <Divider sx={{
@@ -117,11 +117,13 @@ export default function OrderBar({
                   },
                   mx: 5
                 }}>
-                  <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold' }} >Add dishes</Typography>
+                  <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold' }} >
+                    Add dishes
+                    </Typography>
                 </Divider>
                 {newOrder?.map((item, index) => {
                   return (
-                    <>
+                    <React.Fragment key={item.dishId}>
                       {item.dishNumber !== 0 && (
                         <>
                           <Box sx={{ mx: 5 }}>
@@ -145,7 +147,7 @@ export default function OrderBar({
                         </>
                       )}
 
-                    </>
+                    </React.Fragment>
                   )
                 })}
               </>
@@ -154,7 +156,7 @@ export default function OrderBar({
               <>
                 {oldOrder?.map((item, index) => {
                   return (
-                    <>
+                    <React.Fragment key={item.dishId}>
                       <Box sx={{ mx: 5 }}>
                         <OrderDetailBox
                           dishId={item.dishId}
@@ -170,7 +172,7 @@ export default function OrderBar({
                           <Divider sx={{ my: 2, mx: 4 }} />
                         )}
                       </Box>
-                    </>
+                    </React.Fragment>
                   )
                 })}
                 <Divider sx={{
@@ -186,12 +188,12 @@ export default function OrderBar({
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'left' }}>
-                      <Typography variant="h6" sx={{ display: 'flex', p: 2, color: '#626264' }} >
+                      <Typography variant="h6" sx={{ display: 'flex', color: '#626264' }} >
                         Check now? Click here:
-                        <Box sx={{ mx: 1 }}>
-                          <CheckBillButton doSomething={() => toBill()} />
-                        </Box>
                       </Typography>
+                      <Box sx={{ mx: 1 }}>
+                        <CheckBillButton doSomething={() => toBill()} />
+                      </Box>
                     </Box>
                   </Box>
 
@@ -205,9 +207,9 @@ export default function OrderBar({
               <>
                 {newOrder?.map((item, index) => {
                   return (
-                    <>
+                    <React.Fragment key={item.dishId}>
                       {item.dishNumber !== 0 && (
-                        <>
+                        <React.Fragment key={item.dishId + 100}>
                           <Box sx={{ mx: 5 }}>
                             <OrderDetailBox
                               dishId={item.dishId}
@@ -225,10 +227,10 @@ export default function OrderBar({
                             )}
                           </Box>
 
-                        </>
+                        </React.Fragment>
                       )}
 
-                    </>
+                    </React.Fragment>
                   )
                 })}
               </>

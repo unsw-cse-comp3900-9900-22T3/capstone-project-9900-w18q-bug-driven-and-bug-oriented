@@ -47,12 +47,12 @@ export default function CheckBillButton({
       <Button variant="contained" color="warning" onClick={handleOpen} sx={{
         height: 35, width: 95, borderRadius: 3,
       }}>
-        <Typography variant="subtitle2" sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Box  sx={{ display: 'flex', flexDirection: 'row' }}>
           <WalletIcon />
           <Typography variant="subtitle2" sx={{ display: 'flex', flexDirection: 'row', ml:0.5,mt:0.2 }}>
             Check
           </Typography>
-        </Typography>
+        </Box>
       </Button>
       <Modal
         open={open}

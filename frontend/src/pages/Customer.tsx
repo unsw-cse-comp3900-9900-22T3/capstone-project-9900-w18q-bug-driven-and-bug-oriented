@@ -304,7 +304,7 @@ const Customer: React.FC<{}> = () => {
               {menu.map((item: any) => {
 
                 return (
-                  <Grid item xs={'auto'} >
+                  <Grid item xs={'auto'} key={item.dishId}>
                     <DishCard
                       dishId={item.dishId}
                       dishName={item.title}
@@ -316,7 +316,7 @@ const Customer: React.FC<{}> = () => {
                       initDishNum={item.dishNumber}
                       passObj={setNewEdit}
                     />
-                    {/* <div>{JSON.stringify(item)}</div> */}
+                    
                   </Grid>
                 )
               })}

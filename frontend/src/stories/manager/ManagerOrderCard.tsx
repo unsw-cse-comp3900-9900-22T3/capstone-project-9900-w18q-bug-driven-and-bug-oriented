@@ -88,7 +88,7 @@ export default function ManagerOrderCard({
             <Box sx={{ m: 4, mt: 4 }}>
               {itemList.map((item, index) => {
                 return (
-                  <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }} >
+                  <Box key={Math.random()} sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }} >
                     <Box sx={{ display: 'flex' }}>
                       <Box sx={{ width: 35, height: 35, backgroundColor: '#E7E7E7', color: '#626264', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center', display: 'flex', borderRadius: 2 }}>
                         {index + 1}
