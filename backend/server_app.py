@@ -278,7 +278,7 @@ def category_dishes(order_id, category_id):
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
-@app.route('/customer/<int:order_id>/help', methods=["GET"])
+@app.route('/customer/<int:order_id>/help', methods=["POST"])
 def ask_help(order_id):
     table_no = Orders.query.get_or_404(order_id).table
     print(table_no)
@@ -301,7 +301,8 @@ def init_request():
     for line in uncompleted_services:
         line.pop("endTime")
         line.pop("status")
-        line["startTime"] = line["startTime"].strftime("%Y-%m-%d-%H:%M:%S")
+        if line["startTime"] is not None:
+            line["startTime"] = line["startTime"].strftime("%Y-%m-%d-%H:%M:%S")
     return_json = {"requestsList": uncompleted_services}
     return Response(json.dumps(return_json), mimetype="application/json")
 
@@ -323,7 +324,8 @@ def get_uncompleted_order_item():
         line.pop("orderId")
         line.pop("status")
         # line.pop("itemTime")
-        line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
+        if line["itemTime"] is not None:
+            line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
         line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
         line.pop("dishId")
     return_json = {"itemsList": uncompleted_order_item}
@@ -360,7 +362,8 @@ def get_unpayed_order():
         line.pop('status')
         line.pop("isPay")
         # line.pop("orderTime")
-        line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
+        if line["orderTime"] is not None:
+            line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
     return_json = {"orderList": unpayed_order}
     return Response(json.dumps(return_json), mimetype="application/json")
 
