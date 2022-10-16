@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 import DishCard from "../stories/customer/dishCard/DishCard";
 import OrderDetailBOx from "../stories/customer/orderDetailBox/OrderDetailBox";
-import NextButton from "../stories/kitchen/NextButton";
+import PreNextButton from "../stories/kitchen/PreNextButton";
+import StatusMenu from "../stories/kitchen/StatusMenu";
 
 const theme = createTheme();
 
@@ -28,8 +29,9 @@ const Kitchen: React.FC<{}> = () => {
       <div>Kitchen page</div>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
       </Box>
-      <NextButton type={'0'} />
-      <NextButton type={'1'} />
+      <PreNextButton type={'0'} />
+      <PreNextButton type={'1'} />
+      <StatusMenu/>
       
 
     </ThemeProvider>

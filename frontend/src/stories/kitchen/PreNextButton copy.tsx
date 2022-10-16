@@ -2,6 +2,7 @@ import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 // 声明变量的数据格式
 interface ListProps {
@@ -13,7 +14,7 @@ interface ListProps {
 }
 
 // 别忘了修改函数名
-export default function NextButton({
+export default function PreNextButton({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   type = '1',
   doSomething,
@@ -29,7 +30,7 @@ export default function NextButton({
             width: 115,
             backgroundColor: '#503E9D',
             '&:hover': {
-              backgroundColor: '#7365B1',
+              backgroundColor: '#6A5BAB',
             },
             display: 'flex',
             justifyContent: 'center',
@@ -49,21 +50,22 @@ export default function NextButton({
         <Button variant="contained"
           sx={{
             height: 55,
-            width: 115,
+            width: 135,
             backgroundColor: '#EEECF6',
+            color:"#503E9D",
             '&:hover': {
-              backgroundColor: '#7365B1',
+              backgroundColor: '#F6F4FA',
             },
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 2
           }}
-          endIcon={<KeyboardDoubleArrowRightIcon />}
+          startIcon={<KeyboardDoubleArrowLeftIcon />}
           onClick={doSomething}
         >
           <Typography variant="subtitle1">
-            Next
+            Previous
           </Typography>
         </Button>
       )}
