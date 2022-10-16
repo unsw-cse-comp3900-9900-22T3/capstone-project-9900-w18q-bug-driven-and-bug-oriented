@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
@@ -105,8 +105,9 @@ const Customer: React.FC<{}> = () => {
     // setMenu(message.itemList);
   };
 
-  const askHelp = () => {
-    console.log('ask for help', id);
+  const askHelp = async () => {
+    const message = await postCustomerRequest(id);
+    console.log('ask for help',message.message, id);
   };
 
   const getCategory = async () => {

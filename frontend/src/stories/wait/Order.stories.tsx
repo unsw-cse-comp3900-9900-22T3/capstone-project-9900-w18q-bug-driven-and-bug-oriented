@@ -20,50 +20,50 @@ const Template: ComponentStory<typeof OrderCard> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  orderId: '123',
-  table: '1',
+  orderId: 123,
+  table: 1,
   time: '2022-10-10-18:07:58',
-  status: 'yes',
+  isRequest: 1,
   price: '20',
   itemList: [
     {
       dishName: 'meat',
-      price: '20',
-      status: 'yes',
+      price: 20,
+      status: 'Completed',
     },
     {
       dishName: 'vegetable',
-      price: '15',
-      status: 'yes',
+      price: 15,
+      status: 'Completed',
     },
     {
       dishName: 'drink',
-      price: '4',
-      status: 'yes',
+      price: 4,
+      status: 'Completed',
     },
     {
       dishName: 'meat',
-      price: '20',
+      price: 20,
       status: 'no',
     },
     {
       dishName: 'vegetable',
-      price: '15',
-      status: 'yes',
+      price: 15,
+      status: 'Completed',
     },
     {
       dishName: 'drink',
-      price: '4',
+      price: 4,
       status: 'no',
     },
     {
       dishName: 'drink',
-      price: '4',
-      status: 'yes',
+      price: 4,
+      status: 'Completed',
     },
     {
       dishName: 'meat',
-      price: '20',
+      price: 20,
       status: 'no',
     },
 

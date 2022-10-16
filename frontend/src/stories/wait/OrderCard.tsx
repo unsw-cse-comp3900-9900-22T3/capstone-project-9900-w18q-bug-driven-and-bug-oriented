@@ -9,14 +9,14 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
-  orderId?: string;
-  table?: string;
+  orderId?: number;
+  table?: number;
   time?: string;
-  status?: string;
+  isRequest?: number;
   price?: string;
   itemList?: {
     dishName: string,
-    price: string,
+    price: number,
     status: string,
   }[];
 
@@ -45,10 +45,10 @@ const style = {
 // 别忘了修改函数名
 export default function OrderCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  orderId = '',
-  table = '',
+  orderId = 123,
+  table = 5,
   time = '',
-  status = '',
+  isRequest = 0,
   price = '',
   itemList = [],
   confirmFunc,
@@ -124,7 +124,7 @@ export default function OrderCard({
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', width: 170, justifyContent: 'end' }}>
-                      {item.status === 'yes' && (
+                      {item.status === 'Completed' && (
                         <Box sx={{ width: 100, height: 25, backgroundColor: '#ECF6EC', color: '#419D3E', display: 'flex', justifyContent: 'center', alignItems: 'center', p: 0.5, fontWeight: 'bold', borderRadius: 2, mr: 2 }}>
                           Completed
                         </Box>
@@ -148,7 +148,7 @@ export default function OrderCard({
           Total: ${price}
         </Typography>
         <Box sx={{ width: '100%', justifyContent: 'center', display: 'flex', mt: 5, mb: 5 }}>
-          {status === 'yes' && (
+          {isRequest === 1 && (
             <>
               <Button onClick={handleOpen} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2, mr: 3 }}>Pay</Button>
               <Modal
@@ -209,7 +209,7 @@ export default function OrderCard({
 
 
           )}
-          {status === 'no' && (
+          {isRequest === 0 && (
             <Button variant="contained" color='warning' disabled sx={{ width: 190, borderRadius: 2, mr: 3 }}>Pay</Button>
           )}
 
