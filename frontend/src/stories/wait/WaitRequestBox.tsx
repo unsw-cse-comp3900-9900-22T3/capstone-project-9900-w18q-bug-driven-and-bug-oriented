@@ -13,7 +13,7 @@ interface ListProps {
 
   table?: string
   requestId?: string
-  startTime?: Date
+  startTime?: string
 }
 
 
@@ -40,6 +40,32 @@ const style = {
   pt: 2,
 };
 
+//仅做测试用
+const dateToStr = (d: Date) => {
+  let year = d.getFullYear().toString();
+  let mon = (d.getMonth()+1).toString();
+  if (mon.length ===1) {mon = '0' + mon;}
+  let day = d.getDate().toString();
+  if (day.length ===1) {day = '0' + day;}
+  let hr = d.getHours().toString();
+  if (hr.length ===1) {hr = '0' + hr;}
+  let min = d.getMinutes().toString();
+  if (min.length ===1) {min = '0' + min;}
+  let sec = d.getSeconds().toString();
+  if (sec.length ===1) {sec = '0' + sec;}
+  return year + '-' 
+       + mon + '-' 
+       + day + '-' 
+       + hr + ':' 
+       + min + ':' 
+       + sec;
+}
+
+const strToDate = (s: string) => {
+  return new Date(parseInt(s.substring(0, 4)), parseInt(s.substring(5, 7))-1, parseInt(s.substring(8, 10)), parseInt(s.substring(11, 13)),
+                  parseInt(s.substring(14, 16)), parseInt(s.substring(17, 19)));
+}
+
 // 别忘了修改函数名
 export default function WaitRequestBox({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
@@ -47,7 +73,7 @@ export default function WaitRequestBox({
 
   table = '10',
   requestId = '654321',
-  startTime = new Date(),
+  startTime = dateToStr(new Date()),
   ...props
 }: ListProps) {
   
@@ -65,11 +91,17 @@ export default function WaitRequestBox({
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress(() => {
-        let diff = (new Date()).getTime() - startTime.getTime();
+        let diff = (new Date()).getTime() - strToDate(startTime).getTime();
+        console.log(startTime);
+        console.log(dateToStr(new Date()));
+        console.log(new Date().toDateString());
+        console.log(new Date().toTimeString());
+        console.log(strToDate(startTime));
+        console.log(diff);
         return Math.min(diff / (1000 * 60) * 10, 100);
       });
       setWaitTime(() => {
-        let diff = (new Date()).getTime() - startTime.getTime();
+        let diff = (new Date()).getTime() - strToDate(startTime).getTime();
         return Math.trunc(diff / (1000 * 60));
       });
     }, 30 * 1000);
@@ -166,9 +198,14 @@ export default function WaitRequestBox({
       </Box>
     
       <ThemeProvider theme={theme}>
+        {progress !== 100 && (
         <Box sx={{ width: '90%', px:3, py:2}}>
           <LinearProgress variant="determinate" value={progress} />
-        </Box>
+        </Box>)}
+        {progress === 100 && (
+        <Box sx={{ width: '90%', px:3, py:2}}>
+          <LinearProgress variant="determinate" color='error' value={progress} />
+        </Box>)}
       </ThemeProvider>
   
     </Box>
