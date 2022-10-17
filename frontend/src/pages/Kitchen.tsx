@@ -18,11 +18,8 @@ const Kitchen: React.FC<{}> = () => {
 
   const navigate = useNavigate();
 
-  const [dishInfo1, setDishInfo1] = React.useState<any>({});
-  const [dishInfo2, setDishInfo2] = React.useState<any>({});
-  const [dishInfo3, setDishInfo3] = React.useState<any>({});
-  const [dishInfo4, setDishInfo4] = React.useState<any>({});
-
+  const [status, setStatus] = useState('All Status');
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -31,8 +28,8 @@ const Kitchen: React.FC<{}> = () => {
       </Box>
       <PreNextButton type={'0'} />
       <PreNextButton type={'1'} />
-      <StatusMenu/>
-      
+      <StatusMenu doSomething={setStatus}/>
+      {status}
 
     </ThemeProvider>
   );

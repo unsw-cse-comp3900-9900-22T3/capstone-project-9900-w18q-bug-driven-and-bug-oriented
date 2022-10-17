@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
@@ -15,7 +15,7 @@ interface ListProps {
   props3?: boolean;
 
   //预留空函数
-  doSomething?: (params: any) => any;
+  doSomething: (params: any) => any;
 
 }
 
@@ -68,16 +68,26 @@ export default function StatusMenu({
 
 }: ListProps) {
 
-const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-const open = Boolean(anchorEl);
-const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-  setAnchorEl(event.currentTarget);
-};
-const handleClose = () => {
-  setAnchorEl(null);
-};
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const [method, setMethed] = useState('All Status');
+
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+
+  const handleClose = (e: string) => {
+    setAnchorEl(null);
+    setMethed(e);
+    doSomething(e); 
+  };
+
+
+
   return (
-<div>
+    <div>
       <Button
         id="demo-customized-button"
         aria-controls={open ? 'demo-customized-menu' : undefined}
@@ -90,26 +100,26 @@ const handleClose = () => {
           sx={{
             height: 60,
             width: 30,
-          }}        
+          }}
         />}
-        endIcon={<KeyboardArrowDownIcon 
+        endIcon={<KeyboardArrowDownIcon
         />}
         sx={{
           height: 60,
-          width: 160,
+          width: 200,
           backgroundColor: '#503E9D',
           borderRadius: 2,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          verticalAlign:'center',
+          verticalAlign: 'center',
           '&:hover': {
-              backgroundColor: '#6A5BAB',
-            },
-        }}        
+            backgroundColor: '#6A5BAB',
+          },
+        }}
       >
-      <Typography variant="subtitle1" marginLeft={-0.9}>
-        Status
+        <Typography variant="subtitle1" marginLeft={-0.9}>
+          {method}
         </Typography>
       </Button>
       <StyledMenu
@@ -119,30 +129,30 @@ const handleClose = () => {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose(method)}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-         <Typography variant="h6">
-          All Status
-         </Typography>
+        <MenuItem onClick={() => handleClose('All Status')} disableRipple>
+          <Typography variant="h6">
+            All Status
+          </Typography>
         </MenuItem>
 
-        <MenuItem onClick={handleClose} disableRipple>
-         <Typography variant="h6">
-          Wait
-         </Typography>
-        </MenuItem>
-        
-        <MenuItem onClick={handleClose} disableRipple>
-        <Typography variant="h6">
-          Processing
-         </Typography>
+        <MenuItem onClick={() => handleClose('Wait')} disableRipple>
+          <Typography variant="h6">
+            Wait
+          </Typography>
         </MenuItem>
 
-        <MenuItem onClick={handleClose} disableRipple>
-        <Typography variant="h6">
-          Completed
-        </Typography>
+        <MenuItem onClick={() => handleClose('Processing')} disableRipple>
+          <Typography variant="h6">
+            Processing
+          </Typography>
+        </MenuItem>
+
+        <MenuItem onClick={() => handleClose('Completed')} disableRipple>
+          <Typography variant="h6">
+            Completed
+          </Typography>
         </MenuItem>
       </StyledMenu>
     </div>
