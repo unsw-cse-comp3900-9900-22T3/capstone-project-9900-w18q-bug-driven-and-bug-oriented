@@ -555,5 +555,5 @@ if __name__ == '__main__':
     # port_number = int(sys.argv[1])
     # print(port_number)
     db.create_all()  # 创建数据表
-    app.run(debug=True, host='127.0.0.1', port=8080, threaded=False, processes=4)
+    app.run(debug=True, host='127.0.0.1', port=8080, threaded=True)
     pass
