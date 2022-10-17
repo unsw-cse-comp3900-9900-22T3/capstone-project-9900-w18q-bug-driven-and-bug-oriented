@@ -11,6 +11,7 @@ from flask_cors import CORS
 from itertools import groupby
 from sqlalchemy import create_engine, func
 import pandas as pd
+import sys
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')  # 解决跨域问题
@@ -342,7 +343,7 @@ def item_complete(item_index):
 
 @app.route('/wait/order', methods=["GET"])
 def get_unpayed_order():
-    unpayed_order = model_to_dict(Orders.query.filter_by(isPay=0).order_by(Orders.orderTime.asc()).all())
+    unpayed_order = model_to_dict(Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
     for line in unpayed_order:
         total_cost = 0
         order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
@@ -551,6 +552,8 @@ def add_menuitem():
 
 
 if __name__ == '__main__':
+    # port_number = int(sys.argv[1])
+    # print(port_number)
     db.create_all()  # 创建数据表
-    app.run(debug=True, host='127.0.0.1', port=8080, threaded=True)
+    app.run(debug=True, host='127.0.0.1', port=8080, threaded=False, processes=4)
     pass
