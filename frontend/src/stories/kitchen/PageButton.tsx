@@ -111,7 +111,7 @@ export default function PageButton({
         {page !== numberOfPage && (
           <PreNextButton doSomething={() => nextPage()} type='0' />
         )}
-        {page === 1 && (
+        {page === numberOfPage && (
           <Box sx={{ width: 115 }}></Box>
         )}
 

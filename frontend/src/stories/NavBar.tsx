@@ -161,6 +161,21 @@ export default function NavBar({
     </Box>
   )
 }
+{
+  role == 'kitchen' && (
+    <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
+      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
+        Kitchen
+      </Typography>
+      <Box sx={{ display: 'flex', height: '100%', }}></Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 10 }}>
+        <Logout status="logout" />
+      </Box>
+
+
+    </Box>
+  )
+}
 
     </>
   );
