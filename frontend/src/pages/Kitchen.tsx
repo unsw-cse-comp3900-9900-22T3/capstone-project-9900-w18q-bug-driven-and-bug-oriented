@@ -38,28 +38,12 @@ const Kitchen: React.FC<{}> = () => {
   const [page, setPage] = useState(1);
 
 
-  const nowStatus = () => {
-    const output = status;
-    return (output);
-  };
-
-
-  // useEffect(() => {
-  //   const timer = setInterval(allOrder, 5000);
-  //   return () => clearInterval(timer);
-  // }, []);
-
-  const allOrder = () => {
-
-    getOrder(status);
-    console.log('now', status);
-  };
-
   useEffect(() => {
     getOrder(status);
     const timer = setInterval(() => getOrder(status), 3000);
     return () => clearInterval(timer);
   }, [status])
+
 
   const getOrder = async (e: string) => {
     if (e !== 'All Status') {
