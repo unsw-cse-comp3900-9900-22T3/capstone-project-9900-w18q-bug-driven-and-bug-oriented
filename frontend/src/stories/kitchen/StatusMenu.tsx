@@ -81,7 +81,7 @@ export default function StatusMenu({
   const handleClose = (e: string) => {
     setAnchorEl(null);
     setMethed(e);
-    doSomething(e);
+    doSomething(e); 
   };
 
 
