@@ -24,7 +24,7 @@ Test.args = {
   table: 1,
   time: '2022-10-10-18:07:58',
   isRequest: 1,
-  price: '20',
+  price: 20,
   itemList: [
     {
       dishName: 'meat',

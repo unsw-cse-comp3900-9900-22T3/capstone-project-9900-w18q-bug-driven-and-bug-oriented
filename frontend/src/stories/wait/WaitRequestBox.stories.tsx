@@ -22,4 +22,6 @@ export const Test = Template.bind({});
 Test.args = {
   table: '10',
   requestId: '654321',
+  startTime:'2022-10-17-12:34:00',
+  nowTime:'2022-10-17-12:35:00',
 };

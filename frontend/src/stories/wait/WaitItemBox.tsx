@@ -79,7 +79,7 @@ export default function WaitItemBox({
                 </IconButton>
               </Box>
 
-              <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 5, flexDirection: 'column' }}>
+              <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 3, flexDirection: 'column' }}>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2}}  >
                   Item confirm
                 </Typography>
@@ -91,7 +91,7 @@ export default function WaitItemBox({
                 </Typography>
               </Box>
 
-              <Box sx={{display:'flex', justifyContent:'center', mt:7}}>
+              <Box sx={{display:'flex', justifyContent:'center', mt:4}}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
                     backgroundColor: '#8475B0',

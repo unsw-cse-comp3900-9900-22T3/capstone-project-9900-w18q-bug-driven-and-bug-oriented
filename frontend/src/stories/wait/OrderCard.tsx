@@ -13,7 +13,7 @@ interface ListProps {
   table?: number;
   time?: string;
   isRequest?: number;
-  price?: string;
+  price?: number;
   itemList?: {
     dishName: string,
     price: number,
@@ -48,8 +48,8 @@ export default function OrderCard({
   orderId = 123,
   table = 5,
   time = '',
-  isRequest = 0,
-  price = '',
+  isRequest = 1,
+  price = 0,
   itemList = [],
   confirmFunc,
 

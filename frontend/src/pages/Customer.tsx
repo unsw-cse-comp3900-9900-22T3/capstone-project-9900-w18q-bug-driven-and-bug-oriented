@@ -295,17 +295,17 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
+          <NavBar canBack={oldOrder.length === 0? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'center', ml: 17, mt: 5 }} >
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} sx={{ display: 'flex', height: '100%', width: '100%' }}>
+          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
+            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
 
               {menu.map((item: any) => {
 
                 return (
-                  <Grid item xs={'auto'} key={item.dishId}>
+                  <Grid item xs={'auto'} key={item.dishId} >
                     <DishCard
                       dishId={item.dishId}
                       dishName={item.title}

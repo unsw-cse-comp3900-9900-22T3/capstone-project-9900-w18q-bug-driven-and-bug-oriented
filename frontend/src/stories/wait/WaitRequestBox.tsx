@@ -14,6 +14,7 @@ interface ListProps {
   table?: string
   requestId?: string
   startTime?: string
+  nowTime?: string
 }
 
 
@@ -76,6 +77,7 @@ export default function WaitRequestBox({
   table = '10',
   requestId = '654321',
   startTime = dateToStr(new Date()),
+  nowTime =dateToStr(new Date()),
   ...props
 }: ListProps) {
   
@@ -93,7 +95,8 @@ export default function WaitRequestBox({
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress(() => {
-        let diff = (new Date()).getTime() - strToDate(startTime).getTime();
+        // let diff = (new Date()).getTime() - strToDate(startTime).getTime();
+        let diff = strToDate(nowTime).getTime() - strToDate(startTime).getTime();
         console.log(startTime);
         console.log(dateToStr(new Date()));
         console.log(new Date().toDateString());
@@ -161,7 +164,7 @@ export default function WaitRequestBox({
                 </IconButton>
               </Box>
 
-              <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 5, flexDirection: 'column' }}>
+              <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 3, flexDirection: 'column' }}>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2}}  >
                   Request confirm
                 </Typography>
@@ -173,7 +176,7 @@ export default function WaitRequestBox({
                 </Typography>
               </Box>
 
-              <Box sx={{display:'flex', justifyContent:'center', mt:7}}>
+              <Box sx={{display:'flex', justifyContent:'center', mt:4}}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
                     backgroundColor: '#8475B0',

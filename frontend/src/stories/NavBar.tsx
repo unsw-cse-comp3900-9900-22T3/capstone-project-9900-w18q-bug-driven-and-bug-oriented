@@ -17,6 +17,7 @@ interface ListProps {
   show?: string;
   role?: string;
   id?: string;
+  canBack?: boolean;
   //预留空函数
   doSomething: (params: any) => any;
   postRequest: (params: any) => any;
@@ -30,6 +31,7 @@ export default function NavBar({
   show = '',
   role = '',
   id = '',
+  canBack = false,
   doSomething,
   postRequest,
 
@@ -77,82 +79,88 @@ export default function NavBar({
             <AskHelpButton doSomething={postRequest} />
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
-            <Logout status="back"/>
-          </Box>
+            {canBack && (<Logout status="back" />)}
+            {!canBack && (<Box sx={{height:45}}></Box>)}
+        </Box>
 
         </Box>
-      )}
+  )
+}
 
-      {role == 'manager' && (
-        <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
-            Manager
-          </Typography>
-          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {location.pathname !== `/manager` && (
-              <NavButton item='dashboard' selected={false} doSomething={(e) => { navigate(`/manager`); doSomething(e); }} />
-            )}
-            {location.pathname === `/manager` && (
-              <NavButton item='dashboard' selected />
-            )}
+{
+  role == 'manager' && (
+    <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
+      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
+        Manager
+      </Typography>
+      <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {location.pathname !== `/manager` && (
+          <NavButton item='dashboard' selected={false} doSomething={(e) => { navigate(`/manager`); doSomething(e); }} />
+        )}
+        {location.pathname === `/manager` && (
+          <NavButton item='dashboard' selected />
+        )}
 
-            {location.pathname !== `/manager/category` && (
-              <NavButton name='Category' item='category' selected={false} doSomething={(e) => { navigate(`/manager/category`); doSomething(e); }} />
-            )}
-            {location.pathname === `/manager/category` && (
-              <NavButton name='category' item='category' selected />
-            )}
+        {location.pathname !== `/manager/category` && (
+          <NavButton name='Category' item='category' selected={false} doSomething={(e) => { navigate(`/manager/category`); doSomething(e); }} />
+        )}
+        {location.pathname === `/manager/category` && (
+          <NavButton name='category' item='category' selected />
+        )}
 
-            {location.pathname !== `/manager/menu` && (
-              <NavButton item='menu' selected={false} doSomething={(e) => { navigate(`/manager/menu`); doSomething(e); }} />
-            )}
-            {location.pathname === `/manager/menu` && (
-              <NavButton item='menu' selected />
-            )}
+        {location.pathname !== `/manager/menu` && (
+          <NavButton item='menu' selected={false} doSomething={(e) => { navigate(`/manager/menu`); doSomething(e); }} />
+        )}
+        {location.pathname === `/manager/menu` && (
+          <NavButton item='menu' selected />
+        )}
 
-            {location.pathname !== `/manager/order` && (
-              <NavButton item='order' selected={false} doSomething={(e) => { navigate(`/manager/order`); doSomething(e); }} />
-            )}
-            {location.pathname === `/manager/order` && (
-              <NavButton item='order' selected />
-            )}
+        {location.pathname !== `/manager/order` && (
+          <NavButton item='order' selected={false} doSomething={(e) => { navigate(`/manager/order`); doSomething(e); }} />
+        )}
+        {location.pathname === `/manager/order` && (
+          <NavButton item='order' selected />
+        )}
 
-            {location.pathname !== `/manager/service` && (
-              <NavButton item='service' selected={false} doSomething={(e) => { navigate(`/manager/service`); doSomething(e); }} />
-            )}
-            {location.pathname === `/manager/service` && (
-              <NavButton item='service' selected />
-            )}
+        {location.pathname !== `/manager/service` && (
+          <NavButton item='service' selected={false} doSomething={(e) => { navigate(`/manager/service`); doSomething(e); }} />
+        )}
+        {location.pathname === `/manager/service` && (
+          <NavButton item='service' selected />
+        )}
 
-            {location.pathname !== `/manager/key` && (
-              <NavButton item='key' selected={false} doSomething={(e) => { navigate(`/manager/key`); doSomething(e) }} />
-            )}
-            {location.pathname === `/manager/key` && (
-              <NavButton item='key' selected />
-            )}
+        {location.pathname !== `/manager/key` && (
+          <NavButton item='key' selected={false} doSomething={(e) => { navigate(`/manager/key`); doSomething(e) }} />
+        )}
+        {location.pathname === `/manager/key` && (
+          <NavButton item='key' selected />
+        )}
 
-          </Box>
-          <Box sx={{ display: 'flex', height: '100%', }}></Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
-            <Logout status="logout"/>
-          </Box>
+      </Box>
+      <Box sx={{ display: 'flex', height: '100%', }}></Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
+        <Logout status="logout" />
+      </Box>
 
-        </Box>
-      )}
+    </Box>
+  )
+}
 
-      {role == 'bill' && (
-        <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
-            Customer
-          </Typography>
-          <Box sx={{ display: 'flex', height: '100%', }}></Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 10 }}>
-            <Logout status="back"/>
-          </Box>
+{
+  role == 'bill' && (
+    <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
+      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
+        Customer
+      </Typography>
+      <Box sx={{ display: 'flex', height: '100%', }}></Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 10 }}>
+        <Logout status="back" />
+      </Box>
 
 
-        </Box>
-      )}
+    </Box>
+  )
+}
 
     </>
   );
