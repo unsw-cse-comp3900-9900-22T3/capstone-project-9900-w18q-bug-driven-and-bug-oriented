@@ -11,6 +11,7 @@ import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ClearIcon from '@mui/icons-material/Clear';
+import Input from '@mui/material/Input';
 
 import { useEffect } from 'react';
 
@@ -48,6 +49,20 @@ const style = {
   pt: 2,
 };
 
+const editStyle = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  //height: 280,
+  bgcolor: 'background.paper',
+  borderRadius: 3,
+  boxShadow: 24,
+  p: 4,
+  pt: 2,
+};
+
 const theme = createTheme({
   palette: {
     neutral: {
@@ -75,6 +90,8 @@ declare module '@mui/material/Button' {
   }
 }
 
+const ariaLabel = { 'aria-label': 'description' };
+
 // 别忘了修改函数名
 export default function DishCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
@@ -100,6 +117,13 @@ export default function DishCard({
     doSomething(e);
   };
 
+  const [editOpen, setEditOpen] = React.useState(false);
+  const handleEditOpen = () => setEditOpen(true);
+  const handleEditClose = () => setEditOpen(false);
+  const handleEditComfirm =(e: any) => {
+    setOpen(false);
+    doSomething(e);
+  };
 
   const [dishNum, setDishNum] = React.useState(0);
 
@@ -126,23 +150,6 @@ export default function DishCard({
 
   return (
     <>
-      {((dishNum !== 0) || (initDishNum !== 0 && initDishNum)) && (
-        <Box sx={{
-          height: 50,
-          width: 50,
-          backgroundColor: '#FB6D3A',
-          color: '#fff',
-          borderRadius: 10,
-          fontWeight: 'bold',
-          fontSize: 20,
-          display: 'flex', justifyContent: 'center', alignItems: 'center',
-          position: 'relative',
-          zIndex: 15,
-          ml: 48,
-        }}>
-          {((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : dishNum}
-        </Box>
-      )}
 
       {((dishNum === 0) && (initDishNum === 0)) && (
         <Box sx={{
@@ -218,7 +225,7 @@ export default function DishCard({
         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           
             <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
-              <Button variant="contained" onClick={handleOpen} sx={{
+              <Button variant="contained" onClick={handleEditOpen} sx={{
               height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3,
               '&:hover': {
                 backgroundColor: '#8475B0',
@@ -228,6 +235,66 @@ export default function DishCard({
                   Edit
                 </Typography>
               </Button>
+              <Modal
+              open={editOpen}
+              onClose={handleEditClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              >
+
+                <Card sx={editStyle}>
+                  <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
+                    <IconButton onClick={handleEditClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
+                      <ClearIcon />
+                    </IconButton>
+                  </Box>
+
+                  <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: -3, flexDirection: 'column' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2}}  >
+                      CATEGORY NAME
+                    </Typography>
+                    <Input placeholder="Category name" inputProps={ariaLabel} sx={{mb: 5}}/>
+
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2}}  >
+                      DISH NAME
+                    </Typography>
+                    <Input placeholder="Title name" inputProps={ariaLabel} sx={{mb: 5}}/>
+
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2}}  >
+                      DESCRIPTION
+                    </Typography>
+                    <Input placeholder="Within 150 words" inputProps={ariaLabel} sx={{mb: 5}}/>
+
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2}}  >
+                      INGREDIENTS
+                    </Typography>
+                    <Input placeholder="Within 150 words" inputProps={ariaLabel} sx={{mb: 5}}/>
+
+                  </Box>
+
+                  <Box sx={{display:'flex', justifyContent:'center', mt:4}}>
+                    <Button onClick={handleComfirm} sx={{
+                      width: 150, '&:hover': {
+                        backgroundColor: '#8475B0',
+                      }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
+                    }}>
+                      <Typography variant="h6" sx={{ color: '#ffffff' }} >
+                        Confirm
+                      </Typography>
+                    </Button>
+                    <Button onClick={handleClose} sx={{
+                      width: 150, '&:hover': {
+                        backgroundColor: '#F1F1F1',
+                      }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
+                    }}>
+                      <Typography variant="h6" sx={{ color: '#000000', }} >
+                        cancel
+                      </Typography>
+                    </Button>
+                  </Box>
+                </Card>
+
+              </Modal>   
             </Box>
 
             <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
