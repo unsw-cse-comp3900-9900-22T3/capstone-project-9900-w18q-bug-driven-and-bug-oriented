@@ -17,7 +17,7 @@ interface ListProps {
   itemName?: string;
   status?: string;
   //预留空函数
-  doSomething?: (params: any) => any;
+  doSomething: (params: any) => any;
 
 }
 
@@ -82,6 +82,7 @@ export default function ItemRecord({
   const handleClose = (e: string) => {
     setAnchorEl(null);
     setMethed(e);
+    // doSomething(e);
     if(e=="Wait")
     {
       setColor("#FF6D4D")
