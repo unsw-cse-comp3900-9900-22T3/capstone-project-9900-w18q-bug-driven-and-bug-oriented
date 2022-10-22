@@ -25,5 +25,5 @@ Test.args = {
   calories: '20',
   price: '16.66',
   picture: '/dishImg/chickenGrill.jpg',
-  initDishNum: 0,
+  categoryName: 'meat',
 };
