@@ -13,8 +13,10 @@ import OrderDetailBOx from "../stories/customer/orderDetailBox/OrderDetailBox";
 import PreNextButton from "../stories/kitchen/PreNextButton";
 import StatusMenu from "../stories/kitchen/StatusMenu";
 import PageButton from "../stories/kitchen/PageButton";
+import OrderRecord from "../stories/kitchen/OrderRecord";
 import NavBar from "../stories/NavBar";
 import { getKitchenOrder, postKitchenOrder } from "../api/kitchen";
+import { parse } from "querystring";
 
 const theme = createTheme();
 
@@ -93,6 +95,13 @@ const Kitchen: React.FC<{}> = () => {
               <PageButton doSomething={setPage} numberOfPage={5} />
             </Box>
 
+            <Box>
+              {orderList?.orderList.map((item, index) => {
+                return (
+                  <OrderRecord key={item.orderId} table={item.table} orderTime={item.orderTime} status={item.status} waitCount={item.waitCount}/>
+                )
+              })}
+            </Box>
 
 
           </Box>
