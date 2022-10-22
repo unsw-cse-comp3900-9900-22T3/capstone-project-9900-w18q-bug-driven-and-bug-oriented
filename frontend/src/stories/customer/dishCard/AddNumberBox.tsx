@@ -33,7 +33,7 @@ export default function AddNumberBox({
   }, []);
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F7F7', fontWeight: 'bold', borderRadius: 3 }}>
 
         <Box
           onClick={delTryDish}

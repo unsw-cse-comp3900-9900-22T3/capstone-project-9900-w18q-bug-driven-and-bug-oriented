@@ -93,11 +93,12 @@ export default function DishCard({
   const selectDishNum = () => {
     setDishNum(dishTryNum);
     const obj = {
-      dish_id: dishId,
+      dishId: dishId,
       title: dishName,
       calorie: calories,
       cost: price,
       dishNumber: dishTryNum,
+      picture: picture,
     };
     passObj(obj);
     setOpen(false);
@@ -105,13 +106,12 @@ export default function DishCard({
   };
 
   useEffect(() => {
-    
     setDishNum(0);
   }, [initDishNum]);
 
   return (
     <>
-      {((dishNum !== 0 ) || (initDishNum !== 0 && initDishNum)) && (
+      {((dishNum !== 0) || (initDishNum !== 0 && initDishNum)) && (
         <Box sx={{
           height: 50,
           width: 50,
@@ -125,11 +125,11 @@ export default function DishCard({
           zIndex: 15,
           ml: 48,
         }}>
-          {((initDishNum !== 0) && (dishNum === 0))? initDishNum : dishNum}
+          {((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : dishNum}
         </Box>
       )}
 
-      {((dishNum === 0 ) && (initDishNum === 0)) && (
+      {((dishNum === 0) && (initDishNum === 0)) && (
         <Box sx={{
           height: 50,
           width: 50,
@@ -147,7 +147,7 @@ export default function DishCard({
         </Box>
       )}
 
-      <Card variant="outlined" sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5}}>
+      <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
 
         <CardMedia
           component="img"
@@ -159,7 +159,7 @@ export default function DishCard({
 
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
-          <Box sx={{ display: 'flex', height:50 }}>
+          <Box sx={{ display: 'flex', height: 50 }}>
             <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
               {dishName}
             </Typography>
@@ -169,7 +169,7 @@ export default function DishCard({
             <Box
               sx={{
                 minWidth: 50,
-                height:23,
+                height: 23,
                 borderRadius: 2,
                 backgroundColor: '#EEECF5',
                 color: '#503E9D',
@@ -184,7 +184,7 @@ export default function DishCard({
             <Box
               sx={{
                 minWidth: 50,
-                height:23,
+                height: 23,
                 borderRadius: 2,
                 backgroundColor: '#EEECF5',
                 color: '#503E9D',
@@ -202,7 +202,7 @@ export default function DishCard({
 
         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', mx: 1 }}>
+            <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
               <Button
                 size="small"
                 variant="contained"
@@ -253,13 +253,13 @@ export default function DishCard({
                             display: 'flex',
                             minWidth: 30,
                             borderRadius: 2,
-                            height:23,
+                            height: 23,
                             backgroundColor: '#EEECF5',
                             color: '#503E9D',
                             textAlign: 'center',
                             p: 0.5,
                             m: 0.5,
-                            
+
                             fontWeight: 'bold',
                           }}>
                           {calories}Cal
@@ -267,11 +267,11 @@ export default function DishCard({
 
                       </Box>
 
-                      <Box sx={{ my: 0.2,flexDirection:'row', display:'flex'}}>
+                      <Box sx={{ my: 0.2, flexDirection: 'row', display: 'flex' }}>
                         <Typography variant="body1" component="div" >
-                          $ 
+                          $
                         </Typography>
-                        <Typography variant="h6" component="div" sx={{mt:-0.7}} >
+                        <Typography variant="h6" component="div" sx={{ mt: -0.7 }} >
                           {price}
                         </Typography>
                       </Box>
@@ -295,7 +295,7 @@ export default function DishCard({
 
                       <ThemeProvider theme={theme}>
 
-                        <AddNumberBox passNum={setDishTryNum} initialNum={((initDishNum !== 0) && (dishNum === 0))? initDishNum : 1} />
+                        <AddNumberBox passNum={setDishTryNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
 
                         <Box sx={{ display: 'flex', mx: 1 }}>
                           <Button

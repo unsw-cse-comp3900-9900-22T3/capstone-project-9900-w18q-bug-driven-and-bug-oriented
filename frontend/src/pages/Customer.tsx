@@ -9,7 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
@@ -18,46 +18,56 @@ const theme = createTheme();
 
 const haveOrder = [
   {
-    dish_id: 1,
+    dishId: 1,
     title: 'meat',
     calorie: 50,
     cost: 10,
     dishNumber: 1,
+    picture: 'dishImg/img1.png'
   },
   {
-    dish_id: 2,
+    dishId: 2,
     title: 'vegetable',
     calorie: 40,
     cost: 5,
     dishNumber: 1,
+    picture: 'dishImg/img2.png'
   },
   {
-    dish_id: 3,
+    dishId: 3,
     title: 'rice',
     calorie: 48,
     cost: 3,
     dishNumber: 1,
+    picture: 'dishImg/img2.png'
   },
 ]
 
 const nextOrder =
 {
-  dish_id: 11,
+  dishId: 11,
   title: 'Szechuan Dan Dan Noodles',
   calorie: 288,
   cost: 15.9,
   dishNumber: 5,
 }
 
+const ord = {
+  "orderList": [
+    {
+      "dishId": 1,
+      "title": "Chicken Grill",
+      "dishNumber": 1
+    }
+  ]
+}
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [id, setId] = useState('');
   const [nav, setNav] = useState<any>([]);
   const [menu, setMenu] = useState<any>([]);
-
   const [oldOrder, setOldOrder] = useState<any>([]);
-
   const [newOrder, setNewOrder] = useState<any>([]);
   const [totalOrder, setTotalOrder] = useState<any>([]);
   const [numberOfItem, setNumberOfItem] = useState(0);
@@ -65,11 +75,12 @@ const Customer: React.FC<{}> = () => {
   const [countOfCal, setCountOfCal] = useState(0);
   const [ceilingOfCal, setCeilingOfCal] = useState(0);
   const [newEdit, setNewEdit] = useState<any>({
-    dish_id: -999,
+    dishId: -999,
     title: '',
     calorie: 0,
     cost: 0,
     dishNumber: 0,
+    picture: '',
   });
 
 
@@ -81,16 +92,22 @@ const Customer: React.FC<{}> = () => {
     const arr = location.pathname.split('/');
     setId(arr[2]);
     getInit(arr[2]);
+    getOrder(arr[2]);
+    getCategory();
   }, [])
-
 
 
   const getInit = async (e: any) => {
     const message = await getCustomerInit(e);
     console.log('message', message);
     setNav(message.categoryList);
-    setCeilingOfCal(message.diner * 4000);
-    setMenu(message.itemList);
+    setCeilingOfCal(message.diner * 2000);
+    // setMenu(message.itemList);
+  };
+
+  const askHelp = async () => {
+    const message = await postCustomerRequest(id);
+    console.log('ask for help',message.message, id);
   };
 
   const getCategory = async () => {
@@ -106,28 +123,71 @@ const Customer: React.FC<{}> = () => {
     }
   };
 
+  const getOrder = async (e: any) => {
+    const message = await getCustomerOrder(e);
+    console.log('get order', message);
+    const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
+    message.itemList.map((e: any) => {
+      const item = {
+        dishId: e.dishId,
+        title: e.title,
+        calorie: e.calorie,
+        cost: e.cost,
+        dishNumber: e.dishNumber,
+        picture: e.picture,
+      };
+      orderList.push(item);
+    });
+    setOldOrder(orderList);
+  }
+
+  const postOrder = async () => {
+    const order = {
+      'orderList': new Array
+    }
+    newOrder.map((item: any) => {
+      if (item.dishNumber !== 0) {
+        const e =
+        {
+          "dishId": item.dishId,
+          "title": item.title,
+          "dishNumber": item.dishNumber
+        }
+        order.orderList.push(e);
+      }
+    });
+
+    console.log('post', order);
+    const message = await postCustomerOrder(order, id);
+    console.log('now is', message);
+    // navigate(`/customer/${id}/hot`);
+    navigate(0);
+  }
+
 
   // reload menu
   const resetMenu = (input1:
     {
-      dish_id: number;
+      dishId: number;
       title: string;
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture: string;
     }[], input2?:
       {
-        dish_id: number;
+        dishId: number;
         title: string;
         calorie: number;
         cost: number;
         dishNumber: number;
+        picture: string;
       }[]) => {
     if (input2) {
       const newMenu = [...input2];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e?.dish_id === o?.dish_id) {
+          if (e?.dishId === o?.dishId) {
             o.dishNumber = e?.dishNumber;
           }
         });
@@ -137,7 +197,7 @@ const Customer: React.FC<{}> = () => {
       const newMenu = [...menu];
       input1.map((e) => {
         newMenu.map((o) => {
-          if (e?.dish_id === o?.dish_id) {
+          if (e?.dishId === o?.dishId) {
             o.dishNumber = e?.dishNumber;
           }
         });
@@ -150,18 +210,19 @@ const Customer: React.FC<{}> = () => {
   // 修改item
   const editItem = (input:
     {
-      dish_id: number;
+      dishId: number;
       title: string;
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture: string;
     }) => {
     const order = [...newOrder];
     let flag = true;
     let index = 0;
     let i = 0;
     order.map((element) => {
-      if (element?.dish_id === input?.dish_id) {
+      if (element?.dishId === input?.dishId) {
         i = index;
 
         flag = false;
@@ -172,17 +233,22 @@ const Customer: React.FC<{}> = () => {
       order.push(input);
     } else {
       order[i].dishNumber = input?.dishNumber;
-    }
-    setNewOrder(order);
+    };
+
     // setNumberOfItem(numberOfItem + input.dishNumber);
     resetMenu(order);
+    order.map((element, index) => {
+      if (element?.dishNumber === 0 && index !== 0) {
+        order.splice(index, 1);
+      };
+    });
+    setNewOrder(order);
   };
-
 
   // 提交订单函数
-  const confirmSubmit = (e: any) => {
-    setNumberOfItem(0);
-  };
+  // const confirmSubmit = (e: any) => {
+  //   setNumberOfItem(0);
+  // };
 
   // 更新总订单
   useEffect(() => {
@@ -198,7 +264,7 @@ const Customer: React.FC<{}> = () => {
     console.log('menu', menu);
   }, [newOrder, oldOrder]);
 
-// update new item
+  // update new item
   useEffect(() => {
     console.log('new add', newEdit);
     editItem(newEdit);
@@ -210,11 +276,12 @@ const Customer: React.FC<{}> = () => {
     let tempcost = 0;
     let tempCal = 0;
     totalOrder.map((e: {
-      dish_id: string;
+      dishId: string;
       title: string;
       calorie: number;
       cost: number;
       dishNumber: number;
+      picture: string;
     }) => {
       tempcost = tempcost + e?.cost * e?.dishNumber;
       tempCal = tempCal + e?.calorie * e?.dishNumber;
@@ -228,18 +295,19 @@ const Customer: React.FC<{}> = () => {
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar role='customer' id={id} obj={nav} doSomething={() => getCategory()} />
+          <NavBar canBack={oldOrder.length === 0? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1500 }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", }} >
-            <Grid container spacing={3} sx={{ display: 'flex', m: 10, ml: 20 }}>
+        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
+          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
+            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
+
               {menu.map((item: any) => {
 
                 return (
-                  <Grid item xs={4}>
+                  <Grid item xs={'auto'} key={item.dishId} >
                     <DishCard
-                      dishId={item.dish_id}
+                      dishId={item.dishId}
                       dishName={item.title}
                       description={item.description}
                       ingredients={item.ingredient}
@@ -249,28 +317,31 @@ const Customer: React.FC<{}> = () => {
                       initDishNum={item.dishNumber}
                       passObj={setNewEdit}
                     />
-                    {/* <div>{JSON.stringify(item)}</div> */}
+                    
                   </Grid>
                 )
               })}
-            
+
+
 
             </Grid>
-            {/* <Button sx={{ height: 30 }} onClick={() => navigate(`/customer/${id}/bill`)} variant="contained"> to the bill</Button>
-            <Button onClick={() => setOldOrder(haveOrder)} sx={{ height: 30 }}> set old order</Button>
-            <Button variant="contained" onClick={() => editItem(nextOrder)} sx={{ height: 30 }}> add item</Button> */}
+
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
 
             <OrderBar
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
               canSubmit={(numberOfItem >= 1) ? true : false}
               number={numberOfItem}
-              price={price}
+              price={Number(price.toFixed(2))}
               ceilingOfCal={ceilingOfCal}
               countOfCal={countOfCal}
-              submitFunc={() => confirmSubmit(newOrder)} />
+              submitFunc={() => postOrder()}
+              newOrder={newOrder}
+              oldOrder={oldOrder}
+              orderFunc={setNewEdit}
+            />
 
 
           </Box>

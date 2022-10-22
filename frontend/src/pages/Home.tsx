@@ -117,9 +117,9 @@ const Home: React.FC<{}> = () => {
                 </Typography>
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
-                {tableList.map((tableList) => {
+                {tableList.map((tableList,index) => {
                   return (
-                    <Grid item xs={2}>
+                    <Grid item xs={2} key={'table' + index}>
                       {
                         tableList.number == table && (
                           <BorderButton doSomething={() => selectTable(tableList.number)}
@@ -147,9 +147,9 @@ const Home: React.FC<{}> = () => {
 
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
-                {dinerList.map((dinerList) => {
+                {dinerList.map((dinerList,index) => {
                   return (
-                    <Grid item xs={2}>
+                    <Grid item xs={2} key={'diner' + index}>
                       {
                         dinerList.number == diner && (
                           <BorderButton doSomething={() => selectDiner(dinerList.number)}
