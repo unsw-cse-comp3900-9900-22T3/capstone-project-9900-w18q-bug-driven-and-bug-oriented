@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -58,19 +58,19 @@ export default function OrderRecord({
       <Box sx={{ width:'100%' }}>
         <Grid container spacing={1} >
           <Grid item xs={3}>
-            <Typography variant="subtitle1">{table.toString()}</Typography>
+            <Typography sx={{ml:2}} variant="subtitle1">{table.toString()}</Typography>
           </Grid>
           <Grid item xs={3}>
-            <Typography variant="subtitle1">{orderTime}</Typography>
+            <Typography sx={{ml:1.7}} variant="subtitle1">{orderTime.split(' ')[4]}</Typography>
           </Grid>
           <Grid item xs={3}>
-            <Typography variant="subtitle1">{waitCount.toString()}</Typography>
+            <Typography sx={{ml:11}} variant="subtitle1">{waitCount.toString()}</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Box sx={{ height: 25, display: 'inline-block',zoom:1, justifyContent: 'center', alignItems: 'center', py: 0.5,px:1,  borderRadius: 2, ml: 0.5 , marginTop: -1, color: { color }, backgroundColor: { backgroundColor }, }}>{status}</Box>
           </Grid>
           <Grid item xs={1}>
-            <Typography variant="subtitle1" sx={{ marginTop: -1, height: 40, width: 150, color: { color }, backgroundColor: { backgroundColor }, display: 'flex', alignItems: 'center', justifyContent: 'center', }}>{status}</Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Button sx={{ marginTop: -0.3, }} startIcon={<NavigateNextIcon fontSize="large" onClick={doSomething} />}></Button>
+            <IconButton onClick={doSomething} sx={{ marginTop: -0.3, }}><NavigateNextIcon /></IconButton>
           </Grid>
         </Grid>
       </Box>

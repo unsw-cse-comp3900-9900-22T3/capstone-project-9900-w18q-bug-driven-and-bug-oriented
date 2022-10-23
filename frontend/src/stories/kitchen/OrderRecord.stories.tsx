@@ -21,7 +21,7 @@ export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
   table : 1,
-  orderTime : 'Thu, 20 Oct 2022 11:36:00 GMT',
+  orderTime : '2022-10-10-18:07:58',
   status  : 'Completed',
   waitCount  : 0,
 };
