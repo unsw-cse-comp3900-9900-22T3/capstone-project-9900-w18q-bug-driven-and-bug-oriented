@@ -16,6 +16,7 @@ interface ListProps {
   itemCategory?: string;
   itemName?: string;
   status?: string;
+  itemIndex?: number;
   //预留空函数
   doSomething: (params: any) => any;
 
@@ -64,6 +65,7 @@ export default function ItemRecord({
   itemCategory = ' ',
   itemName = ' ',
   status = ' ',
+  itemIndex = 0,
   doSomething,
 
   ...props
@@ -86,18 +88,27 @@ export default function ItemRecord({
     if (e == "Wait") {
       setColor("#FF6D4D")
       setBackgroundColor("#FFF1EE")
-      doSomething(e)
+      doSomething({
+        itemIndex:itemIndex,
+        status: e,
+      })
     }
 
     if (e == "Processing") {
       setColor("#2F4CDD")
       setBackgroundColor("#F7F8FE")
-      doSomething(e)
+      doSomething({
+        itemIndex:itemIndex,
+        status: e,
+      })
     }
     if (e == "Prepared") {
       setColor("#2BC155")
       setBackgroundColor("#F4FCF6")
-      doSomething(e)
+      doSomething({
+        itemIndex:itemIndex,
+        status: e,
+      })
     }
   };
 
