@@ -149,8 +149,8 @@ export default function DishCard({
     if (!e.target.files) {
       return;
     }
+    
     const file = e.target.files[0];
-    setNewPictureFile(file);
     setNewPictureName(file.name);
   };
 
@@ -319,7 +319,7 @@ export default function DishCard({
                   </Box>
                 </Card>
 
-              </Modal>   
+                </Modal>   
             </Box>
 
             <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
