@@ -103,7 +103,7 @@ export default function DishCard({
       title: newDishName,
       calorie: newCalories,
       cost: newPrice,
-      picture: newPictureFile,
+      picture: newPictureName,
       category: newCategoryName,
       description: newDescription,
       ingredients: newIngredients,
@@ -143,7 +143,6 @@ export default function DishCard({
   };
 
   const [newPictureName, setNewPictureName] = React.useState('picture');
-  const [newPictureFile, setNewPictureFile] = React.useState({});
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {

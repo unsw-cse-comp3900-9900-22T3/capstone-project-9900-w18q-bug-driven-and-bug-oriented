@@ -10,6 +10,7 @@ import Input from '@mui/material/Input';
 
 // 声明变量的数据格式
 interface ListProps {
+  modalType?: string;
   editOpen?: boolean;
   categoryName?: string;
   dishName?: string;
@@ -48,6 +49,8 @@ const ariaLabel = { 'aria-label': 'description' };
 // 别忘了修改函数名
 export default function ManagerDishModal({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
+  modalType = 'Add', //Add or Update
+  
   editOpen = false,
 
   categoryName = 'category name',
@@ -154,7 +157,7 @@ export default function ManagerDishModal({
                       }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
                     }}>
                       <Typography variant="h6" sx={{ color: '#ffffff' }} >
-                        Update
+                        {modalType}
                       </Typography>
                     </Button>
                     <Button onClick={handleEditClose} sx={{
