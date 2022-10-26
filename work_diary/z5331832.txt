@@ -18,7 +18,7 @@ We start coding and prepare for the first demostration. As a backend developer, 
 We have set up a document to record the interface standard. Ohterwise, we decided the developing order of interface module. Most importantly, I deveop several
 interfaces about customer module and successfully connect with the frontend.
 
-Week5 
+Week 5 
 We work hard on the sprint 1 and complete the first demostration successfully. After demostration, we hold a retrospective meeting to conclude what well done
 and what need improve. Finally, we summarize a report. Otherwise, I continually to develop interfaces about wait staff module, optimize developed interfaces
 and draft next plan. 
