@@ -17,7 +17,6 @@ interface ListProps {
   nowTime?: string
 }
 
-
 const theme = createTheme({
   palette: {
     primary: {
@@ -41,7 +40,11 @@ const style = {
   pt: 2,
 };
 
+//进度条满时对应时间（分钟）
 const waitTimeLimit = 2;
+
+//进度条更新时间间隔（秒）
+const updateInt = 3;
 
 //仅做测试用
 const dateToStr = (d: Date) => {
@@ -89,27 +92,30 @@ export default function WaitRequestBox({
     doSomething(e);
   };
 
-  const [progress, setProgress] = React.useState(0);
-  const [waitTime, setWaitTime] = React.useState(0);
+  const countProgress = () => {
+    let diff = (new Date()).getTime() - strToDate(startTime).getTime();
+    console.log(startTime);
+    console.log(dateToStr(new Date()));
+    console.log(new Date().toDateString());
+    console.log(new Date().toTimeString());
+    console.log(strToDate(startTime));
+    console.log(diff);
+    return Math.min(diff / (1000 * 60 * waitTimeLimit) * 100, 100);
+  };
+
+  const countTime = () => {
+    let diff = (new Date()).getTime() - strToDate(startTime).getTime();
+    return Math.trunc(diff / (1000 * 60));
+  };
+
+  const [progress, setProgress] = React.useState(countProgress());
+  const [waitTime, setWaitTime] = React.useState(countTime());
   
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress(() => {
-        // let diff = (new Date()).getTime() - strToDate(startTime).getTime();
-        let diff = strToDate(nowTime).getTime() - strToDate(startTime).getTime();
-        console.log(startTime);
-        console.log(dateToStr(new Date()));
-        console.log(new Date().toDateString());
-        console.log(new Date().toTimeString());
-        console.log(strToDate(startTime));
-        console.log(diff);
-        return Math.min(diff / (1000 * 60 * waitTimeLimit) * 100, 100);
-      });
-      setWaitTime(() => {
-        let diff = (new Date()).getTime() - strToDate(startTime).getTime();
-        return Math.trunc(diff / (1000 * 60));
-      });
-    }, waitTimeLimit * 60 * 1000 / 10);
+      setProgress(countProgress());
+      setWaitTime(countTime());
+    }, updateInt);
 
     return () => {
       clearInterval(timer);

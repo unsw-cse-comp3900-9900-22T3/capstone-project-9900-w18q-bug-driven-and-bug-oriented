@@ -58,22 +58,22 @@ const Waiter: React.FC<{}> = () => {
   const [numOfRequest, setNumOfRequest] = useState(0);
   const [numOfItem, setNumOfItem] = useState(0);
   const [numOfOrder, setNumOfOrder] = useState(0);
-  const [items, setItem] = useState<itemInterface>();
-  const [order, setOrder] = useState<orderInterface>();
-  const [request,setRequest] = useState<requestInterface>();
+  const [items, setItem] = useState<(itemInterface | any)>();
+  const [order, setOrder] = useState<orderInterface | any>();
+  const [request, setRequest] = useState<requestInterface | any>();
 
   const getRequest = async () => {
     const message = await getWaitRequest();
     setNumOfRequest(message.requestsList.length);
     setRequest(message);
-    console.log(message.requestsList);
+    // console.log(message.requestsList);
   };
 
   const getItem = async () => {
     const message = await getWaitItem();
     setNumOfItem(message.itemsList.length);
     setItem(message);
-    // console.log(item);
+    console.log(message);
   };
 
   const getOrder = async () => {
@@ -90,28 +90,58 @@ const Waiter: React.FC<{}> = () => {
     getOrder();
   }
 
-  const postOrder = async (id:number) => {
+  const postOrder = async (id: number) => {
     const message = await postWaitOrder(id.toString());
-    console.log('confirm order',message);
+    console.log('confirm order', message);
+    setNumOfOrder(numOfOrder - 1);
+    const newOrder = {...order};
+    newOrder?.orderList?.map((item: { orderId: number; },index: any)=>{
+      if (item.orderId === id){
+        newOrder?.orderList?.splice(index,1);
+      }
+    })
+    setOrder(newOrder);
     // console.log(message.orderList);
   };
 
-  const postItem = async (id:number) => {
+  const postItem = async (id: number) => {
     const message = await postWaitItem(id.toString());
-    console.log('confirm item',message);
+    setNumOfItem(numOfItem - 1);
+    const newItems = { ...items };
+    // let index = 0
+    newItems?.itemsList?.map((item: { itemIndex: number; }, index: number) => {
+      if (item.itemIndex === id) {
+        newItems?.itemsList?.splice(index, 1);
+      }
+    })
+    setItem(newItems);
+
+    console.log('confirm item', message);
     // console.log(message.orderList);
   };
 
-  const postRequest = async (id:number) => {
+  const postRequest = async (id: number) => {
     const message = await postWaitRequest(id.toString());
-    console.log('confirm request',message);
+    console.log('confirm request', message);
+    setNumOfRequest(numOfRequest - 1);
+    const newRequest = {...request};
+    newRequest?.requestsList?.map((item: { id: number; },index: any)=>{
+      if (item.id ===id){
+        newRequest?.requestsList?.splice(index, 1);
+      }
+    })
+    setRequest(newRequest);
     // console.log(message.orderList);
   };
 
 
   useEffect(() => {
-    const timer = setInterval(getAll, 1000);
+    const timer = setInterval(getAll, 8000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    getAll()
   }, []);
 
 
@@ -156,71 +186,71 @@ const Waiter: React.FC<{}> = () => {
 
         </Box>
 
-        <Box sx={{display:'flex',justifyContent:'center', alignItems:'center', height: 'calc(100vh - 50px)', width: '100%'}}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 50px)', width: '100%' }}>
           {show === 'request' && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml:15, mt:10 }}>
-          <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
-  
-            {request?.requestsList.map((item: any, index) => {
-              // if (item.orderTime)
-                return (
-                  <Grid item xs={'auto'} key={'request' + item.id} >
-                    <WaitRequestBox 
-                    doSomething={()=> postRequest(item.id)}
-                    requestId={item.id}
-                    table={item.table}
-                    startTime={item.startTime}
-                    // nowTime={new Date()}
-                    />
-  
-                  </Grid>
-                )
-            })}
-  
-  
-  
-          </Grid>
-        </Box>
-        )}
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
+              <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
-        {show === 'item' && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml:15,  mt:10 }}>
-        <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
-
-          {items?.itemsList.map((item: any, index) => {
-            // if (item.orderTime)
-              return (
-                <Grid item xs={'auto'} key={'item' + index} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-                  <WaitItemBox 
-                  doSomething={()=> postItem(item.itemIndex)}
-                  itemIndex={item.itemIndex}
-                  table={item.table}
-                  dishName={item.dishName}
-                  />
-
-                </Grid>
-              )
-          })}
-
-
-
-        </Grid>
-      </Box>
-        )}
-
-        {show === 'order' && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml:15, mt:10 }}>
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
-
-              {order?.orderList.map((item: any, index) => {
-                // if (item.orderTime)
+                {request?.requestsList.map((item: any) => {
+                  // if (item.orderTime)
                   return (
-                    <Grid item xs={'auto'} key={'order' + index} sx={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+                    <Grid item xs={'auto'} key={'request' + item.id} >
+                      <WaitRequestBox
+                        doSomething={() => postRequest(item.id)}
+                        requestId={item.id}
+                        table={item.table}
+                        startTime={item.startTime}
+                      // nowTime={new Date()}
+                      />
+
+                    </Grid>
+                  )
+                })}
+
+
+
+              </Grid>
+            </Box>
+          )}
+
+          {show === 'item' && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
+              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+
+                {items?.itemsList.map((item: any) => {
+                  // if (item.orderTime)
+                  return (
+                    <Grid item xs={'auto'} key={'item' + item.itemIndex} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <WaitItemBox
+                        doSomething={() => postItem(item.itemIndex)}
+                        itemIndex={item.itemIndex}
+                        table={item.table}
+                        dishName={item.dishName}
+                      />
+
+                    </Grid>
+                  )
+                })}
+
+
+
+              </Grid>
+            </Box>
+          )}
+
+          {show === 'order' && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
+              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+
+                {order?.orderList.map((item: any) => {
+                  // if (item.orderTime)
+                  return (
+                    <Grid item xs={'auto'} key={'order' + item.orderId} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <OrderCard
                         confirmFunc={() => postOrder(item.orderId)}
                         orderId={item.orderId}
                         table={item.table}
-                        time={item.orderTime ? item.orderTime :  '2000-00-00-00:00:00'}
+                        time={item.orderTime ? item.orderTime : '2000-00-00-00:00:00'}
                         isRequest={item.isRequest}
                         price={item.price}
                         itemList={item.itemList}
@@ -228,15 +258,15 @@ const Waiter: React.FC<{}> = () => {
 
                     </Grid>
                   )
-              })}
+                })}
 
 
 
-            </Grid>
-          </Box>
-        )}
+              </Grid>
+            </Box>
+          )}
         </Box>
-        
+
       </Box>
     </ThemeProvider>
   );
