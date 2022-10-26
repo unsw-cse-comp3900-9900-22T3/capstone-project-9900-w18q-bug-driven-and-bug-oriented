@@ -12,3 +12,13 @@ Week 3
 We worked on our proposal. After finish the propsal, we started to set up our project. As a backend developer, I tried to set up database with the help of
 teammate on the AWS RDS. Otherwise, we created tables in the database and insert the initial data into each table. We also commumicated with the frontend 
 developers about the interfaces.
+
+Week 4
+We start coding and prepare for the first demostration. As a backend developer, I communicate with the frontend developer about the interface standard.
+We have set up a document to record the interface standard. Ohterwise, we decided the developing order of interface module. Most importantly, I deveop several
+interfaces about customer module and successfully connect with the frontend.
+
+Week5 
+We work hard on the sprint 1 and complete the first demostration successfully. After demostration, we hold a retrospective meeting to conclude what well done
+and what need improve. Finally, we summarize a report. Otherwise, I continually to develop interfaces about wait staff module, optimize developed interfaces
+and draft next plan. 
