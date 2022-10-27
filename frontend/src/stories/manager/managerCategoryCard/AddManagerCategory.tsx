@@ -7,11 +7,10 @@ import ClearIcon from '@mui/icons-material/Clear';
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
+
   //预留空函数
-  doSomething?: (params: any) => any;
+  changeFunc?: (params: any) => any;
+  submitFunc?: (params: any) => any;
 
 }
 
@@ -36,10 +35,9 @@ const style = {
 // 别忘了修改函数名
 export default function AddManagerCategory({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
-  doSomething,
+
+  changeFunc,
+  submitFunc = () =>{},
 
   ...props
 }: ListProps) {
@@ -50,6 +48,11 @@ export default function AddManagerCategory({
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategoryName(event.target.value);
   };
+
+  const subF = (e: any) => {
+    submitFunc(e);
+    handleClose();
+  }
 
   useEffect(()=>{
     console.log('input',newCategoryName);
@@ -87,11 +90,11 @@ export default function AddManagerCategory({
             <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
               CATEGORY NAME
             </Typography>
-            <Input fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={doSomething}/>
+            <Input fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={changeFunc}/>
           </Box>  
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 7 }}>
-            <Button onClick={doSomething} sx={{
+            <Button onClick={subF} sx={{
               width: 150, '&:hover': {
                 backgroundColor: '#8475B0',
               }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5

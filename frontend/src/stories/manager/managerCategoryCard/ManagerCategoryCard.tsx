@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Paper, Typography } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,10 +10,11 @@ interface ListProps {
   categoryId?: number;
   categoryName?: string;
   lastModified?: string;
+  canMove?: boolean;
   //预留空函数
   preFunc?: (params: any) => any;
   nextFunc?: (params: any) => any;
-
+  fatherListener?: (params: any) => any;
 }
 
 // 别忘了修改函数名
@@ -22,17 +23,24 @@ export default function ManagerCategoryCard({
   categoryId = 0,
   categoryName = '',
   lastModified = '',
+  canMove = false,
   preFunc,
   nextFunc,
+  fatherListener = () => { },
 
   ...props
 }: ListProps) {
   const [move, setMove] = useState(false);
 
+  useEffect(()=>{
+    setMove(canMove);
+    // console.log(categoryId,canMove);
+  },[canMove])
+
   return (
     <>
       {!move && (
-        <Paper elevation={0} onClick={move ? () => setMove(false) : () => setMove(true)} sx={{
+        <Paper elevation={0} onClick={move ? () => {setMove(false); fatherListener(-1)} : () => {setMove(true); fatherListener(categoryId)}} sx={{
           width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
             cursor: 'pointer'
           }
@@ -55,7 +63,7 @@ export default function ManagerCategoryCard({
       {move && (
         <Box sx={{ width: '100%', height: 150, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <Button disableRipple onClick={preFunc} sx={{ width: '100%' }}> <ExpandLessIcon sx={{ color: '#503E9D' }} /></Button>
-          <Paper elevation={0} onClick={move ? () => setMove(false) : () => setMove(true)} sx={{
+          <Paper elevation={0} onClick={move ? () => {setMove(false); fatherListener(-1)} : () => {setMove(true); fatherListener(categoryId)}} sx={{
             width: '100%', height: 100, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
               cursor: 'pointer'
             }, border: '3px solid #503E9D'
