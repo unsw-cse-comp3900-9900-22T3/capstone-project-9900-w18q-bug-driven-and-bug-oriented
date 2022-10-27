@@ -49,7 +49,7 @@ export default function NavBar({
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
             Customer
           </Typography>
-          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', overflow:'auto', height:'100%' }}>
             {location.pathname !== `/customer/${id}/hot` && (
               <NavButton item='hot' selected={false} doSomething={(e) => { navigate(`/customer/${id}/hot`); doSomething(e); }} />
             )}
