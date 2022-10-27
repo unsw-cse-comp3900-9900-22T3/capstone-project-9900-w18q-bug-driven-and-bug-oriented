@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import Typography from '@mui/material/Typography';
 import Input from '@mui/material/Input';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 // 声明变量的数据格式
 interface ListProps {
@@ -74,7 +76,16 @@ export default function ManagerDishModal({
 
   ...props
 }: ListProps) {
+  
+  const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
+
+  const handleCategorySelectChange = (event: SelectChangeEvent) => {
+    setNewCategoryName(event.target.value as string);
+    handleCategoryChange(event.target.value as string);
+  };
+
   return (
+
     <>
       <Modal
                 open={editOpen}
@@ -94,6 +105,16 @@ export default function ManagerDishModal({
                     <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
                       CATEGORY NAME
                     </Typography>
+                    <Select
+       
+                      value={newCategoryName}
+                      //label="Age"
+                      onChange={handleCategorySelectChange}
+                    >
+                      <MenuItem value={25}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
                     <Input placeholder={categoryName} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleCategoryChange}/>
 
                     <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
