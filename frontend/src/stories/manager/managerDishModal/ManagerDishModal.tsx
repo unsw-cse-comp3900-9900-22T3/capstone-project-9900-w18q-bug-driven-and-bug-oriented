@@ -21,6 +21,7 @@ interface ListProps {
   calories?: string;
   price?: string;
   newPictureName?: string;
+  categoryList?: string[];
 
   handleEditClose?: (params: any) => any;
   handleEditComfirm?: (params: any) => any;
@@ -55,13 +56,14 @@ export default function ManagerDishModal({
   
   editOpen = false,
 
-  categoryName = 'category name',
+  categoryName = 'Meat',
   dishName = 'Title name',
   description = 'Within 150 words',
   ingredients = 'Within 150 words',
   calories = '0',
   price = '0.00',
   newPictureName = 'picture',
+  categoryList = ['Meat', 'Vegetable', 'Noodle'],
 
   handleEditClose = () => {},
   handleEditComfirm = () => {},
@@ -80,8 +82,8 @@ export default function ManagerDishModal({
   const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
 
   const handleCategorySelectChange = (event: SelectChangeEvent) => {
-    setNewCategoryName(event.target.value as string);
-    handleCategoryChange(event.target.value as string);
+    setNewCategoryName(event.target.value);
+    handleCategoryChange(event.target.value);
   };
 
   return (
@@ -106,16 +108,13 @@ export default function ManagerDishModal({
                       CATEGORY NAME
                     </Typography>
                     <Select
-       
                       value={newCategoryName}
-                      //label="Age"
                       onChange={handleCategorySelectChange}
+                      sx={{height:35, mb: 5}}
                     >
-                      <MenuItem value={25}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {categoryList.map((candidateCategoryName) => { return (<MenuItem value={candidateCategoryName}>{candidateCategoryName}</MenuItem>)})}
                     </Select>
-                    <Input placeholder={categoryName} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleCategoryChange}/>
+                   
 
                     <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
                       DISH NAME
@@ -136,7 +135,7 @@ export default function ManagerDishModal({
                       CALORIES
                     </Typography>
                     <Box>
-                      <Input placeholder={calories} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleCaloriesChange}/> 
+                      <Input placeholder={calories} inputProps={ariaLabel} sx={{mb: 5, width: 50}} onChange={handleCaloriesChange}/> 
                       <Box display='inline' fontWeight='bold'>Cal</Box>
                     </Box>
 
@@ -145,7 +144,7 @@ export default function ManagerDishModal({
                     </Typography>
                     <Box>
                       <Box display='inline' fontWeight='bold'>$</Box>
-                      <Input placeholder={price} inputProps={ariaLabel} sx={{mb: 5}} onChange={handlePriceChange}/>
+                      <Input placeholder={price} inputProps={ariaLabel} sx={{mb: 5, width: 70}} onChange={handlePriceChange}/>
                     </Box>
 
                     <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >

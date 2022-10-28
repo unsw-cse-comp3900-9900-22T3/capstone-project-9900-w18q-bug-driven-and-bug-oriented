@@ -22,7 +22,7 @@ export const Test = Template.bind({});
 Test.args = {
   editOpen: false,
 
-  categoryName: 'category name',
+  categoryName: 'Meat',
   dishName: 'Title name',
   description: 'Within 150 words',
   ingredients: 'Within 150 words',
