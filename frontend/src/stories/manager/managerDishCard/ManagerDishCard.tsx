@@ -38,6 +38,7 @@ interface ListProps {
   picture?: string;
   passObj?: (params: any) => any;
   categoryList?: string[];
+  canMove: boolean;
 }
 
 const style = {
@@ -47,19 +48,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   height: 280,
-  bgcolor: 'background.paper',
-  borderRadius: 3,
-  boxShadow: 24,
-  p: 4,
-  pt: 2,
-};
-
-const editStyle = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
   borderRadius: 3,
   boxShadow: 24,
@@ -82,6 +70,7 @@ export default function DishCard({
   price = '16.66',
   picture = '/dishImg/chickenGrill.jpg',
   categoryList = ['Meat', 'Vegetable', 'Noodle', 'Soup'],
+  canMove = true,
   passObj = () => { },
   removeCard = () => { },
   editCard = () => { },
@@ -161,6 +150,7 @@ export default function DishCard({
   const [isSelected, setIsSelected] = React.useState(false);
 
   const handleImageClick = () => {
+    if (canMove === false) {return;}
     isSelected === false ? setIsSelected(true) : setIsSelected(false);
   };
 
