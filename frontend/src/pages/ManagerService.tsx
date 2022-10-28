@@ -35,6 +35,7 @@ const ManagerService: React.FC<{}> = () => {
         <div>ManagerService page</div>
         <Box>
          <ManageDishCard 
+          editCard={(obj) => {setinfo1(JSON.stringify(obj));}}
           removeCard={(dishId) => {setinfo1('dish with dishID of ' + dishId + ' is removed' );}}
           moveLeft={() => {setinfo1('move dish left' );}}
           moveRight={() => {setinfo1('move dish right' );}}

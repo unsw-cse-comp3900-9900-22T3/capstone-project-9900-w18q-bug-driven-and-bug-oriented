@@ -28,13 +28,13 @@ interface ListProps {
   moveLeft?: (params: any) => any;
   moveRight?: (params: any) => any;
 
-  dishId?: string;
+  dishId?: number;
   dishName?: string;
   categoryName?: string;
   description?: string;
   ingredients?: string;
-  calories?: string;
-  price?: string;
+  calories?: number;
+  price?: number;
   picture?: string;
   passObj?: (params: any) => any;
   categoryList?: string[];
@@ -61,13 +61,13 @@ const ariaLabel = { 'aria-label': 'description' };
 export default function DishCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
-  dishId = '123',
+  dishId = 123,
   dishName = 'Chicken Grill',
   categoryName = 'Meat',
   description = 'It is one of the mot iconic and well-recognized fast food out there.',
   ingredients = 'Meat, vegetable',
-  calories = '20',
-  price = '16.66',
+  calories = 20,
+  price = 16.66,
   picture = '/dishImg/chickenGrill.jpg',
   categoryList = ['Meat', 'Vegetable', 'Noodle', 'Soup'],
   canMove = true,
@@ -87,6 +87,8 @@ export default function DishCard({
     removeCard(dishId);
   };
 
+  const imgDirectoryPath = '/dishImg/';
+
   const [editOpen, setEditOpen] = React.useState(false);
   const handleEditOpen = () => setEditOpen(true);
   const handleEditClose = () => setEditOpen(false);
@@ -94,10 +96,10 @@ export default function DishCard({
     setEditOpen(false);
     const obj = {
       dishId: dishId,
-      title: newDishName,
-      calorie: newCalories,
-      cost: newPrice,
-      picture: newPictureName,
+      dishName: newDishName,
+      calorie: Number(newCalories),
+      price: Number(newPrice),
+      picture: imgDirectoryPath + newPictureName,
       category: newCategoryName,
       description: newDescription,
       ingredients: newIngredients,
@@ -126,17 +128,17 @@ export default function DishCard({
     setNewIngredients(event.target.value);
   };
 
-  const [newCalories, setNewCalories] = React.useState(calories);
+  const [newCalories, setNewCalories] = React.useState(calories.toString());
   const handleCaloriesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCalories(event.target.value);
   };
 
-  const [newPrice, setNewPrice] = React.useState(price);
+  const [newPrice, setNewPrice] = React.useState(price.toString());
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewPrice(event.target.value);
   };
 
-  const [newPictureName, setNewPictureName] = React.useState('picture');
+  const [newPictureName, setNewPictureName] = React.useState(picture);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -263,8 +265,8 @@ export default function DishCard({
                 dishName = {dishName}
                 description = {description}
                 ingredients = {ingredients}
-                calories = {calories}
-                price = {price}
+                calories = {calories.toString()}
+                price = {price.toString()}
                 categoryList = {categoryList}
 
                 handleEditClose={handleEditClose}

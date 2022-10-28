@@ -36,8 +36,8 @@ export default function ManagerAddDishButton({
     setEditOpen(false);
     const obj = {
       dishName: newDishName,
-      calorie: newCalories,
-      cost: newPrice,
+      calorie: Number(newCalories),
+      price: Number(newPrice),
       picture: newPictureName,
       category: newCategoryName,
       description: newDescription,
