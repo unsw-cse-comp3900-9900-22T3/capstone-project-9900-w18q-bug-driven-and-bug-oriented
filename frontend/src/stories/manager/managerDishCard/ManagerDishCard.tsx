@@ -23,10 +23,10 @@ interface ListProps {
   props2?: string;
   props3?: boolean;
   //预留空函数
-  removeCard: (params: any) => any;
-  editCard: (params: any) => any;
-  moveLeft: (params: any) => any;
-  moveRight: (params: any) => any;
+  removeCard?: (params: any) => any;
+  editCard?: (params: any) => any;
+  moveLeft?: (params: any) => any;
+  moveRight?: (params: any) => any;
 
   dishId?: string;
   dishName?: string;
@@ -38,7 +38,7 @@ interface ListProps {
   picture?: string;
   passObj?: (params: any) => any;
   categoryList?: string[];
-  canMove: boolean;
+  canMove?: boolean;
 }
 
 const style = {
@@ -163,7 +163,9 @@ export default function DishCard({
         isSelected === false && <CardMedia
           component="img"
           height="180"
-          sx={{ width: '100%', borderRadius: 5 }}
+          sx={{ width: '100%', borderRadius: 5, '&:hover': {
+            cursor: 'pointer', backgroundColor: '#8475B0',
+          } }}
           image={picture}
           alt={dishName}
           onClick={handleImageClick}
@@ -180,12 +182,14 @@ export default function DishCard({
               <ArrowBackIosIcon />
             </IconButton>
             <CardMedia
-            component="img"
-            height="180"
-            sx={{ width: '80%', borderRadius: 5, justifyContent: 'center', alignContent: 'center', display: 'flex' }}
-            image={picture}
-            alt={dishName}
-            onClick={handleImageClick}
+              component="img"
+              height="180"
+              sx={{ width: '80%', borderRadius: 5, justifyContent: 'center', alignContent: 'center', display: 'flex', '&:hover': {
+                cursor: 'pointer'
+             } }}
+              image={picture}
+              alt={dishName}
+              onClick={handleImageClick}
             />
             <IconButton 
               sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}

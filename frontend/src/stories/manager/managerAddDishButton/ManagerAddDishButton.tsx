@@ -35,8 +35,7 @@ export default function ManagerAddDishButton({
   const handleEditComfirm =(e: any) => {
     setEditOpen(false);
     const obj = {
-      //dishId: dishId,
-      title: newDishName,
+      dishName: newDishName,
       calorie: newCalories,
       cost: newPrice,
       picture: newPictureName,
