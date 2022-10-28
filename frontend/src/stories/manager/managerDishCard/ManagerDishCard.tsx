@@ -6,16 +6,13 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import ClearIcon from '@mui/icons-material/Clear';
-import Input from '@mui/material/Input';
-import InputAdornment from '@mui/material/InputAdornment';
 
-import { useEffect } from 'react';
-import { fontSize } from '@mui/system';
+import ManagerDishModal from "../managerDishModal/ManagerDishModal";
+
+
 
 // 声明变量的数据格式
 interface ListProps {
@@ -36,6 +33,7 @@ interface ListProps {
   price?: string;
   picture?: string;
   passObj?: (params: any) => any;
+  categoryList?: string[];
 }
 
 const style = {
@@ -73,12 +71,13 @@ export default function DishCard({
 
   dishId = '123',
   dishName = 'Chicken Grill',
-  categoryName = 'meat',
+  categoryName = 'Meat',
   description = 'It is one of the mot iconic and well-recognized fast food out there.',
   ingredients = 'Meat, vegetable',
   calories = '20',
   price = '16.66',
   picture = '/dishImg/chickenGrill.jpg',
+  categoryList = ['Meat', 'Vegetable', 'Noodle', 'Soup'],
   passObj = () => { },
   removeCard = () => { },
   editCard = () => { },
@@ -112,32 +111,32 @@ export default function DishCard({
   };
 
 
-  const [newCategoryName, setNewCategoryName] = React.useState('');
+  const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategoryName(event.target.value);
   };
 
-  const [newDishName, setNewDishName] = React.useState('');
+  const [newDishName, setNewDishName] = React.useState(dishName);
   const handleDishChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewDishName(event.target.value);
   };
 
-  const [newDescription, setNewDescription] = React.useState('');
+  const [newDescription, setNewDescription] = React.useState(description);
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewDescription(event.target.value);
   };
 
-  const [newIngredients, setNewIngredients] = React.useState('');
+  const [newIngredients, setNewIngredients] = React.useState(ingredients);
   const handleIngredientsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewIngredients(event.target.value);
   };
 
-  const [newCalories, setNewCalories] = React.useState('');
+  const [newCalories, setNewCalories] = React.useState(calories);
   const handleCaloriesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCalories(event.target.value);
   };
 
-  const [newPrice, setNewPrice] = React.useState('');
+  const [newPrice, setNewPrice] = React.useState(price);
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewPrice(event.target.value);
   };
@@ -222,103 +221,28 @@ export default function DishCard({
                   Edit
                 </Typography>
               </Button>
-                <Modal
-                open={editOpen}
-                onClose={handleEditClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
+              <ManagerDishModal 
+                editOpen={editOpen} 
+                modalType='Update'
+                categoryName={categoryName}
+                dishName = {dishName}
+                description = {description}
+                ingredients = {ingredients}
+                calories = {calories}
+                price = {price}
+                categoryList = {categoryList}
 
-                <Card sx={editStyle}>
-                  <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
-                    <IconButton onClick={handleEditClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
-                      <ClearIcon />
-                    </IconButton>
-                  </Box>
-
-                  <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: -3, flexDirection: 'column' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      CATEGORY NAME
-                    </Typography>
-                    <Input placeholder={categoryName} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleCategoryChange}/>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      DISH NAME
-                    </Typography>
-                    <Input placeholder={dishName} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleDishChange}/>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      DESCRIPTION
-                    </Typography>
-                    <Input placeholder={description} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleDescriptionChange}/>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      INGREDIENTS
-                    </Typography>
-                    <Input placeholder={ingredients} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleIngredientsChange}/>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      CALORIES
-                    </Typography>
-                    <Box>
-                      <Input placeholder={calories} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleCaloriesChange}/> 
-                      <Box display='inline' fontWeight='bold'>Cal</Box>
-                    </Box>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      PRICE
-                    </Typography>
-                    <Box>
-                      <Box display='inline' fontWeight='bold'>$</Box>
-                      <Input placeholder={price} inputProps={ariaLabel} sx={{mb: 5}} onChange={handlePriceChange}/>
-                    </Box>
-
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      PICTURE
-                    </Typography>
-                    <Box>
-                      <Input disabled placeholder={newPictureName} inputProps={ariaLabel} sx={{mb: 5, width: 0.75, fontWeight: 'bold'}}/> 
-                      <Box display='inline'>
-                      <Button 
-                        component="label"
-                        sx={{
-                          '&:hover': {
-                            backgroundColor: '#8475B0',
-                          }, backgroundColor: '#503E9D', fontWeight: 'bold', borderRadius: 3, mx:1
-                        }}>
-                      <Typography sx={{ color: '#ffffff'}} >
-                        Upload
-                      </Typography>
-                      <input hidden accept="image/*" multiple type="file" onChange={handleFileUpload}/>
-                    </Button>
-                      </Box>
-                    </Box>
-
-                  </Box>
-
-                  <Box sx={{display:'flex', justifyContent:'center', mt:1}}>
-                    <Button onClick={handleEditComfirm} sx={{
-                      width: 150, '&:hover': {
-                        backgroundColor: '#8475B0',
-                      }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
-                    }}>
-                      <Typography variant="h6" sx={{ color: '#ffffff' }} >
-                        Update
-                      </Typography>
-                    </Button>
-                    <Button onClick={handleEditClose} sx={{
-                      width: 150, '&:hover': {
-                        backgroundColor: '#F1F1F1',
-                      }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
-                    }}>
-                      <Typography variant="h6" sx={{ color: '#000000', }} >
-                        Cancel
-                      </Typography>
-                    </Button>
-                  </Box>
-                </Card>
-
-                </Modal>   
+                handleEditClose={handleEditClose}
+                handleEditComfirm={handleEditComfirm}
+                handleCategoryChange={handleCategoryChange}
+                handleDishChange={handleDishChange}
+                handleDescriptionChange={handleDescriptionChange}
+                handleIngredientsChange={handleIngredientsChange}
+                handleCaloriesChange={handleCaloriesChange}
+                handlePriceChange={handlePriceChange}
+                handleFileUpload={handleFileUpload}
+                newPictureName={newPictureName}
+              />
             </Box>
 
             <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>

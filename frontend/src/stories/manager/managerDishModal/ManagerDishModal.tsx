@@ -83,7 +83,7 @@ export default function ManagerDishModal({
 
   const handleCategorySelectChange = (event: SelectChangeEvent) => {
     setNewCategoryName(event.target.value);
-    handleCategoryChange(event.target.value);
+    handleCategoryChange(event);
   };
 
   return (
