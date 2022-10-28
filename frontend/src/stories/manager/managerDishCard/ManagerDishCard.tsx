@@ -9,6 +9,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import ManagerDishModal from "../managerDishModal/ManagerDishModal";
 
@@ -23,6 +25,8 @@ interface ListProps {
   //预留空函数
   removeCard: (params: any) => any;
   editCard: (params: any) => any;
+  moveLeft: (params: any) => any;
+  moveRight: (params: any) => any;
 
   dishId?: string;
   dishName?: string;
@@ -81,6 +85,8 @@ export default function DishCard({
   passObj = () => { },
   removeCard = () => { },
   editCard = () => { },
+  moveLeft = () => {},
+  moveRight = () => {},
   ...props
 }: ListProps) {
 
@@ -152,18 +158,53 @@ export default function DishCard({
     setNewPictureName(file.name);
   };
 
+  const [isSelected, setIsSelected] = React.useState(false);
+
+  const handleImageClick = () => {
+    isSelected === false ? setIsSelected(true) : setIsSelected(false);
+  };
+
   return (
     <>
 
       <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
 
-        <CardMedia
+        {
+        isSelected === false && <CardMedia
           component="img"
           height="180"
           sx={{ width: '100%', borderRadius: 5 }}
           image={picture}
           alt={dishName}
+          onClick={handleImageClick}
         />
+        }
+
+        {
+          isSelected === true && 
+          <Box display='flex' sx={{justifyContent: 'center', alignItems: 'center'}}>
+            <IconButton 
+              sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
+              onClick={moveLeft}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
+            <CardMedia
+            component="img"
+            height="180"
+            sx={{ width: '80%', borderRadius: 5, justifyContent: 'center', alignContent: 'center', display: 'flex' }}
+            image={picture}
+            alt={dishName}
+            onClick={handleImageClick}
+            />
+            <IconButton 
+              sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
+              onClick={moveRight}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Box>
+        }
 
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
