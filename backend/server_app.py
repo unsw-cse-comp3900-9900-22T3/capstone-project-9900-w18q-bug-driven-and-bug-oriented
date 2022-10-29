@@ -487,7 +487,10 @@ def update_function(original_data, update_data):  # 更新功能
 
 def upload_picture(original_local_picture_address):  # 图片转存功能
     root = "../frontend/public/dishImg"
+    upload_picture_address = "../frontend/public" + str(original_local_picture_address[2:])
+    print(upload_picture_address)
     end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
+    print(end_name)
     if end_name not in ["jpg", "png", "jpeg"]:
         return {"msg": "the format is not a valid picture"}
     all_files = os.listdir(root)  # 读取这个路径下的文件
@@ -501,8 +504,9 @@ def upload_picture(original_local_picture_address):  # 图片转存功能
     filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
     img_path = os.path.join(root, filename)  # 拼接转存路径和新的文件名
     print("img_path: ", img_path)
-    shutil.copy(original_local_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
     img_path_post = img_path[18:]
+    img_path_post = str(img_path_post).replace("\\", "/")
     return img_path_post  # 返回新的路径
 
 
