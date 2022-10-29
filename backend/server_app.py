@@ -87,7 +87,7 @@ class Menuitem(Base):
     cost = db.Column(db.Float, default=0)
     picture = db.Column(db.String(255))
     calorie = db.Column(db.Float, default=0)
-    orderTimes = db.Column(db.Integer, default=0)
+    orderTimes = db.Column(db.INT, default=0)
     lastModified = db.Column(db.DateTime, nullable=False)
 
 
@@ -471,7 +471,8 @@ def update_function(original_data, update_data):  # 更新功能
                 setattr(original_data, "categoryId", update_category_id)
                 flag = 1
             if key == "picture":
-                delete_picture(original_data.picture)
+                #original_data_address = original_data.picture
+                #delete_picture(original_data_address)
                 if update_data["picture"][0:3] != "../":
                     update_data["picture"] = ".." + update_data["picture"]
                 new_img_address = upload_picture(update_data["picture"])
@@ -487,22 +488,20 @@ def update_function(original_data, update_data):  # 更新功能
 
 def upload_picture(original_local_picture_address):  # 图片转存功能
     root = "../frontend/public/dishImg"
+    upload_picture_address = "../frontend/public" + str(original_local_picture_address[2:])
+    print(upload_picture_address)
     end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
+    print(end_name)
     if end_name not in ["jpg", "png", "jpeg"]:
         return {"msg": "the format is not a valid picture"}
-    all_files = os.listdir(root)  # 读取这个路径下的文件
-    file_list = []
-    for file in all_files:
-        if file[0:3] == "img":
-            file = file[3:]
-            file_num = file[:-4]
-            file_list.append(int(file_num))
-    cur_file_num = max(file_list) + 1
-    filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
+    # all_files = os.listdir(root)  # 读取这个路径下的文件
+    filename = str(original_local_picture_address[11:])  # 生成新的文件名，避免重复
+    print(filename)
     img_path = os.path.join(root, filename)  # 拼接转存路径和新的文件名
     print("img_path: ", img_path)
-    shutil.copy(original_local_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    # shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
     img_path_post = img_path[18:]
+    img_path_post = str(img_path_post).replace("\\", "/")
     return img_path_post  # 返回新的路径
 
 
@@ -531,17 +530,25 @@ def get_category_list(time_flag):  # 得到所有的类目
 
 
 def get_menu_item_list():  # 得到所有的类目
-    menu_item_list = model_to_dict(Menuitem.query.all())
-    for line in menu_item_list:
-        line["dishName"] = line["title"]
-        line["price"] = line["cost"]
-        line.pop("cost")
-        line.pop("title")
-        line.pop("id")
-        line.pop("lastModified")
-        line.pop("categoryId")
-        line.pop("orderTimes")
-    return {"itemList": menu_item_list}
+    category_id_list = []
+    item_list = []
+    all_category = get_category_list(1)
+    for each_category in all_category["categoryList"]:
+        category_id_list.append(each_category["categoryId"])
+    for category_id in category_id_list:
+        menu_item = model_to_dict(Menuitem.query.filter_by(categoryId=category_id).all())
+        for line in menu_item:
+            line["dishName"] = line["title"]
+            line["price"] = line["cost"]
+            line.pop("cost")
+            line.pop("title")
+            line.pop("id")
+            line.pop("lastModified")
+            line.pop("categoryId")
+            line.pop("orderTimes")
+        item_list.append({"categoryId": category_id, "itemList": menu_item})
+    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
+    return return_json
 
 
 @app.route('/manager/category', methods=["GET"])  # 获取所有类目
@@ -576,7 +583,6 @@ def add_category():
 @app.route('/manager/item', methods=["GET"])  # 获取所有菜品
 def get_menu_item():
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -633,20 +639,18 @@ def add_menu_item():
                               calorie=calorie_post, lastModified=datetime.now())
     menu_item_post.save()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
 @app.route('/manager/item/<int:dish_id>', methods=["POST"])  # 删除现有的菜品
 def delete_menu_item(dish_id):
     menu_item_delete = Menuitem.query.filter_by(dishId=dish_id).first()
-    menu_item_delete_dict = model_to_dict(menu_item_delete)
-    if menu_item_delete_dict["picture"] is not None:
-        delete_picture(str(menu_item_delete_dict["picture"]))
+    # menu_item_delete_dict = model_to_dict(menu_item_delete)
+    # if menu_item_delete_dict["picture"] is not None:
+        # delete_picture(str(menu_item_delete_dict["picture"]))
     db.session.delete(menu_item_delete)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -658,7 +662,6 @@ def edit_menu_item(dish_id):
     update_function(original_data, update_data)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -728,6 +731,43 @@ def delete_key():
         return_json = {"message": "Invalid role and key"}
     return Response(json.dumps(return_json), mimetype="application/json")
 
+
+@app.route('/manager/category', methods=["POST"])  # category sort
+def category_sort():
+    insert_id = 1
+    new_sorted_category_list = []
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    for line in sort_data["categoryList"]:
+        category_delete = Category.query.filter_by(categoryId=line["categoryId"]).first()
+        db.session.delete(category_delete)
+        new_sorted_category_list.append(Category(id=insert_id, categoryId=line["categoryId"],
+                                                 categoryName=line["categoryName"], lastModified=datetime.now()))
+        insert_id += 1
+    db.session.add_all(new_sorted_category_list)
+    db.session.commit()
+    return Response(json.dumps(get_category_list(0)), mimetype="application/json")
+
+
+@app.route('/manager/item', methods=["POST"])  # menu item sort
+def sort_menu_item():
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    new_sorted_menu_item_list = []
+    for line in sort_data["itemList"]:
+        each_category_id = Menuitem.query.filter_by(categoryName=line["categoryName"]).first().categoryId
+        each_item_order_times = Menuitem.query.filter_by(dishId=line["dishId"]).first().orderTimes
+        menu_item_delete = Menuitem.query.filter_by(dishId=line["dishId"]).first()
+        new_sorted_menu_item_list.append(Menuitem(dishId=line["dishId"], categoryId=each_category_id,
+                                                  categoryName=line["categoryName"], title=line["dishName"],
+                                                  description=line["description"],
+                                                  ingredient=line["ingredients"], cost=line["price"],
+                                                  picture=line["picture"],
+                                                  calorie=line["calories"], orderTimes=each_item_order_times,
+                                                  lastModified=datetime.now()))
+        db.session.delete(menu_item_delete)
+    db.session.add_all(new_sorted_menu_item_list)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
 
 ########################################################################################################################
 ###############################################   Manager Module  ######################################################
