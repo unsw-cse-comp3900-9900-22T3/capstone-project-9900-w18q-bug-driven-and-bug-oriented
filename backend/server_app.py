@@ -87,7 +87,7 @@ class Menuitem(Base):
     cost = db.Column(db.Float, default=0)
     picture = db.Column(db.String(255))
     calorie = db.Column(db.Float, default=0)
-    orderTimes = db.Column(db.Integer, default=0)
+    orderTimes = db.Column(db.INT, default=0)
     lastModified = db.Column(db.DateTime, nullable=False)
 
 
@@ -578,6 +578,7 @@ def get_menu_item():
     category_id_list = []
     item_list = []
     all_category = get_category_list(1)
+    print(all_category)
     for each_category in all_category["categoryList"]:
         category_id_list.append(each_category["categoryId"])
     for category_id in category_id_list:
@@ -593,7 +594,7 @@ def get_menu_item():
             line.pop("orderTimes")
         if menu_item:
             item_list.append({category_id: menu_item})
-    return_json = {"itemList": item_list, "categoryList": all_category}
+    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -745,6 +746,44 @@ def delete_key():
         return_json = {"message": "Invalid role and key"}
     return Response(json.dumps(return_json), mimetype="application/json")
 
+
+@app.route('/manager/category', methods=["POST"])  # category sort
+def category_sort():
+    insert_id = 1
+    new_sorted_category_list = []
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    for line in sort_data["categoryList"]:
+        category_delete = Category.query.filter_by(categoryId=line["categoryId"]).first()
+        db.session.delete(category_delete)
+        new_sorted_category_list.append(Category(id=insert_id, categoryId=line["categoryId"],
+                                                 categoryName=line["categoryName"], lastModified=datetime.now()))
+        insert_id += 1
+    db.session.add_all(new_sorted_category_list)
+    db.session.commit()
+    return Response(json.dumps(get_category_list(0)), mimetype="application/json")
+
+
+@app.route('/manager/item', methods=["POST"])  # menu item sort
+def sort_menu_item():
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    new_sorted_menu_item_list = []
+    for line in sort_data["itemList"]:
+        each_category_id = Menuitem.query.filter_by(categoryName=line["categoryName"]).first().categoryId
+        each_item_order_times = Menuitem.query.filter_by(dishId=line["dishId"]).first().orderTimes
+        menu_item_delete = Menuitem.query.filter_by(dishId=line["dishId"]).first()
+        new_sorted_menu_item_list.append(Menuitem(dishId=line["dishId"], categoryId=each_category_id,
+                                                  categoryName=line["categoryName"], title=line["dishName"],
+                                                  description=line["description"],
+                                                  ingredient=line["ingredients"], cost=line["price"],
+                                                  picture=line["picture"],
+                                                  calorie=line["calories"], orderTimes=each_item_order_times,
+                                                  lastModified=datetime.now()))
+        db.session.delete(menu_item_delete)
+    db.session.add_all(new_sorted_menu_item_list)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return_json["categoryList"] = get_category_list(1)["categoryList"]
+    return Response(json.dumps(return_json), mimetype="application/json")
 
 ########################################################################################################################
 ###############################################   Manager Module  ######################################################
