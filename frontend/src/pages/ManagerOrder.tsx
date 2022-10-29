@@ -15,12 +15,12 @@ const ManagerOrder: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-            <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-        <NavBar role='manager' doSomething={()=>{}} postRequest={() => { }} />
-       
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+        <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+
         <div>ManagerOrder page</div>
       </Box>
-      
+
     </ThemeProvider>
   );
 };

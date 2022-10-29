@@ -101,7 +101,7 @@ const Waiter: React.FC<{}> = () => {
       }
     })
     setOrder(newOrder);
-    // console.log(message.orderList);
+    console.log(message.orderList);
   };
 
   const postItem = async (id: number) => {

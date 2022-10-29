@@ -47,7 +47,7 @@ interface itemInterface {
 const ManagerMenu: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [categoryList, setCategoryList] = useState<any>();
-
+  const [nowSelect, setNowSelect] = useState(-1);
   const [itemList, setItemList] = useState<any>();
   const [nowItemList, setNowItemList] = useState<any>();
   const [nowCategoryId, setNowCategoryId] = useState<string>('1');
@@ -65,7 +65,7 @@ const ManagerMenu: React.FC<{}> = () => {
         map1.set(item.categoryId.toString(), item.categoryName);
       });
       setMapList(map1);
-      console.log(map1);
+      // console.log(map1);
 
       setItemList(message?.itemList);
       setNowItemList(message?.itemList[0].itemList);
@@ -132,7 +132,7 @@ const ManagerMenu: React.FC<{}> = () => {
   }, [])
 
   useEffect(() => {
-    console.log(categoryList)
+    // console.log(categoryList)
     // console.log(map1.get('4'));
     // console.log('now',map1.get(nowCategoryId));
     if (itemList) {
@@ -166,6 +166,9 @@ const ManagerMenu: React.FC<{}> = () => {
     // handleCategoryChange(event);
   };
 
+  useEffect(()=>{
+    console.log('now select is', nowSelect);
+  },[nowSelect])
 
   return (
     <ThemeProvider theme={theme}>
@@ -225,6 +228,8 @@ const ManagerMenu: React.FC<{}> = () => {
                     picture={item.picture}
                     removeCard={(e)=>deleteItem(e)}
                     editCard={(obj)=> {editItem(item.dishId, obj)} }
+                    canMove={nowSelect === item.dishId ? true : false}
+                    fatherListener={setNowSelect}
                     />
 
                   </Grid>

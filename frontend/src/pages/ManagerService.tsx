@@ -30,24 +30,10 @@ const ManagerService: React.FC<{}> = () => {
   return (
     
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', m: 5}}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <NavBar role='manager' doSomething={()=>{}} postRequest={() => { }} />
         <div>ManagerService page</div>
-        <Box>
-         <ManageDishCard 
-          editCard={(obj) => {setinfo1(JSON.stringify(obj));}}
-          removeCard={(dishId) => {setinfo1('dish with dishID of ' + dishId + ' is removed' );}}
-          moveLeft={() => {setinfo1('move dish left' );}}
-          moveRight={() => {setinfo1('move dish right' );}}
-         />
-         <Box>{info1}</Box>
-        </Box>
-        <Box>
-          <ManagerAddDishButton 
-            addCard={(obj) => {setinfo2(JSON.stringify(obj));}}
-          />
-          <Box>{info2}</Box>
-        </Box>
+
       </Box>
     </ThemeProvider>
     
