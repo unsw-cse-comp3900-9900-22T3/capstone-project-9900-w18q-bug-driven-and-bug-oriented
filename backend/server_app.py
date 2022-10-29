@@ -2,6 +2,8 @@ import os
 import shutil
 import pymysql
 import datetime
+
+import sqlalchemy.orm.exc
 from flask import Flask, render_template, request, Response, jsonify
 from flask_restx import Resource, Api, reqparse, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
@@ -49,6 +51,7 @@ class Key(Base):  # The structure of table
 
     id = db.Column(db.INT, primary_key=True, autoincrement=True)
     role = db.Column(db.String(255))
+    name = db.Column(db.String(255))
     password = db.Column(db.String(255))
 
 
@@ -84,7 +87,7 @@ class Menuitem(Base):
     cost = db.Column(db.Float, default=0)
     picture = db.Column(db.String(255))
     calorie = db.Column(db.Float, default=0)
-    orderTimes = db.Column(db.Integer)
+    orderTimes = db.Column(db.INT, default=0)
     lastModified = db.Column(db.DateTime, nullable=False)
 
 
@@ -343,7 +346,8 @@ def item_complete(item_index):
 
 @app.route('/wait/order', methods=["GET"])
 def get_unpayed_order():
-    unpayed_order = model_to_dict(Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
+    unpayed_order = model_to_dict(
+        Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
     for line in unpayed_order:
         total_cost = 0
         order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
@@ -375,8 +379,6 @@ def confirm_pay_order(order_id):
     db.session.commit()
     return_json = {"message": "success"}
     return Response(json.dumps(return_json), mimetype="application/json")
-
-
 
 
 ########################################################################################################################
@@ -428,13 +430,13 @@ def update_items(order_id):
 
     # 更新order的status
     res_all = \
-    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).all()[0][0]
+        db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).all()[0][0]
     res_prepared = \
-    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
-        Orderitem.status == "Prepared").all()[0][0]
+        db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
+            Orderitem.status == "Prepared").all()[0][0]
     res_processing = \
-    db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
-        Orderitem.status == "Processing").all()[0][0]
+        db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
+            Orderitem.status == "Processing").all()[0][0]
     res_wait = db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).filter(
         Orderitem.status == "Wait").all()[0][0]
 
@@ -452,102 +454,323 @@ def update_items(order_id):
 
     return {"orderId": order_id}
 
+
 ########################################################################################################################
 ############################################   kitchen Staff Module  ###################################################
 
+########################################################################################################################
+###############################################   Manager Module  ######################################################
 
-@app.route('/add_category', methods=["POST"])  # 添加新的类目
+
+def update_function(original_data, update_data):  # 更新功能
+    flag = 0
+    for key, value in update_data.items():
+        if getattr(original_data, key) != value:  # judge data whether changes
+            if key == "categoryName":
+                update_category_id = Category.query.filter_by(categoryName=value).first().categoryId
+                setattr(original_data, "categoryId", update_category_id)
+                flag = 1
+            if key == "picture":
+                #original_data_address = original_data.picture
+                #delete_picture(original_data_address)
+                if update_data["picture"][0:3] != "../":
+                    update_data["picture"] = ".." + update_data["picture"]
+                new_img_address = upload_picture(update_data["picture"])
+                setattr(original_data, "picture", new_img_address)
+                flag = 1
+            else:
+                setattr(original_data, key, value)  # set new data
+                flag = 1
+        if flag == 1:
+            original_data.lastModified = datetime.now()
+    return original_data
+
+
+def upload_picture(original_local_picture_address):  # 图片转存功能
+    root = "../frontend/public/dishImg"
+    upload_picture_address = "../frontend/public" + str(original_local_picture_address[2:])
+    print(upload_picture_address)
+    end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
+    print(end_name)
+    if end_name not in ["jpg", "png", "jpeg"]:
+        return {"msg": "the format is not a valid picture"}
+    # all_files = os.listdir(root)  # 读取这个路径下的文件
+    filename = str(original_local_picture_address[11:])  # 生成新的文件名，避免重复
+    print(filename)
+    img_path = os.path.join(root, filename)  # 拼接转存路径和新的文件名
+    print("img_path: ", img_path)
+    # shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    img_path_post = img_path[18:]
+    img_path_post = str(img_path_post).replace("\\", "/")
+    return img_path_post  # 返回新的路径
+
+
+def delete_picture(picture_address_in_database):  # 删除图片
+    root = "../frontend/public/dishImg"
+    all_pictures = os.listdir(root)  # 读取这个路径下的文件
+    for picture_name in all_pictures:
+        if picture_name == picture_address_in_database[9:]:
+            os.remove(os.path.join(root, picture_name))
+    return 0
+
+
+def get_category_list(time_flag):  # 得到所有的类目
+    category_list = model_to_dict(Category.query.all())
+    if time_flag == 0:  # 有lastModified
+        for line in category_list:
+            line.pop("id")
+            line["lastModified"] = line["lastModified"].strftime("%Y-%m-%d-%H:%M:%S")
+        return_json = {"categoryList": category_list}
+    else:  # 没有lastModified
+        for line in category_list:
+            line.pop("id")
+            line.pop("lastModified")
+        return_json = {"categoryList": category_list}
+    return return_json
+
+
+def get_menu_item_list():  # 得到所有的类目
+    category_id_list = []
+    item_list = []
+    all_category = get_category_list(1)
+    for each_category in all_category["categoryList"]:
+        category_id_list.append(each_category["categoryId"])
+    for category_id in category_id_list:
+        menu_item = model_to_dict(Menuitem.query.filter_by(categoryId=category_id).all())
+        for line in menu_item:
+            line["dishName"] = line["title"]
+            line["price"] = line["cost"]
+            line.pop("cost")
+            line.pop("title")
+            line.pop("id")
+            line.pop("lastModified")
+            line.pop("categoryId")
+            line.pop("orderTimes")
+        item_list.append({"categoryId": category_id, "itemList": menu_item})
+    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
+    return return_json
+
+
+@app.route('/manager/category', methods=["GET"])  # 获取所有类目
+def get_category():
+    return_json = get_category_list(0)
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/manager/category/add', methods=["POST"])  # 添加新的类目
 def add_category():
     category_id_list = []
     category_name_list = []
-    category_list = Category.query.all()
-    print(category_list)
-    category_dict = model_to_dict(category_list)
-    print(category_dict)
+    category_dict = model_to_dict(Category.query.all())
     if not category_dict:
         category_id_max_cur = 1
     else:
         for line in category_dict:
-            category_id_list.append(line["category_id"])
-            category_name_list.append(line["category_name"])
-        print(category_id_list)
-        print(category_name_list)
+            category_id_list.append(int(line["categoryId"]))
+            category_name_list.append(str(line["categoryName"]).lower())
         category_id_max_cur = max(category_id_list) + 1
     post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
-    Category_name = str(post_data["category_name"]).strip().replace(r'-_|\/?,><;:"}]{[+=)(*&^%$#@!`~', ' ')
-    if Category_name in category_name_list:
-        return {"code": 1, "msg": "Already in category_table"}
+    category_name = str(post_data["categoryName"]).strip().replace(r'-_|\/?,><;:"}]{[+=)(*&^%$#@!`~', ' ')
+    if category_name.lower() in category_name_list:
+        return_json = {"message": "Duplicated category name"}
     else:
-        category = Category(categoryId=category_id_max_cur, categoryName=Category_name, lastModified=datetime.now())
+        category = Category(categoryId=category_id_max_cur, categoryName=category_name, lastModified=datetime.now())
         category.save()
-        return {"code": 0}
+        return_json = get_category_list(0)
+    return Response(json.dumps(return_json), mimetype="application/json")
 
 
-def upload_picture(original_local_picture_address):  # 图片转存功能
-    end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
-    if end_name not in ["jpg", "png", "jpeg"]:
-        return {"msg": "the format is not a valid picture"}
-    all_files = os.listdir("../frontend/public/dishImg")  # 读取这个路径下的文件
-    file_list = []
-    for file in all_files:
-        file = file[3:]
-        file_num = file[:-4]
-        file_list.append(int(file_num))
-    cur_file_num = max(file_list) + 1
-    filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
-    img_path = os.path.join("../frontend/public/dishImg", filename)  # 拼接转存路径和新的文件名
-    print("img_path: ", img_path)
-    shutil.copy(original_local_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
-    img_path_post = img_path[18:]
-    return img_path_post  # 返回新的路径
+@app.route('/manager/item', methods=["GET"])  # 获取所有菜品
+def get_menu_item():
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
 
 
-@app.route('/add_menuitem', methods=["GET", "POST"])  # 添加新的菜品
-def add_menuitem():
-    if request.method == "GET":
-        items_list = Menuitem.query.all()
-        items_dict = model_to_dict(items_list)
-        return jsonify(items_dict)
-    else:
-        post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
-        category_name_post = post_data["category_name"]
-        print(category_name_post)
+@app.route('/manager/item/add', methods=["POST"])  # 添加新的菜品
+def add_menu_item():
+    post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    title_post = str(post_data["title"]).strip().replace(r'-_|\/?,><;:"}]{[+=)(*&^%$#@!`~', ' ')
+    try:
+        category_name_post = post_data["categoryName"]
         category_line = Category.query.filter_by(categoryName=category_name_post).first()
         category_line = model_to_dict(category_line)
-        print(category_line)
-        category_id_post = int(category_line["category_id"])
-        print(category_id_post)
-        title_post = str(post_data["title"]).strip().replace(r'-_|\/?,><;:"}]{[+=)(*&^%$#@!`~', ' ')
+        category_id_post = int(category_line["categoryId"])
+    except KeyError:
+        category_name_post = None
+        category_id_post = None
+    try:
         description_post = str(post_data['description'])
+    except KeyError:
+        description_post = None
+    try:
         ingredient_post = str(post_data["ingredient"])
+    except KeyError:
+        ingredient_post = None
+    try:
         cost_post = float(post_data["cost"])
+    except KeyError:
+        cost_post = 0
+    try:
         calorie_post = float(post_data["calorie"])
+    except KeyError:
+        calorie_post = 0
 
+    try:
         picture_post = str(post_data["picture"])  # post上来的图片的原路径
-        print(picture_post)
+        if picture_post[0:3] != "../":
+            picture_post = ".." + picture_post
         picture_post_address = upload_picture(picture_post)  # 图片的转存功能，返回的是转存后的路径
         print("img_path_post: ", picture_post_address)
+    except KeyError:
+        picture_post = None
 
-        dish_id_list = []
-        dish_list = Menuitem.query.all()
-        print(dish_list)
-        dish_dict = model_to_dict(dish_list)
-        print(dish_dict)
-        if dish_dict == []:
-            dish_id_max_cur = 1
+    dish_id_list = []
+    dish_dict = model_to_dict(Menuitem.query.all())
+    if dish_dict == []:
+        dish_id_max_cur = 1
+    else:
+        for line in dish_dict:
+            dish_id_list.append(line["dishId"])
+        dish_id_max_cur = max(dish_id_list) + 1
+
+    menu_item_post = Menuitem(dishId=dish_id_max_cur, categoryId=category_id_post,
+                              categoryName=category_name_post, title=title_post, description=description_post,
+                              ingredient=ingredient_post, cost=cost_post, picture=picture_post_address,
+                              calorie=calorie_post, lastModified=datetime.now())
+    menu_item_post.save()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/manager/item/<int:dish_id>', methods=["POST"])  # 删除现有的菜品
+def delete_menu_item(dish_id):
+    menu_item_delete = Menuitem.query.filter_by(dishId=dish_id).first()
+    # menu_item_delete_dict = model_to_dict(menu_item_delete)
+    # if menu_item_delete_dict["picture"] is not None:
+        # delete_picture(str(menu_item_delete_dict["picture"]))
+    db.session.delete(menu_item_delete)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/manager/item/<int:dish_id>', methods=["PUT"])  # 更新现有的菜品
+def edit_menu_item(dish_id):
+    update_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    original_data = Menuitem.query.filter_by(dishId=dish_id).first()
+
+    update_function(original_data, update_data)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+def get_all_key():
+    key_list = model_to_dict(Key.query.order_by(Key.role.asc()).all())
+    for line in key_list:
+        line["key"] = line["password"]
+        line.pop("password")
+        line.pop("id")
+    return {"keyList": key_list}
+
+
+@app.route('/manager/key', methods=["GET"])  # 获得所有的key
+def get_key():
+    return_json = get_all_key()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/manager/key', methods=["POST"])  # add key
+def add_key():
+    return_json = {}
+    manager_all_key = []
+    kitchen_all_key = []
+    wait_all_key = []
+    post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    key_dict = model_to_dict(Key.query.all())
+    for line in key_dict:
+        if line["role"] == "manager":
+            manager_all_key.append(line["password"])
+        elif line["role"] == "wait":
+            wait_all_key.append(line["password"])
         else:
-            for line in dish_dict:
-                dish_id_list.append(line["dish_id"])
-            print(dish_id_list)
-            dish_id_max_cur = max(dish_id_list) + 1
+            kitchen_all_key.append(line["password"])
+    if post_data["role"] == "manager":
+        if post_data["key"] in manager_all_key:
+            return_json = {"message": "Duplicated Key"}
+        else:
+            key_post = Key(role=post_data["role"], name=post_data["name"], password=post_data["key"])
+            key_post.save()
+            return_json = {"message": "success", "keyList": get_all_key()["keyList"]}
+    elif post_data["role"] == "wait":
+        if post_data["key"] in wait_all_key:
+            return_json = {"message": "Duplicated Key"}
+        else:
+            key_post = Key(role=post_data["role"], name=post_data["name"], password=post_data["key"])
+            key_post.save()
+            return_json = {"message": "success", "keyList": get_all_key()["keyList"]}
+    elif post_data["role"] == "kitchen":
+        if post_data["key"] in kitchen_all_key:
+            return_json = {"message": "Duplicated Key"}
+        else:
+            key_post = Key(role=post_data["role"], name=post_data["name"], password=post_data["key"])
+            key_post.save()
+            return_json = {"message": "success", "keyList": get_all_key()["keyList"]}
+    return Response(json.dumps(return_json), mimetype="application/json")
 
-        menu_item_post = Menuitem(dishId=dish_id_max_cur, categoryId=category_id_post,
-                                  categoryName=category_name_post, title=title_post, description=description_post,
-                                  ingredient=ingredient_post, cost=cost_post, picture=picture_post_address,
-                                  calorie=calorie_post, lastModified=datetime.now())
-        # menu_item_post.save()
-        return {"code": 0}
 
+@app.route('/manager/key', methods=["DELETE"])  # delete key
+def delete_key():
+    post_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    try:
+        key_delete = Key.query.filter(Key.role == post_data["role"], Key.password == post_data["key"]).first()
+        db.session.delete(key_delete)
+        db.session.commit()
+        return_json = get_all_key()
+    except sqlalchemy.orm.exc.UnmappedInstanceError:
+        return_json = {"message": "Invalid role and key"}
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/manager/category', methods=["POST"])  # category sort
+def category_sort():
+    insert_id = 1
+    new_sorted_category_list = []
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    for line in sort_data["categoryList"]:
+        category_delete = Category.query.filter_by(categoryId=line["categoryId"]).first()
+        db.session.delete(category_delete)
+        new_sorted_category_list.append(Category(id=insert_id, categoryId=line["categoryId"],
+                                                 categoryName=line["categoryName"], lastModified=datetime.now()))
+        insert_id += 1
+    db.session.add_all(new_sorted_category_list)
+    db.session.commit()
+    return Response(json.dumps(get_category_list(0)), mimetype="application/json")
+
+
+@app.route('/manager/item', methods=["POST"])  # menu item sort
+def sort_menu_item():
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    new_sorted_menu_item_list = []
+    for line in sort_data["itemList"]:
+        each_category_id = Menuitem.query.filter_by(categoryName=line["categoryName"]).first().categoryId
+        each_item_order_times = Menuitem.query.filter_by(dishId=line["dishId"]).first().orderTimes
+        menu_item_delete = Menuitem.query.filter_by(dishId=line["dishId"]).first()
+        new_sorted_menu_item_list.append(Menuitem(dishId=line["dishId"], categoryId=each_category_id,
+                                                  categoryName=line["categoryName"], title=line["dishName"],
+                                                  description=line["description"],
+                                                  ingredient=line["ingredients"], cost=line["price"],
+                                                  picture=line["picture"],
+                                                  calorie=line["calories"], orderTimes=each_item_order_times,
+                                                  lastModified=datetime.now()))
+        db.session.delete(menu_item_delete)
+    db.session.add_all(new_sorted_menu_item_list)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
+
+########################################################################################################################
+###############################################   Manager Module  ######################################################
 
 if __name__ == '__main__':
     # port_number = int(sys.argv[1])

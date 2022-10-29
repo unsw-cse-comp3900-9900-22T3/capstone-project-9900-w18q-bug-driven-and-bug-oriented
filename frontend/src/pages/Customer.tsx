@@ -5,6 +5,7 @@ import {
   createTheme,
   Grid,
   ThemeProvider,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
@@ -290,7 +291,7 @@ const Customer: React.FC<{}> = () => {
     setCountOfCal(tempCal);
   }, [totalOrder]);
 
-
+  console.log(menu.length)
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
@@ -302,8 +303,7 @@ const Customer: React.FC<{}> = () => {
           <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
             <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
 
-              {menu.map((item: any) => {
-
+              { menu?.map((item: any) => {
                 return (
                   <Grid item xs={'auto'} key={item.dishId} >
                     <DishCard
@@ -321,6 +321,15 @@ const Customer: React.FC<{}> = () => {
                   </Grid>
                 )
               })}
+              { menu.length === 0 && ( 
+                  <Grid item xs={12} sx={{height:'calc(100vh - 95px)' ,display:'flex', justifyContent:'center',alignItems:'center'}}>
+                    <Typography variant="h3">
+                      Upcoming......
+                      </Typography>
+                    </Grid>
+              )
+
+              }
 
 
 
