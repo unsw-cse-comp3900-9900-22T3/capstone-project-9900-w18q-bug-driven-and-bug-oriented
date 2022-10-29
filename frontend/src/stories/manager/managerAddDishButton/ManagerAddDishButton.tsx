@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import ManagerDishModal from "../managerDishModal/ManagerDishModal";
@@ -8,43 +8,105 @@ import AddIcon from '@mui/icons-material/Add';
 // 声明变量的数据格式
 interface ListProps {
   //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
+
   //预留空函数
   doSomething?: (params: any) => any;
-
+  categoryName?: string;
   addCard?: (params: any) => any;
 }
 
 // 别忘了修改函数名
 export default function ManagerAddDishButton({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  props1 = '',
-  props2 = '',
-  props3 = true,
+
   doSomething,
 
-  addCard = () => {},
+  categoryName,
+  addCard = () => { },
   ...props
 }: ListProps) {
-  
+
   const [editOpen, setEditOpen] = React.useState(false);
+
+  const [haveDishName, setHaveDishName] = useState(true);
+  const [haveCalories, setHaveCalories] = useState(true);
+  const [havePrice, setHavePrice] = useState(true);
+  const [havePicture, setHavePicture] = useState(true);
+  const [haveCategory, setHaveCategory] = useState(true);
+  const [haveDescription, setHaveDescription] = useState(true);
+  const [haveIngredients, setHaveIngredients] = useState(true);
+  const [canError, setCanError] = useState(false);
+
+
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => { setEditOpen(false); setNewPictureName('picture');}
-  const handleEditComfirm =(e: any) => {
-    setEditOpen(false);
+  const handleEditClose = () => { 
+    setEditOpen(false); 
+    setNewDishName('');
+    setNewCalories('');
+    setNewPrice('');
+    setNewPictureName('');
+    // setNewCategoryName('');
+    setNewDescription('');
+    setNewIngredients('');
+
+    setCanError(false);
+
+    setHaveDishName(true);
+    setHaveCalories(true);
+    setHavePrice(true);
+    setHavePicture(true);
+    setHaveCategory(true);
+    setHaveDescription(true);
+    setHaveIngredients(true);
+  }
+
+  const handleEditComfirm = (e: any) => {
+    if (!newDishName) setHaveDishName(false)
+    else setHaveDishName(true);
+    if (!newCalories) setHaveCalories(false)
+    else setHaveCalories(true);
+    if (!newPrice) setHavePrice(false)
+    else setHavePrice(true);
+    if (!newPictureName) setHavePicture(false)
+    else setHavePicture(true);
+    if (!newCategoryName) setHaveCategory(false)
+    else setHaveCategory(true);
+    if (!newDescription) setHaveDescription(false)
+    else setHaveDescription(true);
+    if (!newIngredients) setHaveIngredients(false)
+    else setHaveIngredients(true);
+
     const obj = {
-      dishName: newDishName,
+      title: newDishName,
       calorie: Number(newCalories),
-      price: Number(newPrice),
+      cost: Number(newPrice),
       picture: newPictureName,
-      category: newCategoryName,
+      categoryName: categoryName,
       description: newDescription,
-      ingredients: newIngredients,
+      ingredient: newIngredients,
     };
-    addCard(obj);
+
+    console.log('now obj is', obj);
+    if (obj.title && obj.calorie && obj.cost && obj.picture
+      && obj.categoryName && obj.description && obj.ingredient) {
+
+      addCard(obj);
+      setNewDishName('');
+      setNewCalories('');
+      setNewPrice('');
+      setNewPictureName('');
+      // setNewCategoryName('');
+      setNewDescription('');
+      setNewIngredients('');
+      
+      setCanError(false);
+      setEditOpen(false);
+    } else {
+      setCanError(true);
+    }
+
   };
+
 
 
   const [newCategoryName, setNewCategoryName] = React.useState('');
@@ -77,16 +139,41 @@ export default function ManagerAddDishButton({
     setNewPrice(event.target.value);
   };
 
-  const [newPictureName, setNewPictureName] = React.useState('picture');
+  const [newPictureName, setNewPictureName] = React.useState('');
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
     }
-    
+
     const file = e.target.files[0];
-    setNewPictureName(file.name);
+    setNewPictureName('/dishImg/' + file.name);
   };
+
+  useEffect(() => {
+    
+  if (canError) {
+    if (!newDishName) setHaveDishName(false)
+    else setHaveDishName(true);
+    if (!newCalories) setHaveCalories(false)
+    else setHaveCalories(true);
+    if (!newPrice) setHavePrice(false)
+    else setHavePrice(true);
+    if (!newPictureName) setHavePicture(false)
+    else setHavePicture(true);
+    if (!newCategoryName) setHaveCategory(false)
+    else setHaveCategory(true);
+    if (!newDescription) setHaveDescription(false)
+    else setHaveDescription(true);
+    if (!newIngredients) setHaveIngredients(false)
+    else setHaveIngredients(true);
+  }
+    
+  }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients])
+
+
+
+
 
   return (
     <>
@@ -96,13 +183,16 @@ export default function ManagerAddDishButton({
           backgroundColor: '#8475B0',
         }
       }}
-      startIcon={<AddIcon fontSize="large"/>} >
+        startIcon={<AddIcon fontSize="large" />} >
         <Typography variant="body1" >
           Add new dishes
         </Typography>
       </Button>
-      <ManagerDishModal 
-        editOpen={editOpen} 
+      <ManagerDishModal
+        editOpen={editOpen}
+        // categoryName={newCategoryName}
+
+
         handleEditClose={handleEditClose}
         handleEditComfirm={handleEditComfirm}
         handleCategoryChange={handleCategoryChange}
@@ -112,7 +202,17 @@ export default function ManagerAddDishButton({
         handleCaloriesChange={handleCaloriesChange}
         handlePriceChange={handlePriceChange}
         handleFileUpload={handleFileUpload}
+
         newPictureName={newPictureName}
+
+        haveCalories={haveCalories}
+        haveCategoryName={haveCategory}
+        haveDescription={haveDescription}
+        haveDishName={haveDishName}
+        haveIngredients={haveIngredients}
+        haveNewPictureName={havePicture}
+        havePrice={havePrice}
+
       />
     </>
   );

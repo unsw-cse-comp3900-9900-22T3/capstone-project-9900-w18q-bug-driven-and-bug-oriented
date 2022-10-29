@@ -95,15 +95,15 @@ export default function DishCard({
   const handleEditComfirm =(e: any) => {
     setEditOpen(false);
     const obj = {
-      dishId: dishId,
-      dishName: newDishName,
+      title: newDishName,
       calorie: Number(newCalories),
-      price: Number(newPrice),
-      picture: imgDirectoryPath + newPictureName,
-      category: newCategoryName,
+      cost: Number(newPrice),
+      picture: newPictureName.startsWith('/dishImg')? newPictureName: imgDirectoryPath + newPictureName,
+      categoryName: newCategoryName,
       description: newDescription,
-      ingredients: newIngredients,
+      ingredient: newIngredients,
     };
+    console.log('obj is', obj);
     editCard(obj);
   };
 
@@ -267,7 +267,7 @@ export default function DishCard({
                 ingredients = {ingredients}
                 calories = {calories.toString()}
                 price = {price.toString()}
-                categoryList = {categoryList}
+                
 
                 handleEditClose={handleEditClose}
                 handleEditComfirm={handleEditComfirm}

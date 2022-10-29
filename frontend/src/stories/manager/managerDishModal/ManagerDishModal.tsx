@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, FormControl } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
@@ -21,7 +21,7 @@ interface ListProps {
   calories?: string;
   price?: string;
   newPictureName?: string;
-  categoryList?: string[];
+
 
   handleEditClose?: (params: any) => any;
   handleEditComfirm?: (params: any) => any;
@@ -32,6 +32,14 @@ interface ListProps {
   handleCaloriesChange?: (params: any) => any;
   handlePriceChange?: (params: any) => any;
   handleFileUpload?: (params: any) => any;
+
+  haveCategoryName?:boolean;
+  haveDishName?:boolean;
+  haveDescription?:boolean;
+  haveIngredients?:boolean;
+  haveCalories?:boolean;
+  havePrice?:boolean;
+  haveNewPictureName?:boolean;
 }
 
 const editStyle = {
@@ -62,8 +70,8 @@ export default function ManagerDishModal({
   ingredients = 'Within 150 words',
   calories = '0',
   price = '0.00',
-  newPictureName = 'picture',
-  categoryList = ['Meat', 'Vegetable', 'Noodle'],
+  newPictureName = '',
+
 
   handleEditClose = () => { },
   handleEditComfirm = () => { },
@@ -75,11 +83,20 @@ export default function ManagerDishModal({
   handlePriceChange = () => { },
   handleFileUpload = () => { },
 
+  haveCategoryName = true,
+  haveDishName= true,
+  haveDescription= true,
+  haveIngredients= true,
+  haveCalories= true,
+  havePrice= true,
+  haveNewPictureName= true,
+
+
 
   ...props
 }: ListProps) {
 
-  const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
+  const [newCategoryName, setNewCategoryName] = React.useState('');
 
   const handleCategorySelectChange = (event: SelectChangeEvent) => {
     setNewCategoryName(event.target.value);
@@ -103,39 +120,42 @@ export default function ManagerDishModal({
             </IconButton>
           </Box>
 
-          <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: -3, flexDirection: 'column' }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+          <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', flexDirection: 'column' }}>
+            {/* <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               CATEGORY NAME
             </Typography>
-            <Select
+            <FormControl sx={{mt:1}} error={haveCategoryName?false:true}>
+              <Select
               value={newCategoryName}
               onChange={handleCategorySelectChange}
               sx={{ height: 35, mb: 5 }}
             >
               {categoryList.map((candidateCategoryName) => { return (<MenuItem value={candidateCategoryName}>{candidateCategoryName}</MenuItem>) })}
             </Select>
+            </FormControl> */}
+            
 
 
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               DISH NAME
             </Typography>
-            <Input placeholder={dishName} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDishChange} />
+            <Input error={haveDishName?false:true} placeholder={dishName} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDishChange} />
 
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               DESCRIPTION
             </Typography>
-            <Input placeholder={description} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDescriptionChange} />
+            <Input error={haveDescription?false:true} placeholder={description} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDescriptionChange} />
 
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               INGREDIENTS
             </Typography>
-            <Input placeholder={ingredients} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleIngredientsChange} />
+            <Input error={haveIngredients?false:true} placeholder={ingredients} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleIngredientsChange} />
 
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               CALORIES
             </Typography>
             <Box>
-              <Input placeholder={calories} inputProps={ariaLabel} sx={{ mb: 5, width: 50 }} onChange={handleCaloriesChange} />
+              <Input error={haveCalories?false:true} placeholder={calories} inputProps={ariaLabel} sx={{ mb: 5, width: 50 }} onChange={handleCaloriesChange} />
               <Box display='inline' fontWeight='bold'>Cal</Box>
             </Box>
 
@@ -144,14 +164,14 @@ export default function ManagerDishModal({
             </Typography>
             <Box>
               <Box display='inline' fontWeight='bold'>$</Box>
-              <Input placeholder={price} inputProps={ariaLabel} sx={{ mb: 5, width: 70 }} onChange={handlePriceChange} />
+              <Input error={havePrice?false:true} placeholder={price} inputProps={ariaLabel} sx={{ mb: 5, width: 70 }} onChange={handlePriceChange} />
             </Box>
 
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
               PICTURE
             </Typography>
             <Box>
-              <Input disabled placeholder={newPictureName} inputProps={ariaLabel} sx={{ mb: 5, width: 0.75, fontWeight: 'bold' }} />
+              <Input error={haveNewPictureName?false:true} disabled placeholder={newPictureName} inputProps={ariaLabel} sx={{ mb: 5, width: 0.75, fontWeight: 'bold' }} />
               <Box display='inline'>
                 <Button
                   component="label"
