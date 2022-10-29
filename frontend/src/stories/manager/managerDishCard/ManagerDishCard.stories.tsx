@@ -22,8 +22,8 @@ Test.args = {
   dishName: 'Chicken Grill',
   description: 'It is one of the mot iconic and well-recognized fast food out there.',
   ingredients: 'Meat, vegetable',
-  calories: '20',
-  price: '16.66',
+  calories: 20,
+  price: 16.66,
   picture: '/dishImg/chickenGrill.jpg',
-  categoryName: 'meat',
+  categoryName: 'Meat',
 };
