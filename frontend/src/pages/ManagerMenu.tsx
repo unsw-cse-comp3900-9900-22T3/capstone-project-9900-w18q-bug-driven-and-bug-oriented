@@ -213,7 +213,7 @@ const ManagerMenu: React.FC<{}> = () => {
               {nowItemList?.map((item: any) => {
 
                 return (
-                  <Grid item xs={'auto'} key={item.dishId} sx={{mt:5}} >
+                  <Grid item xs={'auto'} key={'name'+item.dishId} sx={{mt:5}} >
                     <ManagerDishCard
                     dishId={item.dishId}
                     dishName={item.dishName}

@@ -92,8 +92,9 @@ export default function DishCard({
   const [editOpen, setEditOpen] = React.useState(false);
   const handleEditOpen = () => setEditOpen(true);
   const handleEditClose = () => setEditOpen(false);
+  // const [nowPicture]
   const handleEditComfirm =(e: any) => {
-    setEditOpen(false);
+    
     const obj = {
       title: newDishName,
       calorie: Number(newCalories),
@@ -105,6 +106,7 @@ export default function DishCard({
     };
     console.log('obj is', obj);
     editCard(obj);
+    setEditOpen(false);
   };
 
 
@@ -138,7 +140,7 @@ export default function DishCard({
     setNewPrice(event.target.value);
   };
 
-  const [newPictureName, setNewPictureName] = React.useState(picture);
+  const [newPictureName, setNewPictureName] = React.useState(picture.startsWith('/dishImg')? picture: '/dishImg/' + picture );
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -146,7 +148,7 @@ export default function DishCard({
     }
     
     const file = e.target.files[0];
-    setNewPictureName(file.name);
+    setNewPictureName('/dishImg/' + file.name);
   };
 
   const [isSelected, setIsSelected] = React.useState(false);
@@ -155,6 +157,10 @@ export default function DishCard({
     if (canMove === false) {return;}
     isSelected === false ? setIsSelected(true) : setIsSelected(false);
   };
+
+  React.useEffect(()=>{
+    // console.log('change')
+  },[picture])
 
   return (
     <>
