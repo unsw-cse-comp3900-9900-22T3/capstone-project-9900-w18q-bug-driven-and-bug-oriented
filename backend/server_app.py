@@ -471,7 +471,8 @@ def update_function(original_data, update_data):  # 更新功能
                 setattr(original_data, "categoryId", update_category_id)
                 flag = 1
             if key == "picture":
-                delete_picture(original_data.picture)
+                #original_data_address = original_data.picture
+                #delete_picture(original_data_address)
                 if update_data["picture"][0:3] != "../":
                     update_data["picture"] = ".." + update_data["picture"]
                 new_img_address = upload_picture(update_data["picture"])
@@ -493,18 +494,12 @@ def upload_picture(original_local_picture_address):  # 图片转存功能
     print(end_name)
     if end_name not in ["jpg", "png", "jpeg"]:
         return {"msg": "the format is not a valid picture"}
-    all_files = os.listdir(root)  # 读取这个路径下的文件
-    file_list = []
-    for file in all_files:
-        if file[0:3] == "img":
-            file = file[3:]
-            file_num = file[:-4]
-            file_list.append(int(file_num))
-    cur_file_num = max(file_list) + 1
-    filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
+    # all_files = os.listdir(root)  # 读取这个路径下的文件
+    filename = str(original_local_picture_address[11:])  # 生成新的文件名，避免重复
+    print(filename)
     img_path = os.path.join(root, filename)  # 拼接转存路径和新的文件名
     print("img_path: ", img_path)
-    shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    # shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
     img_path_post = img_path[18:]
     img_path_post = str(img_path_post).replace("\\", "/")
     return img_path_post  # 返回新的路径
@@ -650,9 +645,9 @@ def add_menu_item():
 @app.route('/manager/item/<int:dish_id>', methods=["POST"])  # 删除现有的菜品
 def delete_menu_item(dish_id):
     menu_item_delete = Menuitem.query.filter_by(dishId=dish_id).first()
-    menu_item_delete_dict = model_to_dict(menu_item_delete)
-    if menu_item_delete_dict["picture"] is not None:
-        delete_picture(str(menu_item_delete_dict["picture"]))
+    # menu_item_delete_dict = model_to_dict(menu_item_delete)
+    # if menu_item_delete_dict["picture"] is not None:
+        # delete_picture(str(menu_item_delete_dict["picture"]))
     db.session.delete(menu_item_delete)
     db.session.commit()
     return_json = get_menu_item_list()
