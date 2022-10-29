@@ -531,17 +531,25 @@ def get_category_list(time_flag):  # 得到所有的类目
 
 
 def get_menu_item_list():  # 得到所有的类目
-    menu_item_list = model_to_dict(Menuitem.query.all())
-    for line in menu_item_list:
-        line["dishName"] = line["title"]
-        line["price"] = line["cost"]
-        line.pop("cost")
-        line.pop("title")
-        line.pop("id")
-        line.pop("lastModified")
-        line.pop("categoryId")
-        line.pop("orderTimes")
-    return {"itemList": menu_item_list}
+    category_id_list = []
+    item_list = []
+    all_category = get_category_list(1)
+    for each_category in all_category["categoryList"]:
+        category_id_list.append(each_category["categoryId"])
+    for category_id in category_id_list:
+        menu_item = model_to_dict(Menuitem.query.filter_by(categoryId=category_id).all())
+        for line in menu_item:
+            line["dishName"] = line["title"]
+            line["price"] = line["cost"]
+            line.pop("cost")
+            line.pop("title")
+            line.pop("id")
+            line.pop("lastModified")
+            line.pop("categoryId")
+            line.pop("orderTimes")
+        item_list.append({"categoryId": category_id, "itemList": menu_item})
+    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
+    return return_json
 
 
 @app.route('/manager/category', methods=["GET"])  # 获取所有类目
@@ -575,26 +583,7 @@ def add_category():
 
 @app.route('/manager/item', methods=["GET"])  # 获取所有菜品
 def get_menu_item():
-    category_id_list = []
-    item_list = []
-    all_category = get_category_list(1)
-    print(all_category)
-    for each_category in all_category["categoryList"]:
-        category_id_list.append(each_category["categoryId"])
-    for category_id in category_id_list:
-        menu_item = model_to_dict(Menuitem.query.filter_by(categoryId=category_id).all())
-        for line in menu_item:
-            line["dishName"] = line["title"]
-            line["price"] = line["cost"]
-            line.pop("cost")
-            line.pop("title")
-            line.pop("id")
-            line.pop("lastModified")
-            line.pop("categoryId")
-            line.pop("orderTimes")
-        if menu_item:
-            item_list.append({category_id: menu_item})
-    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
+    return_json = get_menu_item_list()
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -651,7 +640,6 @@ def add_menu_item():
                               calorie=calorie_post, lastModified=datetime.now())
     menu_item_post.save()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -664,7 +652,6 @@ def delete_menu_item(dish_id):
     db.session.delete(menu_item_delete)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -676,7 +663,6 @@ def edit_menu_item(dish_id):
     update_function(original_data, update_data)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -782,7 +768,6 @@ def sort_menu_item():
     db.session.add_all(new_sorted_menu_item_list)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 ########################################################################################################################
