@@ -22,6 +22,4 @@ export const Test = Template.bind({});
 Test.args = {
   table: 1,
   startTime: '2022-10-10-18:07:58',
-  endTime: '2022-10-10-20:40:32',
-  isRequest: 1
 };
