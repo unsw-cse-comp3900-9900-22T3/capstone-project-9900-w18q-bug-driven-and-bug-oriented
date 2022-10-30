@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, FormControl } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
@@ -21,7 +21,7 @@ interface ListProps {
   calories?: string;
   price?: string;
   newPictureName?: string;
-  categoryList?: string[];
+
 
   handleEditClose?: (params: any) => any;
   handleEditComfirm?: (params: any) => any;
@@ -32,6 +32,14 @@ interface ListProps {
   handleCaloriesChange?: (params: any) => any;
   handlePriceChange?: (params: any) => any;
   handleFileUpload?: (params: any) => any;
+
+  haveCategoryName?:boolean;
+  haveDishName?:boolean;
+  haveDescription?:boolean;
+  haveIngredients?:boolean;
+  haveCalories?:boolean;
+  havePrice?:boolean;
+  haveNewPictureName?:boolean;
 }
 
 const editStyle = {
@@ -53,7 +61,7 @@ const ariaLabel = { 'aria-label': 'description' };
 export default function ManagerDishModal({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   modalType = 'Add', //Add or Update
-  
+
   editOpen = false,
 
   categoryName = 'Meat',
@@ -62,24 +70,33 @@ export default function ManagerDishModal({
   ingredients = 'Within 150 words',
   calories = '0',
   price = '0.00',
-  newPictureName = 'picture',
-  categoryList = ['Meat', 'Vegetable', 'Noodle'],
+  newPictureName = '',
 
-  handleEditClose = () => {},
-  handleEditComfirm = () => {},
-  handleCategoryChange = () => {},
-  handleDishChange = () => {},
-  handleDescriptionChange = () => {},
-  handleIngredientsChange = () => {},
-  handleCaloriesChange = () => {},
-  handlePriceChange = () => {},
-  handleFileUpload = () => {},
-  
+
+  handleEditClose = () => { },
+  handleEditComfirm = () => { },
+  handleCategoryChange = () => { },
+  handleDishChange = () => { },
+  handleDescriptionChange = () => { },
+  handleIngredientsChange = () => { },
+  handleCaloriesChange = () => { },
+  handlePriceChange = () => { },
+  handleFileUpload = () => { },
+
+  haveCategoryName = true,
+  haveDishName= true,
+  haveDescription= true,
+  haveIngredients= true,
+  haveCalories= true,
+  havePrice= true,
+  haveNewPictureName= true,
+
+
 
   ...props
 }: ListProps) {
-  
-  const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
+
+  const [newCategoryName, setNewCategoryName] = React.useState('');
 
   const handleCategorySelectChange = (event: SelectChangeEvent) => {
     setNewCategoryName(event.target.value);
@@ -90,109 +107,112 @@ export default function ManagerDishModal({
 
     <>
       <Modal
-                open={editOpen}
-                onClose={handleEditClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
+        open={editOpen}
+        onClose={handleEditClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
 
-                <Card sx={editStyle}>
-                  <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
-                    <IconButton onClick={handleEditClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
-                      <ClearIcon />
-                    </IconButton>
-                  </Box>
+        <Card sx={editStyle}>
+          <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
+            <IconButton onClick={handleEditClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
+              <ClearIcon />
+            </IconButton>
+          </Box>
 
-                  <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: -3, flexDirection: 'column' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      CATEGORY NAME
-                    </Typography>
-                    <Select
-                      value={newCategoryName}
-                      onChange={handleCategorySelectChange}
-                      sx={{height:35, mb: 5}}
-                    >
-                      {categoryList.map((candidateCategoryName) => { return (<MenuItem value={candidateCategoryName}>{candidateCategoryName}</MenuItem>)})}
-                    </Select>
-                   
+          <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', flexDirection: 'column' }}>
+            {/* <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              CATEGORY NAME
+            </Typography>
+            <FormControl sx={{mt:1}} error={haveCategoryName?false:true}>
+              <Select
+              value={newCategoryName}
+              onChange={handleCategorySelectChange}
+              sx={{ height: 35, mb: 5 }}
+            >
+              {categoryList.map((candidateCategoryName) => { return (<MenuItem value={candidateCategoryName}>{candidateCategoryName}</MenuItem>) })}
+            </Select>
+            </FormControl> */}
+            
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      DISH NAME
-                    </Typography>
-                    <Input placeholder={dishName} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleDishChange}/>
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      DESCRIPTION
-                    </Typography>
-                    <Input placeholder={description} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleDescriptionChange}/>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              DISH NAME
+            </Typography>
+            <Input error={haveDishName?false:true} placeholder={dishName} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDishChange} />
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      INGREDIENTS
-                    </Typography>
-                    <Input placeholder={ingredients} inputProps={ariaLabel} sx={{mb: 5}} onChange={handleIngredientsChange}/>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              DESCRIPTION
+            </Typography>
+            <Input error={haveDescription?false:true} placeholder={description} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleDescriptionChange} />
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      CALORIES
-                    </Typography>
-                    <Box>
-                      <Input placeholder={calories} inputProps={ariaLabel} sx={{mb: 5, width: 50}} onChange={handleCaloriesChange}/> 
-                      <Box display='inline' fontWeight='bold'>Cal</Box>
-                    </Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              INGREDIENTS
+            </Typography>
+            <Input error={haveIngredients?false:true} placeholder={ingredients} inputProps={ariaLabel} sx={{ mb: 5 }} onChange={handleIngredientsChange} />
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      PRICE
-                    </Typography>
-                    <Box>
-                      <Box display='inline' fontWeight='bold'>$</Box>
-                      <Input placeholder={price} inputProps={ariaLabel} sx={{mb: 5, width: 70}} onChange={handlePriceChange}/>
-                    </Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              CALORIES
+            </Typography>
+            <Box>
+              <Input error={haveCalories?false:true} placeholder={calories} inputProps={ariaLabel} sx={{ mb: 5, width: 50 }} onChange={handleCaloriesChange} />
+              <Box display='inline' fontWeight='bold'>Cal</Box>
+            </Box>
 
-                    <Typography variant="h6" sx={{ fontWeight: 'bold'}}  >
-                      PICTURE
-                    </Typography>
-                    <Box>
-                      <Input disabled placeholder={newPictureName} inputProps={ariaLabel} sx={{mb: 5, width: 0.75, fontWeight: 'bold'}}/> 
-                      <Box display='inline'>
-                      <Button 
-                        component="label"
-                        sx={{
-                          '&:hover': {
-                            backgroundColor: '#8475B0',
-                          }, backgroundColor: '#503E9D', fontWeight: 'bold', borderRadius: 3, mx:1
-                        }}>
-                      <Typography variant="body2" sx={{ color: '#ffffff', fontWeight: 'bold'}} >
-                        Upload
-                      </Typography>
-                      <input hidden accept="image/*" multiple type="file" onChange={handleFileUpload}/>
-                    </Button>
-                      </Box>
-                    </Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              PRICE
+            </Typography>
+            <Box>
+              <Box display='inline' fontWeight='bold'>$</Box>
+              <Input error={havePrice?false:true} placeholder={price} inputProps={ariaLabel} sx={{ mb: 5, width: 70 }} onChange={handlePriceChange} />
+            </Box>
 
-                  </Box>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}  >
+              PICTURE
+            </Typography>
+            <Box>
+              <Input error={haveNewPictureName?false:true} disabled placeholder={newPictureName} inputProps={ariaLabel} sx={{ mb: 5, width: 0.75, fontWeight: 'bold' }} />
+              <Box display='inline'>
+                <Button
+                  component="label"
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: '#8475B0',
+                    }, backgroundColor: '#503E9D', fontWeight: 'bold', borderRadius: 3, mx: 1
+                  }}>
+                  <Typography variant="body2" sx={{ color: '#ffffff', fontWeight: 'bold' }} >
+                    Upload
+                  </Typography>
+                  <input hidden accept="image/*" multiple type="file" onChange={handleFileUpload} />
+                </Button>
+              </Box>
+            </Box>
 
-                  <Box sx={{display:'flex', justifyContent:'center', mt:1}}>
-                    <Button onClick={handleEditComfirm} sx={{
-                      width: 150, '&:hover': {
-                        backgroundColor: '#8475B0',
-                      }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
-                    }}>
-                      <Typography variant="h6" sx={{ color: '#ffffff' }} >
-                        {modalType}
-                      </Typography>
-                    </Button>
-                    <Button onClick={handleEditClose} sx={{
-                      width: 150, '&:hover': {
-                        backgroundColor: '#F1F1F1',
-                      }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
-                    }}>
-                      <Typography variant="h6" sx={{ color: '#000000' }} >
-                        Cancel
-                      </Typography>
-                    </Button>
-                  </Box>
-                </Card>
+          </Box>
 
-                </Modal> 
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+            <Button onClick={handleEditComfirm} sx={{
+              width: 150, '&:hover': {
+                backgroundColor: '#8475B0',
+              }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5
+            }}>
+              <Typography variant="h6" sx={{ color: '#ffffff' }} >
+                {modalType}
+              </Typography>
+            </Button>
+            <Button onClick={handleEditClose} sx={{
+              width: 150, '&:hover': {
+                backgroundColor: '#F1F1F1',
+              }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
+            }}>
+              <Typography variant="h6" sx={{ color: '#000000' }} >
+                Cancel
+              </Typography>
+            </Button>
+          </Box>
+        </Card>
+
+      </Modal>
     </>
   );
 }

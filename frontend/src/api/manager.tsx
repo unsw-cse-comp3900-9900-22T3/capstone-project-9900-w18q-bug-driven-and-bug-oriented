@@ -45,7 +45,7 @@ export const editManagerItem =async (id:string, input:{
   picture:string;
 }) => {
   const data = JSON.stringify(input);
-  const result = await apiClient.put(`/manager/item/${id}`,input);
+  const result = await apiClient.put(`/manager/item/${id}`,data);
   return result.data;
 }
 
@@ -59,7 +59,8 @@ export const postManagerKey =async (input:{
   name:string;
   key:string;
 }) => {
-  const result = await apiClient.post(`/manager/key`,input);
+  const data = JSON.stringify(input)
+  const result = await apiClient.post(`/manager/key`,data);
   return result.data;
 }
 
@@ -67,6 +68,7 @@ export const deleteManagerKey =async (input:{
   role:string;
   key:string;
 }) => {
-  const result = await apiClient.delete(`/manager/key`,{data:{input}});
+  const data = JSON.stringify(input)
+  const result = await apiClient.delete(`/manager/key`,{data:{data}});
   return result.data;
 }

@@ -13,6 +13,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import ManagerDishModal from "../managerDishModal/ManagerDishModal";
+import { useEffect, useState } from 'react';
 
 
 
@@ -36,7 +37,7 @@ interface ListProps {
   calories?: number;
   price?: number;
   picture?: string;
-  passObj?: (params: any) => any;
+  fatherListener?: (params: any) => any;
   categoryList?: string[];
   canMove?: boolean;
 }
@@ -70,8 +71,8 @@ export default function DishCard({
   price = 16.66,
   picture = '/dishImg/chickenGrill.jpg',
   categoryList = ['Meat', 'Vegetable', 'Noodle', 'Soup'],
-  canMove = true,
-  passObj = () => { },
+  canMove = false,
+  fatherListener = () => { },
   removeCard = () => { },
   editCard = () => { },
   moveLeft = () => {},
@@ -92,19 +93,21 @@ export default function DishCard({
   const [editOpen, setEditOpen] = React.useState(false);
   const handleEditOpen = () => setEditOpen(true);
   const handleEditClose = () => setEditOpen(false);
+  // const [nowPicture]
   const handleEditComfirm =(e: any) => {
-    setEditOpen(false);
+    
     const obj = {
-      dishId: dishId,
-      dishName: newDishName,
+      title: newDishName,
       calorie: Number(newCalories),
-      price: Number(newPrice),
-      picture: imgDirectoryPath + newPictureName,
-      category: newCategoryName,
+      cost: Number(newPrice),
+      picture: newPictureName.startsWith('/dishImg')? newPictureName: imgDirectoryPath + newPictureName,
+      categoryName: newCategoryName,
       description: newDescription,
-      ingredients: newIngredients,
+      ingredient: newIngredients,
     };
+    console.log('obj is', obj);
     editCard(obj);
+    setEditOpen(false);
   };
 
 
@@ -138,7 +141,7 @@ export default function DishCard({
     setNewPrice(event.target.value);
   };
 
-  const [newPictureName, setNewPictureName] = React.useState(picture);
+  const [newPictureName, setNewPictureName] = React.useState(picture.startsWith('/dishImg')? picture: '/dishImg/' + picture );
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -146,15 +149,22 @@ export default function DishCard({
     }
     
     const file = e.target.files[0];
-    setNewPictureName(file.name);
+    setNewPictureName('/dishImg/' + file.name);
   };
 
-  const [isSelected, setIsSelected] = React.useState(false);
+  const [move, setMove] = useState(false);
 
   const handleImageClick = () => {
-    if (canMove === false) {return;}
-    isSelected === false ? setIsSelected(true) : setIsSelected(false);
+    // if (canMove === false) {return;}
+    // isSelected === false ? ()=>{setIsSelected(true); fatherListener(dishId)} : () => {setIsSelected(false); fatherListener(-1)};
   };
+
+
+
+  useEffect(()=>{
+    setMove(canMove);
+    // console.log(categoryId,canMove);
+  },[canMove])
 
   return (
     <>
@@ -162,7 +172,7 @@ export default function DishCard({
       <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
 
         {
-        isSelected === false && <CardMedia
+        !move && <CardMedia
           component="img"
           height="180"
           sx={{ width: '100%', borderRadius: 5, '&:hover': {
@@ -170,12 +180,12 @@ export default function DishCard({
           } }}
           image={picture}
           alt={dishName}
-          onClick={handleImageClick}
+          onClick={()=>{setMove(true); fatherListener(dishId)}}
         />
         }
 
         {
-          isSelected === true && 
+          move && 
           <Box display='flex' sx={{justifyContent: 'center', alignItems: 'center'}}>
             <IconButton 
               sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
@@ -191,7 +201,7 @@ export default function DishCard({
              } }}
               image={picture}
               alt={dishName}
-              onClick={handleImageClick}
+              onClick={() => {setMove(false); fatherListener(-1)}}
             />
             <IconButton 
               sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
@@ -267,7 +277,7 @@ export default function DishCard({
                 ingredients = {ingredients}
                 calories = {calories.toString()}
                 price = {price.toString()}
-                categoryList = {categoryList}
+                
 
                 handleEditClose={handleEditClose}
                 handleEditComfirm={handleEditComfirm}
