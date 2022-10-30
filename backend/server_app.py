@@ -759,9 +759,9 @@ def sort_menu_item():
         new_sorted_menu_item_list.append(Menuitem(dishId=line["dishId"], categoryId=each_category_id,
                                                   categoryName=line["categoryName"], title=line["dishName"],
                                                   description=line["description"],
-                                                  ingredient=line["ingredients"], cost=line["price"],
+                                                  ingredient=line["ingredient"], cost=line["price"],
                                                   picture=line["picture"],
-                                                  calorie=line["calories"], orderTimes=each_item_order_times,
+                                                  calorie=line["calorie"], orderTimes=each_item_order_times,
                                                   lastModified=datetime.now()))
         db.session.delete(menu_item_delete)
     db.session.add_all(new_sorted_menu_item_list)
