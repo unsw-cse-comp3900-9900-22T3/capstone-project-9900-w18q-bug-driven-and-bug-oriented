@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
-import React, { useEffect } from "react";
-import { Button, Card, IconButton, Input, Modal, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Button, Card, FormControl, IconButton, Input, Modal, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -34,7 +34,7 @@ const style = {
 const roleList = ['Manager', 'Wait staff', 'Kitchen staff']
 
 // 别忘了修改函数名
-export default function AddManagerKey({
+export default function ManagerAddKey({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
   addFunc = () =>{},
@@ -43,7 +43,15 @@ export default function AddManagerKey({
 }: ListProps) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setRoleName('');
+    setStaffName('');
+    setKey('');
+    setHaveRoleName(true);
+    setHaveStaffName(true);
+    setHaveKey(true);
+  }
 
   const [roleName, setRoleName] = React.useState('');
   const handleRoleNameSelectChange = (event: SelectChangeEvent) => {
@@ -60,7 +68,23 @@ export default function AddManagerKey({
     setKey(event.target.value);
   };
 
+  const [haveRoleName, setHaveRoleName] = useState(true);
+  const [haveStaffName, setHaveStaffName] = useState(true);
+  const [haveKey, setHaveKey] = useState(true);
+
   const subF = (e: any) => {
+
+    if (roleName === '') setHaveRoleName(false)
+    else setHaveRoleName(true);
+
+    if (staffName === '') setHaveStaffName(false)
+    else setHaveStaffName(true);
+
+    if (key === '') setHaveKey(false)
+    else setHaveKey(true);
+
+    if (roleName === '' || staffName === '' ||  key === '') return;
+    
     handleClose();
     const obj = {
       role: roleName,
@@ -73,6 +97,8 @@ export default function AddManagerKey({
   useEffect(()=>{
     console.log('input',roleName, staffName, key);
   },[roleName, staffName, key])
+
+
 
   return (
     <>
@@ -106,6 +132,7 @@ export default function AddManagerKey({
             <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
               ROLE NAME
             </Typography>
+            <FormControl error={!haveRoleName}>
             <Select
               value={roleName}
               onChange={handleRoleNameSelectChange}
@@ -113,20 +140,21 @@ export default function AddManagerKey({
             >
               {roleList.map((role) => { return (<MenuItem value={role}>{role}</MenuItem>)})}
             </Select>
+            </FormControl>
           </Box>  
 
           <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5,ml:4, flexDirection:'column', width:300 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
               STAFF NAME
             </Typography>
-            <Input fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleStaffNameChange}/>
+            <Input error={!haveStaffName} fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleStaffNameChange}/>
           </Box>  
 
           <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5,ml:4, flexDirection:'column', width:300 }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
               KEY
             </Typography>
-            <Input fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleKeyChange}/>
+            <Input error={!haveKey} fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleKeyChange}/>
           </Box>  
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 7 }}>

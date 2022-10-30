@@ -1,20 +1,20 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import AddManagerKey from "./AddManagerKey";
+import ManagerAddKey from "./ManagerAddKey";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 //修改所有的AddManagerKey(不要修改Template)
 export default {
-  title: "AddManagerKey",
-  component: AddManagerKey,
+  title: "ManagerAddKey",
+  component: ManagerAddKey,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: "color" },
   },
-} as ComponentMeta<typeof AddManagerKey>;
+} as ComponentMeta<typeof ManagerAddKey>;
 
-const Template: ComponentStory<typeof AddManagerKey> = (args) => (
-  <AddManagerKey {...args} />
+const Template: ComponentStory<typeof ManagerAddKey> = (args) => (
+  <ManagerAddKey {...args} />
 );
 
 export const Test = Template.bind({});

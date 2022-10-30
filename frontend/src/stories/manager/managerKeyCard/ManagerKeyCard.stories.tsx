@@ -20,7 +20,5 @@ const Template: ComponentStory<typeof ManagerKeyCard> = (args) => (
 export const Test = Template.bind({});
 // 参数,storybook里的默认参数
 Test.args = {
-  categoryId: 111,
-  categoryName: "meat",
   lastModified: '2022-10-10-18:07:58',
 };
