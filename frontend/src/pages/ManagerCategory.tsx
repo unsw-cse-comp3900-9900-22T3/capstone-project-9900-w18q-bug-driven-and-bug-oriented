@@ -7,7 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import AddManagerCategory from "../stories/manager/managerCategoryCard/AddManagerCategory";
-import { getManagerCategory, postManagerCategory } from "../api/manager";
+import { getManagerCategory, postManagerCategory, postManagerCategoryOrder } from "../api/manager";
 import ManagerCategoryCardStories from "../stories/manager/managerCategoryCard/ManagerCategoryCard.stories";
 import ManagerCategoryCard from "../stories/manager/managerCategoryCard/ManagerCategoryCard";
 
@@ -28,6 +28,37 @@ const ManagerCategory: React.FC<{}> = () => {
   const [categoryList, setCategoryList] = useState<categoryInterface>();
   const [moveItem, setMoveItem] = useState(-1);
 
+  const exList = (arr: {
+    categoryName: string;
+    categoryId: number,
+    lastModified: string,
+  }[], index1: number, index2: number) => {
+    if (index1 >= 0 && index2 >= 0 && index1 < arr.length && index2 < arr.length) {
+      arr.splice(index1, 1, ...arr.splice(index2, 1, arr[index1]));
+    }
+    return arr;
+  }
+
+  const changeList = (index1: number, index2: number) => {
+    if (categoryList)
+      setCategoryList({
+        categoryList: exList(categoryList.categoryList, index1, index2)
+      }
+      )
+  }
+
+  const postOrder = async (input:{
+    categoryList:{
+      categoryName: string;
+      lastModified: string;
+      categoryId: number;
+    }[]}) => {
+      const message = await postManagerCategoryOrder(input);
+      console.log('new category', message);
+      setCategoryList(message);
+  }
+
+
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategory(event.target.value);
   };
@@ -38,7 +69,7 @@ const ManagerCategory: React.FC<{}> = () => {
   }
 
   const postCategory = async () => {
-    const message = await postManagerCategory({categoryName:newCategory});
+    const message = await postManagerCategory({ categoryName: newCategory });
     console.log('success submit', message);
     setCategoryList(message);
   }
@@ -55,6 +86,11 @@ const ManagerCategory: React.FC<{}> = () => {
     getCategory();
   }, [])
 
+  useEffect(() => {
+    if (categoryList && moveItem === -1)
+    postOrder(categoryList);
+  }, [moveItem])
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -67,13 +103,13 @@ const ManagerCategory: React.FC<{}> = () => {
         <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ alignItems: 'end', justifyContent: 'right', height: 200, width: '100%', display: 'flex' }}>
             <Box sx={{ mr: 20 }}>
-              <AddManagerCategory changeFunc={handleCategoryChange} submitFunc={()=>postCategory()}/>
+              <AddManagerCategory changeFunc={handleCategoryChange} submitFunc={() => postCategory()} />
             </Box>
 
           </Box>
-          <Box sx={{ height: '100%', width: '100%' , overflow: "auto", mt:5}}>
+          <Box sx={{ height: '100%', width: '100%', overflow: "auto", mt: 5 }}>
             {
-              categoryList?.categoryList.map((item) => {
+              categoryList?.categoryList.map((item, index) => {
                 return (
                   <React.Fragment key={item.categoryId}>
                     <Box sx={{ my: 3, mx: 10, height: 185 }}>
@@ -83,6 +119,8 @@ const ManagerCategory: React.FC<{}> = () => {
                         lastModified={item.lastModified}
                         canMove={moveItem === item.categoryId ? true : false}
                         fatherListener={setMoveItem}
+                        preFunc={() => changeList(index, index - 1)}
+                        nextFunc={() => changeList(index, index + 1)}
                       />
                     </Box>
 

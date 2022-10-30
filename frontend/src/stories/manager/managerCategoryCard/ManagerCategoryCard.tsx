@@ -24,8 +24,8 @@ export default function ManagerCategoryCard({
   categoryName = '',
   lastModified = '',
   canMove = false,
-  preFunc,
-  nextFunc,
+  preFunc= () => { },
+  nextFunc= () => { },
   fatherListener = () => { },
 
   ...props
