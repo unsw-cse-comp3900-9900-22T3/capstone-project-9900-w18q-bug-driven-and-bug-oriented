@@ -21,7 +21,7 @@ interface ListProps {
 
 
   //预留空函数
-  confirmFunc: (params: any) => any;
+  confirmFunc?: (params: any) => any;
 
 }
 
@@ -34,7 +34,7 @@ export default function ManagerOrderCard({
   time = '',
   price = '',
   itemList = [],
-  confirmFunc,
+  confirmFunc = () => {},
 
   ...props
 }: ListProps) {

@@ -189,7 +189,7 @@ const Waiter: React.FC<{}> = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 50px)', width: '100%' }}>
           {show === 'request' && (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
-              <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+              <Grid container  justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
                 {request?.requestsList.map((item: any) => {
                   // if (item.orderTime)
@@ -215,7 +215,7 @@ const Waiter: React.FC<{}> = () => {
 
           {show === 'item' && (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
-              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+              <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
                 {items?.itemsList.map((item: any) => {
                   // if (item.orderTime)
@@ -240,7 +240,7 @@ const Waiter: React.FC<{}> = () => {
 
           {show === 'order' && (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
-              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+              <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
                 {order?.orderList.map((item: any) => {
                   // if (item.orderTime)
