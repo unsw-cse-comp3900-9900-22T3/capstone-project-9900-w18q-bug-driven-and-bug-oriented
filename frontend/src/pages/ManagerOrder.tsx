@@ -37,18 +37,20 @@ const ManagerOrder: React.FC<{}> = () => {
   const getOrder = async () => {
     const message = await getWaitOrder();
     setOrder(message);
-    console.log(order);
+    console.log(message);
     // console.log(message.orderList);
   };
+
+  useEffect(() => {
+    getOrder();
+  }, []); 
 
   useEffect(() => {
     const timer = setInterval(getOrder, 5000);
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    getOrder();
-  }, []);
+
 
 
   return (
