@@ -105,7 +105,7 @@ export default function NavBar({
           <NavButton name='Category' item='category' selected={false} doSomething={(e) => { navigate(`/manager/category`); doSomething(e); }} />
         )}
         {location.pathname === `/manager/category` && (
-          <NavButton name='category' item='category' selected />
+          <NavButton name='Category' item='category' selected />
         )}
 
         {location.pathname !== `/manager/menu` && (
