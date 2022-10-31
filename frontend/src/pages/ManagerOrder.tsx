@@ -67,7 +67,7 @@ const ManagerOrder: React.FC<{}> = () => {
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', overflow: "auto", ml: 15, flexGrow:1}}>
 
-            <Grid container alignItems='flex-start' justifyContent="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+            <Grid container alignItems={!order ? 'cneter' :'flex-start'} justifyContent="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
               {order?.orderList.map((item: any) => {
                 // if (item.orderTime)
@@ -83,6 +83,14 @@ const ManagerOrder: React.FC<{}> = () => {
                   </Grid>
                 )
               })}
+              {!order && (
+                 <Grid item xs={12} sx={{display:'flex', justifyContent:'center',alignItems:'center', mt:50}}>
+                 <Typography variant="h3">
+                   Upcoming......
+                   </Typography>
+                 </Grid>
+              )
+              }
             </Grid>
           </Box>
         </Box>

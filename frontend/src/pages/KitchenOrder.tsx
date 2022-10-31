@@ -150,6 +150,14 @@ const KitchenOrder: React.FC<{}> = () => {
 
                   )
                 })}
+                {!pageOrder && (
+                 <Grid item xs={12} sx={{display:'flex', justifyContent:'center',alignItems:'center', mt:50}}>
+                 <Typography variant="h3">
+                   Upcoming......
+                   </Typography>
+                 </Grid>
+              )
+              }
               </Box>
             </Box>
           </Box>

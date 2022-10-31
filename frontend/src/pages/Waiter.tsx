@@ -94,10 +94,10 @@ const Waiter: React.FC<{}> = () => {
     const message = await postWaitOrder(id.toString());
     console.log('confirm order', message);
     setNumOfOrder(numOfOrder - 1);
-    const newOrder = {...order};
-    newOrder?.orderList?.map((item: { orderId: number; },index: any)=>{
-      if (item.orderId === id){
-        newOrder?.orderList?.splice(index,1);
+    const newOrder = { ...order };
+    newOrder?.orderList?.map((item: { orderId: number; }, index: any) => {
+      if (item.orderId === id) {
+        newOrder?.orderList?.splice(index, 1);
       }
     })
     setOrder(newOrder);
@@ -124,9 +124,9 @@ const Waiter: React.FC<{}> = () => {
     const message = await postWaitRequest(id.toString());
     console.log('confirm request', message);
     setNumOfRequest(numOfRequest - 1);
-    const newRequest = {...request};
-    newRequest?.requestsList?.map((item: { id: number; },index: any)=>{
-      if (item.id ===id){
+    const newRequest = { ...request };
+    newRequest?.requestsList?.map((item: { id: number; }, index: any) => {
+      if (item.id === id) {
         newRequest?.requestsList?.splice(index, 1);
       }
     })
@@ -189,7 +189,7 @@ const Waiter: React.FC<{}> = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 50px)', width: '100%' }}>
           {show === 'request' && (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100%', width: '100%', overflow: "auto", ml: 15, mt: 10 }}>
-              <Grid container  justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
+              <Grid container justifyContent="flex-start" alignItems="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
                 {request?.requestsList.map((item: any) => {
                   // if (item.orderTime)
@@ -259,7 +259,14 @@ const Waiter: React.FC<{}> = () => {
                     </Grid>
                   )
                 })}
-
+                {!order && (
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
+                    <Typography variant="h3">
+                      Upcoming......
+                    </Typography>
+                  </Grid>
+                )
+                }
 
 
               </Grid>
