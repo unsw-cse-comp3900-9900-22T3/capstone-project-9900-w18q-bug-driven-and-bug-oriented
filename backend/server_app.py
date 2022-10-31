@@ -444,12 +444,12 @@ def update_items(order_id):
         db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Completed"})
         db.session.commit()
 
-    if res_all == res_wait:
-        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Wait"})
+    elif (res_processing+res_wait) > 0 and res_all != res_wait and res_prepared < res_all:
+        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Processing"})
         db.session.commit()
 
-    if res_processing > 0 and res_prepared < res_all:
-        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Processing"})
+    else:
+        db.session.query(Orders).filter(Orders.orderId == order_id).update({"status": "Wait"})
         db.session.commit()
 
     return {"orderId": order_id}
