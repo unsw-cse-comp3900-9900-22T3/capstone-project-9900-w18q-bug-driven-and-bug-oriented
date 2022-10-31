@@ -112,7 +112,8 @@ class Orderitem(Base):
     dishId = db.Column(db.INT, nullable=False)
     orderId = db.Column(db.INT, db.ForeignKey("orders.orderId"))
     itemTime = db.Column(db.DateTime)
-    status = status = db.Column(db.String(45), nullable=False, default="Wait")
+    status = db.Column(db.String(45), nullable=False, default="Wait")
+    finish = db.Column(db.INT, nullable=False, default=0)
 
 
 # 数据库查询query转为字典格式
@@ -321,12 +322,13 @@ def request_finish(request_id):
 
 @app.route('/wait/item', methods=["GET"])
 def get_uncompleted_order_item():
-    uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status != "Prepared")
+    uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status == "Prepared", Orderitem.finish == 0)
                                            .order_by(Orderitem.itemTime.asc()).all())
     for line in uncompleted_order_item:
         line["table"] = Orders.query.get_or_404(line["orderId"]).table
         line.pop("orderId")
         line.pop("status")
+        line.pop("finish")
         # line.pop("itemTime")
         if line["itemTime"] is not None:
             line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
@@ -338,7 +340,7 @@ def get_uncompleted_order_item():
 
 @app.route('/wait/item/<int:item_index>', methods=["POST"])
 def item_complete(item_index):
-    Orderitem.query.filter_by(itemIndex=item_index).update({Orderitem.status: "Prepared"})
+    Orderitem.query.filter_by(itemIndex=item_index).update({Orderitem.finish: 1})
     db.session.commit()
     return_json = {"message": "success"}
     return Response(json.dumps(return_json), mimetype="application/json")
@@ -359,6 +361,7 @@ def get_unpayed_order():
             each_item.pop("itemTime")
             each_item.pop("itemIndex")
             each_item.pop("dishId")
+            each_item.pop("finish")
             # each_item.pop("orderId")
         line["price"] = round(total_cost, 1)
         line["itemList"] = order_items
