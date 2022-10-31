@@ -61,10 +61,10 @@ const ManagerService: React.FC<{}> = () => {
 
             <Grid container alignItems='flex-start' justifyContent="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
-              {request?.requestsList.map((item: any) => {
+              {request?.requestsList.map((item: any, index: any) => {
                 // if (item.requestTime)
                 return (
-                  <Grid item xs={'auto'} key={'request' + item.requestId} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Grid item xs={'auto'} key={'request' + item.requestId + 'index' + index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <ShowService
                       requestId={item.id}
                       table={item.table}

@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { Button, Card, FormControl, IconButton, Input, Modal, Typography } from "@mui/material";
+import { Alert, Button, Card, FormControl, IconButton, Input, Modal, Snackbar, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -31,17 +31,20 @@ const style = {
   pt: 2,
 };
 
-const roleList = ['Manager', 'Wait staff', 'Kitchen staff']
+const roleList = [{ name: 'Manager', role: 'manager' }, { name: 'Wait staff', role: 'wait' }, { name: 'Kitchen staff', role: 'kitchen' }]
 
 // 别忘了修改函数名
 export default function ManagerAddKey({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
-  addFunc = () =>{},
+  addFunc = () => { },
 
   ...props
 }: ListProps) {
   const [open, setOpen] = React.useState(false);
+
+  const [openNoticeWin, setOpenNoticeWin] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -83,25 +86,51 @@ export default function ManagerAddKey({
     if (key === '') setHaveKey(false)
     else setHaveKey(true);
 
-    if (roleName === '' || staffName === '' ||  key === '') return;
-    
-    handleClose();
+    if (roleName === '' || staffName === '' || key === '') return;
+
+
     const obj = {
       role: roleName,
       name: staffName,
       key: key,
     };
-    addFunc(obj);
+    addFunc(obj)
+      .then((res: any) => {
+        console.log('message is', res);
+        if (res === 'success') {
+          handleClose();
+        } else {
+          setOpenNoticeWin(true);
+        }
+      });
+
+
   }
 
-  useEffect(()=>{
-    console.log('input',roleName, staffName, key);
-  },[roleName, staffName, key])
+  const handleCloseNoticeWin = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenNoticeWin(false);
+  };
+
+  useEffect(() => {
+    console.log('input', roleName, staffName, key);
+  }, [roleName, staffName, key])
 
 
 
   return (
     <>
+      <Snackbar open={openNoticeWin}
+        autoHideDuration={5000}
+        onClose={handleCloseNoticeWin}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseNoticeWin} severity="info" sx={{ width: '100%' }}>
+          Duplicate key, please try again.
+        </Alert>
+      </Snackbar>
       <Button onClick={handleOpen} variant="contained" sx={{
         height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3, '&:hover': {
           backgroundColor: '#8475B0',
@@ -128,34 +157,34 @@ export default function ManagerAddKey({
             </IconButton>
           </Box>
 
-          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5,ml:4, flexDirection:'column', width:300 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
+          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5, ml: 4, flexDirection: 'column', width: 300 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}  >
               ROLE NAME
             </Typography>
             <FormControl error={!haveRoleName}>
-            <Select
-              value={roleName}
-              onChange={handleRoleNameSelectChange}
-              sx={{height:35, mb:2}}
-            >
-              {roleList.map((role) => { return (<MenuItem value={role}>{role}</MenuItem>)})}
-            </Select>
+              <Select
+                value={roleName}
+                onChange={handleRoleNameSelectChange}
+                sx={{ height: 35, mb: 2 }}
+              >
+                {roleList.map((role) => { return (<MenuItem key={'name' + role.name} value={role.role}>{role.name}</MenuItem>) })}
+              </Select>
             </FormControl>
-          </Box>  
+          </Box>
 
-          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5,ml:4, flexDirection:'column', width:300 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
+          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5, ml: 4, flexDirection: 'column', width: 300 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}  >
               STAFF NAME
             </Typography>
-            <Input error={!haveStaffName} fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleStaffNameChange}/>
-          </Box>  
+            <Input error={!haveStaffName} fullWidth inputProps={ariaLabel} sx={{ mb: 2 }} onChange={handleStaffNameChange} />
+          </Box>
 
-          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5,ml:4, flexDirection:'column', width:300 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}  >
+          <Box sx={{ justifyContent: 'center', display: 'flex', mt: 5, ml: 4, flexDirection: 'column', width: 300 }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}  >
               KEY
             </Typography>
-            <Input error={!haveKey} fullWidth inputProps={ariaLabel} sx={{mb: 2}} onChange={handleKeyChange}/>
-          </Box>  
+            <Input error={!haveKey} fullWidth inputProps={ariaLabel} sx={{ mb: 2 }} onChange={handleKeyChange} />
+          </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 7 }}>
             <Button onClick={subF} sx={{

@@ -69,7 +69,7 @@ export const deleteManagerKey = async (input: {
   key: string;
 }) => {
   const data = JSON.stringify(input)
-  const result = await apiClient.delete(`/manager/key`, { data: { data } });
+  const result = await apiClient.delete(`/manager/key`, { data : data });
   return result.data;
 }
 

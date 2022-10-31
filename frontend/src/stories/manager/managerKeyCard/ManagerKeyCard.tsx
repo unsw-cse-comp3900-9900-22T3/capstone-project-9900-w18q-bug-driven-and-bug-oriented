@@ -11,7 +11,7 @@ interface ListProps {
   //问号是说可有可无
   role?: string;
   name?: string;
-  key?: string;
+  keyValue?: string;
   lastModified?: string;
   //预留空函数
   deleteFunc?: (params: any) => any;
@@ -36,16 +36,19 @@ export default function ManagerKeyCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   role = 'Manager',
   name = 'Tony',
-  key = '12345678',
+  keyValue = '',
   lastModified = '2022-09-24 19:07:33',
   deleteFunc = () =>{},
 
   ...props
 }: ListProps) {
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   const handleComfirm =(e: any) => {
     setOpen(false);
     deleteFunc(e);
@@ -56,9 +59,7 @@ export default function ManagerKeyCard({
         <Paper elevation={0}  
           sx={{
             width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', 
-            '&:hover': {
-            cursor: 'pointer'
-            }
+            
         }}>
           
           <Box display='flex' justifyContent='space-between'>
@@ -73,21 +74,14 @@ export default function ManagerKeyCard({
                     Name: {name}
                   </Typography>
                 </Box>
-                <Box sx={{ m: 4, mt: 3, flexDirection: 'row', display: 'flex' }}>
-                  <Box sx={{ bgcolor: '#f8eae5', height: 25, width: 180, color: '#FB6D3A', borderRadius: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography sx={{ fontWeight: 'bold' }} variant="subtitle2">
-                      Last modified:
-                    </Typography>
-                  </Box>
-                  <Typography sx={{ ml: 5, mt: 0.2, fontWeight: 'bold', color: '#626264' }} variant="subtitle2">
-                    {lastModified}
-                  </Typography>
+                <Box sx={{ m: 5, mt: 1, flexDirection: 'row', display: 'flex' }}>
+                <Typography sx={{ fontWeight: 'bold' }} variant="h5">
+                  Key: {keyValue}
+                </Typography>                  
                 </Box>
               </Box>
               <Box>
-                <Typography sx={{ ml: 5, mt: 5, fontWeight: 'bold' }} variant="h5">
-                  Key: {key}
-                </Typography>
+
               </Box>
             </Box>
           </Box>
@@ -133,7 +127,7 @@ export default function ManagerKeyCard({
                   Name: {name}
                 </Typography>
                 <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
-                  Key: {key}
+                  Key: {keyValue}
                 </Typography>
               </Box>
 
