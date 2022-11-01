@@ -103,7 +103,12 @@ const ManagerCategory: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {loading ? (
+
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+        <Box>
+          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+        </Box>
+        {loading ? (
         <Box
           sx={{
             textAlign: "center",
@@ -116,14 +121,9 @@ const ManagerCategory: React.FC<{}> = () => {
         >
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
-      ) : null}
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-        <Box>
-          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
-        </Box>
+      ) : (
+         <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
 
-
-        <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ alignItems: 'end', justifyContent: 'right', height: 200, width: '100%', display: 'flex' }}>
             <Box sx={{ mr: 20 }}>
               <AddManagerCategory changeFunc={handleCategoryChange} submitFunc={() => postCategory()} />
@@ -161,7 +161,11 @@ const ManagerCategory: React.FC<{}> = () => {
             }
 
           </Box>
-        </Box>
+        </Box>       
+      )}
+
+
+
 
 
       </Box>

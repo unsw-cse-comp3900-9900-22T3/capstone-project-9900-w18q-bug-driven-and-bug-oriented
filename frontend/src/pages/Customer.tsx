@@ -46,7 +46,6 @@ const Customer: React.FC<{}> = () => {
   }, []);
 
 
-
   //init
   useEffect(() => {
     // const order = haveOrder;
@@ -65,7 +64,7 @@ const Customer: React.FC<{}> = () => {
     console.log('message', message);
     setNav(message.categoryList);
     setCeilingOfCal(message.diner * 2000);
-    
+
     // setMenu(message.itemList);
   };
 
@@ -86,7 +85,7 @@ const Customer: React.FC<{}> = () => {
       console.log('message', message);
       resetMenu(newOrder, message.itemList);
     }
-    setTimeout(()=>setLoading(false), 100);
+    setTimeout(() => setLoading(false), 100);
   };
 
   const getOrder = async (e: any) => {
@@ -261,56 +260,59 @@ const Customer: React.FC<{}> = () => {
   console.log(menu.length)
   return (
     <ThemeProvider theme={theme}>
-      {loading ? (
-        <Box
-          sx={{
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100vh",
-          }}
-        >
-          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
-        </Box>
-      ) : (<Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
           <NavBar canBack={oldOrder.length === 0 ? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
+
+
         <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
+          {loading ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
+              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
 
-              {menu?.map((item: any) => {
-                return (
-                  <Grid item xs={'auto'} key={item.dishId} >
-                    <DishCard
-                      dishId={item.dishId}
-                      dishName={item.title}
-                      description={item.description}
-                      ingredients={item.ingredient}
-                      calories={item.calorie}
-                      price={item.cost}
-                      picture={item.picture}
-                      initDishNum={item.dishNumber}
-                      passObj={setNewEdit}
-                    />
+                {menu?.map((item: any) => {
+                  return (
+                    <Grid item xs={'auto'} key={item.dishId} >
+                      <DishCard
+                        dishId={item.dishId}
+                        dishName={item.title}
+                        description={item.description}
+                        ingredients={item.ingredient}
+                        calories={item.calorie}
+                        price={item.cost}
+                        picture={item.picture}
+                        initDishNum={item.dishNumber}
+                        passObj={setNewEdit}
+                      />
 
+                    </Grid>
+                  )
+                })}
+                {menu.length === 0 && (
+                  <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h3">
+                      Upcoming......
+                    </Typography>
                   </Grid>
                 )
-              })}
-              {menu.length === 0 && (
-                <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography variant="h3">
-                    Upcoming......
-                  </Typography>
-                </Grid>
-              )
-              }
-            </Grid>
-          </Box>
+                }
+              </Grid>
+            </Box>)}
           <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
             <OrderBar
               haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
@@ -326,7 +328,8 @@ const Customer: React.FC<{}> = () => {
             />
           </Box>
         </Box>
-      </Box>)}
+
+      </Box>
 
 
 

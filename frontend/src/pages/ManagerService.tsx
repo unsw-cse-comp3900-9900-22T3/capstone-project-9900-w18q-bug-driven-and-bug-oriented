@@ -54,6 +54,10 @@ const ManagerService: React.FC<{}> = () => {
   return (
 
     <ThemeProvider theme={theme}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+        <Box>
+          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+        </Box>      
       {loading ? (
         <Box
           sx={{
@@ -67,12 +71,7 @@ const ManagerService: React.FC<{}> = () => {
         >
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
-      ) : null}
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
-        <Box>
-          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
-        </Box>
-        <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column' }}>
+      ) : (<Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', width: '100%', }}>
             <Typography sx={{ m: 5, ml: 15 }} variant='h3'>
               Now request:
@@ -104,7 +103,9 @@ const ManagerService: React.FC<{}> = () => {
               }
             </Grid>
           </Box>
-        </Box>
+        </Box>)}
+
+        
       </Box>
     </ThemeProvider>
 

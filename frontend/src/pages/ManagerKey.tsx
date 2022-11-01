@@ -88,6 +88,10 @@ const ManagerKey: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
+ <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+        <Box>
+          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+        </Box>      
       {loading ? (
         <Box
           sx={{
@@ -101,14 +105,7 @@ const ManagerKey: React.FC<{}> = () => {
         >
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
-      ) : null}
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-        <Box>
-          <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
-        </Box>
-
-
-        <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      ) : (<Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ alignItems: 'end', justifyContent: 'space-between', height: 250, width: '100%', display: 'flex' }}>
             <Box sx={{ ml: 20, display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, mt: 5 }}  >
@@ -151,8 +148,8 @@ const ManagerKey: React.FC<{}> = () => {
               })
             }
           </Box>
-        </Box>
-
+        </Box>)}
+     
 
       </Box>
 

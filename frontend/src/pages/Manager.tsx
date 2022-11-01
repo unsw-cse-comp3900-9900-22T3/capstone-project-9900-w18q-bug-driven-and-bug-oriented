@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import html from './dashboard'
 import PacmanLoader from "react-spinners/PacmanLoader";
+import zIndex from "@mui/material/styles/zIndex";
 
 
 const theme = createTheme();
@@ -37,6 +38,11 @@ const Manager: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
+
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+          <Box>
+            <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+          </Box>
       {loading ? (
         <Box
           sx={{
@@ -44,20 +50,19 @@ const Manager: React.FC<{}> = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "100%",
+            width: "calc(100vw - 300px)",
             height: "100vh",
+            position:'absolute',
+            zIndex: 100,
+            background:'#ffffff',
+            left:300
           }}
         >
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
       ) : null}
-        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
-          <Box>
-            <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
-          </Box>
 
-
-          <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1500, ml: 30 }}>
+          <Box sx={{ position:'relative',zIndex:10, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', minWidth: 1500, ml: 30 }}>
             <iframe
               id='ifra'
               title="resg"
@@ -68,8 +73,7 @@ const Manager: React.FC<{}> = () => {
             onLoad={()=>setTimeout(()=> setLoading(false), 2200)}
             />
           </Box>
-          {
-          }
+ 
 
 
 
