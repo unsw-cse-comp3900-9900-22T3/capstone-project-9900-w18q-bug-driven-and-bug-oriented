@@ -89,6 +89,10 @@ const Kitchen: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
+         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+        <Box>
+          <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
+        </Box>      
       {loading ? (
         <Box
           sx={{
@@ -103,10 +107,7 @@ const Kitchen: React.FC<{}> = () => {
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
       ) : (
-         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
-        <Box>
-          <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
-        </Box>
+
         <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', flexDirection: 'column' }}>
 
           <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'start', mt: 20, mb: 10, height:300 }}>
@@ -170,8 +171,9 @@ const Kitchen: React.FC<{}> = () => {
           </Box>
 
         </Box>
+        )}
       </Box>
-      )}
+      
      
 
     </ThemeProvider>
