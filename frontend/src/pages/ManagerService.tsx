@@ -57,7 +57,7 @@ const ManagerService: React.FC<{}> = () => {
               Now request:
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', overflow: "auto", ml: 15, flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', overflow: "auto", ml: 15, flexGrow: 1, height:'100%',width:'100%' }}>
 
             <Grid container alignItems='flex-start' justifyContent="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
 
@@ -76,8 +76,6 @@ const ManagerService: React.FC<{}> = () => {
             </Grid>
           </Box>
         </Box>
-
-
       </Box>
     </ThemeProvider>
 
