@@ -16,6 +16,7 @@ import { addManagerItem, deleteManagerItem, editManagerItem, getManagerItem, pos
 import ManagerAddDishButton from "../stories/manager/managerAddDishButton/ManagerAddDishButton";
 import ManagerDishCard from "../stories/manager/managerDishCard/ManagerDishCard";
 import { Interface } from "readline";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 
 const theme = createTheme();
@@ -69,6 +70,11 @@ const ManagerMenu: React.FC<{}> = () => {
   const [nowCategoryName, setNowCategoryName] = useState<string | undefined>('');
   const [mapList, setMapList] = useState<Map<string, string>>();
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
+
   const init = async () => {
     const message = await getManagerItem();
     if (message) {
@@ -83,6 +89,7 @@ const ManagerMenu: React.FC<{}> = () => {
       setNowItemList({itemList:message?.itemList[0].itemList});
       setNowCategoryId(message?.categoryList[0].categoryId.toString());
       setNowCategoryName(message?.categoryList[0].categoryName);
+      setLoading(false);
     }
   }
 
@@ -233,6 +240,20 @@ const ManagerMenu: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : null}
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
           <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
@@ -304,7 +325,7 @@ const ManagerMenu: React.FC<{}> = () => {
               {Array.isArray(nowItemList?.itemList) && nowItemList?.itemList.length === 0 && (
                 <Grid item xs={12} sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 30 }}>
                   <Typography variant="h3">
-                    Please add new items......
+                    Please add new item......
                   </Typography>
                 </Grid>
               )

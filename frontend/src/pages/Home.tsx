@@ -15,6 +15,7 @@ import ButtonIcon from "../stories/home/ButtonIcon";
 import BorderButton from "../stories/home/BorderButton";
 import OrderNowButton from "../stories/home/OrderNowButton";
 import { checkLogin } from "../api/login";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme();
 
@@ -45,6 +46,11 @@ const Home: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [table, setTable] = useState('');
   const [diner, setDiner] = useState('');
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(()=>setLoading(false),1000);
+  }, []);
 
   const goToOrder = async () => {
     const message = await checkLogin({
@@ -85,8 +91,20 @@ const Home: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-
-      <Grid container component="main" sx={{ height: "100vh", minWidth: 1100, minHeight: 1000 }}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : (<Grid container component="main" sx={{ height: "100vh", minWidth: 1100, minHeight: 1000 }}>
         <Grid
           item
           xs={3}
@@ -190,7 +208,9 @@ const Home: React.FC<{}> = () => {
 
         </Grid>
 
-      </Grid>
+      </Grid>)}
+
+      
     </ThemeProvider>
   );
 };

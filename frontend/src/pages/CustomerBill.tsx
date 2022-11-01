@@ -11,6 +11,7 @@ import NavBar from "../stories/NavBar";
 import { getCustomerBill } from "../api/customer";
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import OrderDetailBox from "../stories/customer/orderDetailBox/OrderDetailBox";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme();
 const id = '123';
@@ -34,6 +35,11 @@ const CustomerBill: React.FC<{}> = () => {
   const [bill, setBill] = useState<any>();
   const [price, setPrice] = useState(0);
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
 
   const getInit = async (e: any) => {
     const message = await getCustomerBill(e);
@@ -44,6 +50,7 @@ const CustomerBill: React.FC<{}> = () => {
       cost = cost + item.cost * item.dishNumber;
     });
     setPrice(cost);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -53,7 +60,20 @@ const CustomerBill: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : (<Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
           <NavBar role='bill' doSomething={() => { }} postRequest={() => { }} />
         </Box>
@@ -111,7 +131,8 @@ const CustomerBill: React.FC<{}> = () => {
 
 
         </Box>
-      </Box>
+      </Box>)}
+      
 
     </ThemeProvider>
   );

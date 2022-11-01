@@ -15,6 +15,7 @@ import { getWaitItem, getWaitOrder, getWaitRequest, postWaitItem, postWaitOrder,
 import OrderCard from "../stories/wait/OrderCard";
 import WaitItemBox from "../stories/wait/WaitItemBox";
 import WaitRequestBox from "../stories/wait/WaitRequestBox";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 
 const theme = createTheme();
@@ -62,6 +63,11 @@ const Waiter: React.FC<{}> = () => {
   const [order, setOrder] = useState<orderInterface | any>();
   const [request, setRequest] = useState<requestInterface | any>();
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
+
   const getRequest = async () => {
     const message = await getWaitRequest();
     setNumOfRequest(message.requestsList.length);
@@ -82,6 +88,7 @@ const Waiter: React.FC<{}> = () => {
     setOrder(message);
     // console.log(order);
     // console.log(message.orderList);
+    setLoading(false);
   };
 
   const getAll = () => {
@@ -148,6 +155,20 @@ const Waiter: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : null}
 
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box>
@@ -206,6 +227,14 @@ const Waiter: React.FC<{}> = () => {
                     </Grid>
                   )
                 })}
+                {(request?.requestsList.length === 0 || !request) && (
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
+                    <Typography variant="h3">
+                      No request now......
+                    </Typography>
+                  </Grid>
+                )
+                }
 
 
 
@@ -231,6 +260,14 @@ const Waiter: React.FC<{}> = () => {
                     </Grid>
                   )
                 })}
+                {(!items || items?.itemsList.length === 0 ) && (
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
+                    <Typography variant="h3">
+                      No item now......
+                    </Typography>
+                  </Grid>
+                )
+                }
 
 
 
@@ -259,14 +296,15 @@ const Waiter: React.FC<{}> = () => {
                     </Grid>
                   )
                 })}
-                {!order && (
+             {(!order || order?.orderList.length === 0 ) && (
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
                     <Typography variant="h3">
-                      Upcoming......
+                      No item now......
                     </Typography>
                   </Grid>
                 )
                 }
+                
 
 
               </Grid>

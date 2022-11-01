@@ -13,6 +13,7 @@ import ManageDishCard from "../stories/manager/managerDishCard/ManagerDishCard"
 import ManagerAddDishButton from "../stories/manager/managerAddDishButton/ManagerAddDishButton";
 import { getWaitRequest } from "../api/wait";
 import ShowService from "../stories/manager/ShowService";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme();
 
@@ -26,12 +27,18 @@ interface requestInterface {
 
 const ManagerService: React.FC<{}> = () => {
   const navigate = useNavigate();
-  const [request, setRequest] = useState<requestInterface | any>()
+  const [request, setRequest] = useState<requestInterface>()
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
 
   const getRequest = async () => {
     const message = await getWaitRequest();
     setRequest(message);
-    // console.log(message.requestsList);
+    console.log(message);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -47,6 +54,20 @@ const ManagerService: React.FC<{}> = () => {
   return (
 
     <ThemeProvider theme={theme}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : null}
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box>
           <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
@@ -73,6 +94,14 @@ const ManagerService: React.FC<{}> = () => {
                   </Grid>
                 )
               })}
+               {(request?.requestsList.length === 0 || !request)&& (
+                 <Grid item xs={12} sx={{display:'flex', justifyContent:'center',alignItems:'center', mt:50}}>
+                 <Typography variant="h3">
+                   No request now......
+                   </Typography>
+                 </Grid>
+              )
+              }
             </Grid>
           </Box>
         </Box>

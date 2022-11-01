@@ -3,6 +3,7 @@ import {
   Box,
   createTheme,
   ThemeProvider,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
@@ -10,6 +11,7 @@ import AddManagerCategory from "../stories/manager/managerCategoryCard/AddManage
 import { getManagerCategory, postManagerCategory, postManagerCategoryOrder } from "../api/manager";
 import ManagerCategoryCardStories from "../stories/manager/managerCategoryCard/ManagerCategoryCard.stories";
 import ManagerCategoryCard from "../stories/manager/managerCategoryCard/ManagerCategoryCard";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 
 const theme = createTheme();
@@ -27,6 +29,11 @@ const ManagerCategory: React.FC<{}> = () => {
   const [newCategory, setNewCategory] = useState('');
   const [categoryList, setCategoryList] = useState<categoryInterface>();
   const [moveItem, setMoveItem] = useState(-1);
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
 
   const exList = (arr: {
     categoryName: string;
@@ -47,15 +54,16 @@ const ManagerCategory: React.FC<{}> = () => {
       )
   }
 
-  const postOrder = async (input:{
-    categoryList:{
+  const postOrder = async (input: {
+    categoryList: {
       categoryName: string;
       lastModified: string;
       categoryId: number;
-    }[]}) => {
-      const message = await postManagerCategoryOrder(input);
-      console.log('new category', message);
-      setCategoryList(message);
+    }[]
+  }) => {
+    const message = await postManagerCategoryOrder(input);
+    console.log('new category', message);
+    setCategoryList(message);
   }
 
 
@@ -66,6 +74,7 @@ const ManagerCategory: React.FC<{}> = () => {
   const getCategory = async () => {
     const message = await getManagerCategory();
     setCategoryList(message);
+    setLoading(false);
   }
 
   const postCategory = async () => {
@@ -88,12 +97,26 @@ const ManagerCategory: React.FC<{}> = () => {
 
   useEffect(() => {
     if (categoryList && moveItem === -1)
-    postOrder(categoryList);
+      postOrder(categoryList);
   }, [moveItem])
 
 
   return (
     <ThemeProvider theme={theme}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : null}
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
           <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
@@ -128,6 +151,15 @@ const ManagerCategory: React.FC<{}> = () => {
                 )
               })
             }
+            {(categoryList?.categoryList.length === 0) || (!categoryList) && (
+              <Box sx={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h3">
+                  No category now......
+                </Typography>
+              </Box>
+            )
+            }
+
           </Box>
         </Box>
 

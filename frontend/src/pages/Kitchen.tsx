@@ -21,6 +21,7 @@ import NavBar from "../stories/NavBar";
 import { getKitchenOrder, postKitchenOrder } from "../api/kitchen";
 import { parse } from "querystring";
 import { minHeight } from "@mui/system";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme();
 
@@ -44,6 +45,11 @@ const Kitchen: React.FC<{}> = () => {
   const [pageOrder, setPageOrder] = useState<orderInterface | any>();
   const [numPage, setNumPage] = useState(1);
   const [page, setPage] = useState(1);
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
 
   useEffect(() => {
@@ -77,13 +83,27 @@ const Kitchen: React.FC<{}> = () => {
       setOrderList(message);
       console.log('message', message);
     }
-
+    setLoading(false);
 
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+        </Box>
+      ) : (
+         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box>
           <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
         </Box>
@@ -129,7 +149,7 @@ const Kitchen: React.FC<{}> = () => {
 
                   )
                 })}
-                {!pageOrder && (
+                {(!pageOrder || pageOrder?.orderList.length === 0) && (
                  <Grid item xs={12} sx={{display:'flex', justifyContent:'center',alignItems:'center', mt:50}}>
                  <Typography variant="h3">
                    Upcoming......
@@ -151,6 +171,8 @@ const Kitchen: React.FC<{}> = () => {
 
         </Box>
       </Box>
+      )}
+     
 
     </ThemeProvider>
   );
