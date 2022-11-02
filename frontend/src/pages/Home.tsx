@@ -121,7 +121,7 @@ const Home: React.FC<{}> = () => {
         />
         <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ height: 800, width: 900 }}>
-            <Typography variant="h4" gutterBottom >
+            <Typography  variant="h4" gutterBottom >
               Welcome!
             </Typography>
             <Typography variant="subtitle1" sx={{ color: '#626264' }}>
