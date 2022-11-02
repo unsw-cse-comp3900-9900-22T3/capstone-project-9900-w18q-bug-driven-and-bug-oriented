@@ -22,7 +22,11 @@ import ButtonIcon from "../stories/home/ButtonIcon";
 import { checkLogin } from "../api/login";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 
 

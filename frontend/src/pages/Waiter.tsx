@@ -18,7 +18,11 @@ import WaitRequestBox from "../stories/wait/WaitRequestBox";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 interface orderInterface {
   orderList: {

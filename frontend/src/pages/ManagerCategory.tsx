@@ -169,11 +169,14 @@ const ManagerCategory: React.FC<{}> = () => {
         });
       newList.push(input.categoryList[i]);
     }
-    newList.push({
+    if (newList.length !== 0){
+      newList.push({
       categoryId: 0,
       categoryName: '',
       lastModified: ''
     });
+    }
+    
     return { categoryList: newList };
   }
 

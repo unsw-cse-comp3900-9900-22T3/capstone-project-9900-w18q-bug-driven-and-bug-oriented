@@ -17,7 +17,11 @@ import OrderNowButton from "../stories/home/OrderNowButton";
 import { checkLogin } from "../api/login";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 const tableList = [
   { number: '1' },

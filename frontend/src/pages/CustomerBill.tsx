@@ -13,7 +13,11 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import OrderDetailBox from "../stories/customer/orderDetailBox/OrderDetailBox";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 const id = '123';
 const obj = [
   {

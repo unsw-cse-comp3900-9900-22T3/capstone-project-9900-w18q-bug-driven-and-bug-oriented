@@ -15,7 +15,11 @@ import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 
 const Customer: React.FC<{}> = () => {

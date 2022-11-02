@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   createTheme,
+  Divider,
   Grid,
   MenuItem,
   Select,
@@ -20,7 +21,11 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 interface categoryListInterface {
   [index: number]: {
@@ -84,7 +89,7 @@ const ManagerMenu: React.FC<{}> = () => {
           if (nowItemList.itemList[i].dishId !== 0)
             newList.push(nowItemList.itemList[i]);
         }
-        // postList({ categoryList: newList });
+        postOrder({ itemList: newList });
       }
     } else {
       setMove(true);
@@ -103,7 +108,7 @@ const ManagerMenu: React.FC<{}> = () => {
     // console.log(`#${id} - `, e);
     e.preventDefault();
     setTarget(id);
-    console.log('over')
+    console.log('over', id)
     setHide(true)
 
   }
@@ -145,7 +150,8 @@ const ManagerMenu: React.FC<{}> = () => {
             price: 0,
           });
       }
-      newList.push({
+      if (newList.length !==0){
+        newList.push({
         ingredient: '',
         picture: '',
         categoryName: '',
@@ -155,6 +161,8 @@ const ManagerMenu: React.FC<{}> = () => {
         dishName: '',
         price: 0,
       });
+      }
+      
       return { itemList: newList };
     } else {
       return { itemList: [] };
@@ -171,8 +179,10 @@ const ManagerMenu: React.FC<{}> = () => {
     if ((nowItemList) && (target !== null) && (source !== null)) {
       if (nowItemList.itemList[target].dishId !== 0) {
         nowItemList.itemList[target - 1] = nowItemList.itemList[source]
+        console.log('now is 1!!!!!!!!!!');
       } else {
         nowItemList.itemList[target] = nowItemList.itemList[source]
+        console.log('now is 2!!!!!!!!!!');
       }
 
       nowItemList.itemList[source] = {
@@ -331,6 +341,7 @@ const ManagerMenu: React.FC<{}> = () => {
         }
       });
     }
+    setMove(false);
     // console.log('now name', map1.get(nowCategoryId));
 
   }, [nowCategoryId, itemList,])
@@ -356,7 +367,7 @@ const ManagerMenu: React.FC<{}> = () => {
 
   useEffect(() => {
     if (move === false && nowItemList) {
-      postOrder(nowItemList)
+      // postOrder(nowItemList)
       console.log('now select is', move);
     }
 
@@ -437,84 +448,119 @@ const ManagerMenu: React.FC<{}> = () => {
 
               {Array.isArray(nowItemList?.itemList) && nowItemList?.itemList?.map((item: any, index) => {
                 if (index % 3 === 1)
-                  return (
-                    <Grid item container xs={'auto'} key={'dishname' + index}>
-                      <Box sx={{
+                return (
+                  <Grid item container xs={'auto'} key={'dishname' + index}>
+                    
+                    <Box sx={{
                         mt: 3,
                         width: 280,
-                        mr:-30,
-                        bgcolor: nowItemList.itemList[index - 1].dishId === 0 ? "red" : 'green',
+                        mr:-31.25,
+                        // bgcolor: index-1 === target ? "red" : 'green',
                         position: 'relative',
-                        // zIndex: hide ? 15 : 5,
+                        zIndex: hide ? 15 : 5,
+                        display:'flex',
+                        justifyContent:'start',
+                        borderLeft: (index-1 === target ) ? '3px solid #503E9D': '3px solid #ffffff',
+                        mb:3
                       }}
-                        onDragOver={onDragOver(index)}
+                        onDragOver={onDragOver(index - 1)}
                         onDragLeave={onDragLeave(index)}
+                        onDragStart={onDragStart(index - 1)}
+                        onDrop={onDrop}
+                        
                       >
-                        {index - 1}
-                      </Box>
-                      <Box
-                        sx={{ mt: 5, bgcolor: item.dishId === 0 ? "red" : 'green' }}
-                        onDragOver={onDragOver(index)}
-                        onDragLeave={onDragLeave(index)}
-                      >
+                        {/* <Divider flexItem orientation="vertical" sx={{
+                              mr:1000,
+                              width: '100%',
+                
+                              color: target === index - 1 ? '#503E9D' : '#ffffff',
 
+                            }}> 
+                            </Divider> */}
+                      </Box>
+                    <Box
+                      sx={{ mt: 5, 
+                        // bgcolor: target === index ? "black" : 'yellow', 
+                        height: '100%' }}
+                      onDragOver={onDragOver(index)}
+                      onDragLeave={onDragLeave(index)}
+                    >
+
+                      <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        height: '100%',
+                        width: '100%',
+                        alignItems: 'center',
+                        position: 'relative',
+                        zIndex: 10,
+                      }}
+                        draggable={(item.dishId !== 0 && move) ? true : false}
+                        onDragStart={onDragStart(index)}
+                        onDrop={onDrop}
+
+                      // onDrop={onDrop}
+                      >
                         {
                           item.dishId !== 0 && (
-                            <Box sx={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              height: '100%',
-                              width: '100%',
-                              alignItems: 'center',
-                              position: 'relative',
-                              zIndex: 10,
-                            }}
-                              draggable={(item.dishId !== 0 && move) ? true : false}
-                              onDragStart={onDragStart(index)}
-                              onDrop={onDrop}
-
-                            // onDrop={onDrop}
-                            >
-                              <ManagerDishCard
-                                dishId={item.dishId}
-                                dishName={item.dishName}
-                                categoryName={item.categoryName}
-                                description={item.description}
-                                ingredients={item.ingredient}
-                                calories={item.calorie}
-                                price={item.price}
-                                picture={item.picture}
-                                removeCard={(e) => deleteItem(e)}
-                                editCard={(obj) => { editItem(item.dishId, obj) }}
-                                canMove={move}
-                              // fatherListener={setMove}
-                              // moveLeft={() => changeList(index, index - 1)}
-                              // moveRight={() => changeList(index, index + 1)}
-                              />
-                            </Box>
-
-                          )
-                        }
-
-
+                            <ManagerDishCard
+                              dishId={item.dishId}
+                              dishName={item.dishName}
+                              categoryName={item.categoryName}
+                              description={item.description}
+                              ingredients={item.ingredient}
+                              calories={item.calorie}
+                              price={item.price}
+                              picture={item.picture}
+                              removeCard={(e) => deleteItem(e)}
+                              editCard={(obj) => { editItem(item.dishId, obj) }}
+                              canMove={move}
+                              selected={source === index}
+                            // fatherListener={setMove}
+                            // moveLeft={() => changeList(index, index - 1)}
+                            // moveRight={() => changeList(index, index + 1)}
+                            />
+                              )}
                       </Box>
-                      <Box sx={{
+
+                      
+
+
+
+                    </Box>
+                    <Box sx={{
                         mt: 3,
                         width: 280,
-                        ml:-30,
-                        bgcolor: nowItemList.itemList[index + 1].dishId === 0 ? "red" : 'green',
+                        ml:-31.25,
+                        // bgcolor: index+1 === target ? "red" : 'green',
                         position: 'relative',
-                        // zIndex: hide ? 15 : 5,
+                        zIndex: hide ? 15 : 5,
+                        borderRight: (index+1 === target ) ? '3px solid #503E9D': '3px solid #ffffff',
+                        mb:3
                       }}
-                        onDragOver={onDragOver(index)}
+                        onDragOver={onDragOver(index + 1)}
                         onDragLeave={onDragLeave(index)}
+                        onDragStart={onDragStart(index + 1)}
+                        onDrop={onDrop}
+                        
                       >
-                        {index + 1}
+                        {/* {index + 1} */}
+                        {/* <Divider  orientation="vertical" sx={{
+                          
+                          width: '100%',
+                          "&::before, &::after": {
+                            borderColor: target === index + 1 ? '#503E9D' : '#ffffff',
+
+                          },
+                          color: target === index + 1 ? '#503E9D' : '#ffffff',
+
+                        }}> Move to here
+                        </Divider> */}
                       </Box>
 
-                    </Grid>
+                  </Grid>
 
-                  )
+                )
               })}
               {Array.isArray(nowItemList?.itemList) && nowItemList?.itemList.length === 0 && (
                 <Grid item xs={12} sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 30 }}>

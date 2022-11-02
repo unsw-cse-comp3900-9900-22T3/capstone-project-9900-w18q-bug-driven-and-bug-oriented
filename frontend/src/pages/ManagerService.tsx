@@ -15,7 +15,11 @@ import { getWaitRequest } from "../api/wait";
 import ShowService from "../stories/manager/ShowService";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 interface requestInterface {
   requestsList: {

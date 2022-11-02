@@ -11,7 +11,11 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 import zIndex from "@mui/material/styles/zIndex";
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 // class Rsvp extends React.Component {
 //   constructor(props: {} | Readonly<{}>) {

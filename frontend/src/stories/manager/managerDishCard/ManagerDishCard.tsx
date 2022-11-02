@@ -40,6 +40,7 @@ interface ListProps {
   fatherListener?: (params: any) => any;
   categoryList?: string[];
   canMove?: boolean;
+  selected?: boolean;
 }
 
 const style = {
@@ -72,6 +73,7 @@ export default function DishCard({
   picture = '/dishImg/chickenGrill.jpg',
   categoryList = ['Meat', 'Vegetable', 'Noodle', 'Soup'],
   canMove = false,
+  selected = false,
   fatherListener = () => { },
   removeCard = () => { },
   editCard = () => { },
@@ -175,44 +177,41 @@ export default function DishCard({
         !move && <CardMedia
           component="img"
           height="180"
-          sx={{ width: '100%', borderRadius: 5, '&:hover': {
-            cursor: 'pointer', backgroundColor: '#8475B0',
-          } }}
+          sx={{ width: '100%', borderRadius: 5,  }}
           image={picture}
           alt={dishName}
-          onClick={()=>{setMove(true); fatherListener(dishId)}}
+          draggable={false}
+          // onClick={()=>{ fatherListener(dishId)}}
         />
         }
 
         {
           move && 
           <Box display='flex' sx={{justifyContent: 'center', alignItems: 'center'}}>
-            <IconButton 
-              sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
-              onClick={moveLeft}
-            >
+
               <ArrowBackIosIcon />
-            </IconButton>
+           
             <CardMedia
               component="img"
               height="180"
               sx={{ width: '80%', borderRadius: 5, justifyContent: 'center', alignContent: 'center', display: 'flex', '&:hover': {
                 cursor: 'pointer'
-             } }}
+             }, border: selected ? '5px solid #503E9D': '5px solid #ffffff'
+             }}
               image={picture}
               alt={dishName}
-              onClick={() => {setMove(false); fatherListener(-1)}}
+              draggable={false}
+              // onClick={() => { fatherListener(-1)}}
             />
-            <IconButton 
-              sx={{justifyContent: 'center', alignContent: 'center', alignItems: 'center'}}
-              onClick={moveRight}
-            >
+
               <ArrowForwardIosIcon />
-            </IconButton>
+
           </Box>
         }
 
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CardContent sx={{ display: 'flex', justifyContent: 'space-between','&:hover': move ? {
+                cursor: 'pointer'
+             }: undefined }}>
 
           <Box sx={{ display: 'flex', height: 50 }}>
             <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>

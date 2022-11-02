@@ -17,7 +17,11 @@ import ManagerKeyCard from "../stories/manager/managerKeyCard/ManagerKeyCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand"
+  }
+});
 
 interface keyListInterface {
   keyList: {
