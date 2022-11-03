@@ -96,6 +96,24 @@ const Home: React.FC<{}> = () => {
     console.log('table = ', table, 'diner = ', diner)
   }, [table, diner])
 
+  useEffect(()=>{
+    const keyDownHandler = (e: any) => {
+      console.log('now pressed:', e.key);
+      if (e.key === 'Enter'){
+        e.preventDefault();
+        if (table !== '' && diner !== '') {
+          console.log('here we r');
+          goToOrder();
+        }
+        
+      }
+    }
+    document.addEventListener('keydown',keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    }
+  },[table,diner])
+
   return (
     <ThemeProvider theme={theme}>
       {loading ? (

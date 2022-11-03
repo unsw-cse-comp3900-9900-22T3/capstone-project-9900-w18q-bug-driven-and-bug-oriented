@@ -153,19 +153,7 @@ const ManagerMenu: React.FC<{}> = () => {
             price: 0,
           });
       }
-      if (newList.length !==0){
-        newList.push({
-        ingredient: '',
-        picture: '',
-        categoryName: '',
-        dishId: 0,
-        description: '',
-        calorie: 0,
-        dishName: '',
-        price: 0,
-      });
-      }
-      
+    
       return { itemList: newList };
     } else {
       return { itemList: [] };
@@ -336,10 +324,12 @@ const ManagerMenu: React.FC<{}> = () => {
     // console.log(map1.get('4'));
     // console.log('now',map1.get(nowCategoryId));
     if (itemList) {
+      console.log('uploading',itemList);
       setNowCategoryName(mapList?.get(nowCategoryId));
       Array.isArray(itemList) && itemList.map((item: any) => {
         if (item.categoryId.toString() === nowCategoryId) {
           setNowItemList(modifyList({ itemList: item.itemList }));
+          console.log('now modify', modifyList({ itemList: item.itemList }))
           // setNowItemList({ itemList: item.itemList });
         }
       });

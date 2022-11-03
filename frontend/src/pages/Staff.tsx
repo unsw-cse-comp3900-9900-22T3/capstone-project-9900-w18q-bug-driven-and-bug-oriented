@@ -23,9 +23,9 @@ import { checkLogin } from "../api/login";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
 const theme = createTheme({
-  typography:{
-     fontFamily: "Quicksand",
-     button: {
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
       textTransform: 'none'
     }
   }
@@ -103,19 +103,38 @@ const Staff: React.FC<{}> = () => {
   //   }
   // };
 
+  useEffect(() => {
+    const keyDownHandler = (e: any) => {
+      console.log('now pressed:', e.key);
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!showKey && staff){
+          setShowKey(true);
+        } else if (showKey && key) {
+          gotToStaff();
+        }
+
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    }
+  }, [key, staff,showKey,])
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh", minWidth: 1100, minHeight: 1000 }}>
-      <Snackbar 
-      open={open} 
-      autoHideDuration={3000} 
-      onClose={handleClose} 
-      anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-      >
-        <Alert onClose={handleClose} severity="warning" sx={{ width: 600 }}>
-        Wrong key. Please try again.
-        </Alert>
-      </Snackbar>
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleClose} severity="warning" sx={{ width: 600 }}>
+            Wrong key. Please try again.
+          </Alert>
+        </Snackbar>
         <Grid
           item
           xs={3}
@@ -130,7 +149,7 @@ const Staff: React.FC<{}> = () => {
             borderBottomRightRadius: 10,
           }}
         />
-        
+
         {!showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ justifyContent: 'left', margin: 10 }}>
@@ -223,7 +242,7 @@ const Staff: React.FC<{}> = () => {
                   {!key && (
                     <BigButton name='Log in' confirm={false} />
                   )}
-                  <Box sx={{ display: 'flex', justifyContent:'center',marginTop:5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
                     <Typography variant="subtitle1" sx={{ color: '#626264' }}>
                       Forgot key? Please contact to the manager.
                     </Typography>

@@ -63,9 +63,9 @@ export default function ManagerAddDishButton({
   const handleEditComfirm = (e: any) => {
     if (!newDishName) setHaveDishName(false)
     else setHaveDishName(true);
-    if (!newCalories) setHaveCalories(false)
+    if (!newCalories || isNaN(Number(newCalories))) setHaveCalories(false)
     else setHaveCalories(true);
-    if (!newPrice) setHavePrice(false)
+    if (!newPrice || isNaN(Number(newPrice))) setHavePrice(false)
     else setHavePrice(true);
     if (!newPictureName) setHavePicture(false)
     else setHavePicture(true);
@@ -172,6 +172,26 @@ export default function ManagerAddDishButton({
   }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients])
 
 
+  useEffect(() => {
+    console.log('input', newCategoryName);
+  }, [newCategoryName])
+
+  useEffect(() => {
+    const keyDownHandler = (e: any) => {
+      console.log('now pressed:', e.key);
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (editOpen){
+          handleEditComfirm(''); 
+        }
+      
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    }
+  }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients,editOpen])
 
 
 

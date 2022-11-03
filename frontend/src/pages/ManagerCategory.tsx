@@ -23,8 +23,8 @@ const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
     button: {
-     textTransform: 'none'
-   }
+      textTransform: 'none'
+    }
   }
 });
 
@@ -157,8 +157,15 @@ const ManagerCategory: React.FC<{}> = () => {
 
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewCategory(event.target.value);
+    if (event) {
+      setNewCategory(event.target.value);
+    }
+
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    console.log(event.target);
+  }
 
 
   const modifyList = (input: categoryInterface): categoryInterface => {
@@ -172,14 +179,14 @@ const ManagerCategory: React.FC<{}> = () => {
         });
       newList.push(input.categoryList[i]);
     }
-    if (newList.length !== 0){
+    if (newList.length !== 0) {
       newList.push({
-      categoryId: 0,
-      categoryName: '',
-      lastModified: ''
-    });
+        categoryId: 0,
+        categoryName: '',
+        lastModified: ''
+      });
     }
-    
+
     return { categoryList: newList };
   }
 
@@ -189,10 +196,15 @@ const ManagerCategory: React.FC<{}> = () => {
     setLoading(false);
   }
 
-  const postCategory = async () => {
-    const message = await postManagerCategory({ categoryName: newCategory });
-    console.log('success submit', message);
-    setCategoryList(message);
+  const postCategory = async (input: string) => {
+    const message = await postManagerCategory({ categoryName: input });
+    if (message.message) {
+      return (message.message);
+    } else {
+      console.log('success submit', message);
+      setCategoryList(modifyList(message));
+    }
+
   }
 
   useEffect(() => {
@@ -212,6 +224,7 @@ const ManagerCategory: React.FC<{}> = () => {
       // postList(categoryList);
       console.log('now is', move);
   }, [move])
+
 
 
   return (
@@ -238,7 +251,7 @@ const ManagerCategory: React.FC<{}> = () => {
           <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
 
             <Box sx={{ alignItems: 'end', justifyContent: 'right', height: 200, width: '100%', display: 'flex', flexDirection: 'row' }}>
-              <Box sx={{mr:5}}>
+              <Box sx={{ mr: 5 }}>
                 <Button variant="contained" onClick={sortFunc} sx={{
                   height: 45, width: 120, backgroundColor: '#503E9D', borderRadius: 3, '&:hover': {
                     backgroundColor: '#8475B0'
@@ -253,9 +266,9 @@ const ManagerCategory: React.FC<{}> = () => {
                 </Button>
               </Box>
 
-              <Box sx={{mr:15}}>
-                <AddManagerCategory changeFunc={handleCategoryChange}
-                  submitFunc={() => postCategory()}
+              <Box sx={{ mr: 15 }}>
+                <AddManagerCategory
+                  submitFunc={(e) => postCategory(e)}
                 />
               </Box>
 
