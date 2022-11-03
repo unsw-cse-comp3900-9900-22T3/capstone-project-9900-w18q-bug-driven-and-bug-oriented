@@ -49,11 +49,26 @@ export default function WaitItemBox({
   return (
     <Box sx={{backgroundColor: '#F7F7F7', width: 450, height: 170, borderRadius: 5}}>
       <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', m:1, p:2 }}>
-        <Box display='flex' fontSize={20} fontWeight={'bold'} >Table {table}</Box>
-        <Box display='flex' sx={{color: '#626264'}}>#{itemIndex}</Box>
+        <Box display='flex'  fontWeight={'bold'} >
+        <Typography fontSize={20} sx={{ fontWeight: 'bold' }}> 
+        Table {table}
+        </ Typography>
+          
+          </Box>
+        <Box display='flex' sx={{color: '#626264'}}>
+        <Typography sx={{  }}> 
+        #{itemIndex}
+        </Typography>
+          
+          </Box>
       </Box>
       <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', m:1, p:2 }}>
-        <Box display='flex' fontSize={24} fontWeight={'bold'} >{dishName}</Box>
+        <Box display='flex'  fontWeight={'bold'} >
+        <Typography variant="h5" sx={{ fontWeight:'bold' }}> 
+         {dishName}
+        </Typography>
+         
+          </Box>
         <Box display='flex'>
         <Button variant="contained" onClick={handleOpen} sx={{
             height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3,
@@ -107,7 +122,7 @@ export default function WaitItemBox({
                   }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
                 }}>
                   <Typography variant="h6" sx={{ color: '#000000', }} >
-                    cancel
+                    Cancel
                   </Typography>
                 </Button>
               </Box>

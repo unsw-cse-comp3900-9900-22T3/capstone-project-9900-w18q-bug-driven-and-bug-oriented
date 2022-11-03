@@ -25,7 +25,10 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
   typography:{
-     fontFamily: "Quicksand"
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
   }
 });
 
@@ -157,7 +160,7 @@ const Kitchen: React.FC<{}> = () => {
                 {(!pageOrder || pageOrder?.orderList.length === 0) && (
                  <Grid item xs={12} sx={{display:'flex', justifyContent:'center',alignItems:'center', mt:50}}>
                  <Typography variant="h3">
-                   Upcoming......
+                   No order now......
                    </Typography>
                  </Grid>
               )

@@ -23,7 +23,10 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const theme = createTheme({
   typography:{
-     fontFamily: "Quicksand"
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
   }
 });
 
@@ -429,7 +432,7 @@ const ManagerMenu: React.FC<{}> = () => {
                   <Box sx={{ display: 'flex' }}>
                     <BorderColorIcon sx={{ color: '#ffffff' }} />
                     <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 1, fontSize: 16 }}>
-                      sort
+                      Sort
                     </Typography>
                   </Box>
                 </Button>

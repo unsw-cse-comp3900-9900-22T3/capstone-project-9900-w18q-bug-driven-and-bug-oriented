@@ -15,7 +15,10 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
   typography:{
-     fontFamily: "Quicksand"
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
   }
 });
 const id = '123';
@@ -94,7 +97,7 @@ const CustomerBill: React.FC<{}> = () => {
             <Box sx={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: "auto",width:'100%' }}>
               {bill?.map((item: any, index: number) => {
                 return (
-                  <>
+                  <React.Fragment key={'key' + index}>
                     <OrderDetailBox
                       dishId={item.dishId}
                       dishName={item.title}
@@ -108,7 +111,7 @@ const CustomerBill: React.FC<{}> = () => {
                     {(index !== bill.length - 1) && (
                       <Divider sx={{ my: 2 }} />
                     )}
-                  </>
+                  </React.Fragment>
                 )
               })}
               <Divider sx={{

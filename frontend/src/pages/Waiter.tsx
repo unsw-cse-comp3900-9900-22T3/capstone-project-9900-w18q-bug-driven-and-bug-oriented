@@ -20,7 +20,10 @@ import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
   typography:{
-     fontFamily: "Quicksand"
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
   }
 });
 

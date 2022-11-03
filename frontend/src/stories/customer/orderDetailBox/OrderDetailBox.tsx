@@ -59,7 +59,10 @@ export default function OrderDetailBox({
           </Box>
           <Box>
             <Box sx={{ fontSize: 20, fontWeight: 'bold', m: 2 }}>
-              {dishName}
+            <Typography sx={{fontWeight: 'bold'}}> 
+            {dishName}
+            </Typography>
+              
             </Box>
             <Box display='flex' sx={{ m: 2 }}>
               <Box sx={{ px: 0.5, py: 0.5 }}>

@@ -34,7 +34,7 @@ export default function ManagerOrderCard({
   time = '',
   price = '',
   itemList = [],
-  confirmFunc = () => {},
+  confirmFunc = () => { },
 
   ...props
 }: ListProps) {
@@ -66,11 +66,11 @@ export default function ManagerOrderCard({
   return (
     <>
       <Card sx={{ minHeight: 275, width: 450, backgroundColor: '#F7F7F7', borderRadius: 5 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <Typography sx={{ m: 2, ml: 4, fontWeight: 'bold' }} variant='h6'>
             Table {table}
           </Typography>
-          <Typography sx={{ color: '#626264', m:2, mr:4 }} variant='subtitle1'>
+          <Typography sx={{ color: '#626264', m: 2, mr: 4 }} variant='subtitle1'>
             #{orderId}
           </Typography>
         </Box>
@@ -99,8 +99,10 @@ export default function ManagerOrderCard({
                     </Box>
                     <Box sx={{ display: 'flex', width: 170, justifyContent: 'end' }}>
                       {item.status === 'yes' && (
-                        <Box sx={{ width: 100, height: 25, backgroundColor: '#ECF6EC', color: '#419D3E', display: 'flex', justifyContent: 'center', alignItems: 'center', p: 0.5, fontWeight: 'bold', borderRadius: 2, mr:2 }}>
-                          Completed
+                        <Box sx={{ width: 100, height: 25, backgroundColor: '#ECF6EC', color: '#419D3E', display: 'flex', justifyContent: 'center', alignItems: 'center', p: 0.5, fontWeight: 'bold', borderRadius: 2, mr: 2 }}>
+                          <Typography sx={{ fontWeight: 'bold' }} >
+                            Completed
+                          </Typography>
                         </Box>
                       )}
 
@@ -118,11 +120,16 @@ export default function ManagerOrderCard({
             </Box>
           </Paper>
         </Collapse>
-        <Typography sx={{ p: 4, fontWeight: 'bold' }} variant='h4'>
+        <Typography sx={{ p: 4, }} variant='h4'>
           Total: ${price}
         </Typography>
         <Box sx={{ width: '100%', justifyContent: 'center', display: 'flex', mt: 5, mb: 5 }}>
-          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 400, borderRadius: 2 }}>details</Button>
+          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 400, borderRadius: 2 }}>
+            <Typography sx={{  }} >
+              Details
+            </Typography>
+
+          </Button>
         </Box>
       </Card>
     </>

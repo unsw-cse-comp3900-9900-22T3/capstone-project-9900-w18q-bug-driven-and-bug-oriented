@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PreNextButton from "./PreNextButton";
 import { number } from "prop-types";
 
@@ -37,7 +37,7 @@ export default function PageButton({
       temp.push(i);
     }
     setPageList(temp);
-    console.log(temp,'numberpage',numberOfPage);
+    console.log(temp, 'numberpage', numberOfPage);
   }, [numberOfPage]);
 
   const nextPage = () => {
@@ -94,7 +94,12 @@ export default function PageButton({
                       },
                     }}
                     >
-                      {item}
+                      <Typography sx={{ fontWeight: 'bold' }}>
+                        {item}
+                      </Typography>
+
+                      
+                      
                     </Box>
                   )}
                   {item !== page && (
@@ -106,7 +111,10 @@ export default function PageButton({
                       }
                     }} onClick={() => selectPage(item)}
                     >
-                      {item}
+                      <Typography sx={{ fontWeight: 'bold' }}>
+                       {item} 
+                      </Typography>
+                      
                     </Box>
                   )}
                 </React.Fragment>

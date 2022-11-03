@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Snackbar, Alert } from "@mui/material";
+import { Button, Snackbar, Alert, Typography } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -113,7 +113,10 @@ export default function Template({
         size="large"
         onClick={handleClick}
       >
-        Ask for help
+        <Typography sx={{}}>
+          Ask for help
+        </Typography>
+        
       </Button>}
 
       {askTimer !== 0 && <ThemeProvider theme={theme}><Button
@@ -124,7 +127,10 @@ export default function Template({
         size="large"
         onClick={handleClick}
       >
-        Ask for help ({askTimer})
+        <Typography sx={{}}>
+          Ask for help ({askTimer})
+        </Typography>
+        
       </Button></ThemeProvider>}
 
       <Snackbar open={openInitWin}

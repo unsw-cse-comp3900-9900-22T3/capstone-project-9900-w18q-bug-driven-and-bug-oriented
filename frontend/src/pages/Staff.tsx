@@ -24,7 +24,10 @@ import DishCard from "../stories/customer/dishCard/DishCard";
 
 const theme = createTheme({
   typography:{
-     fontFamily: "Quicksand"
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
   }
 });
 
@@ -145,34 +148,34 @@ const Staff: React.FC<{}> = () => {
                 </Typography>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'kitchen') && (
-                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='kitchen staff' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='Kitchen staff' selected />
                   )}
                   {(staff !== 'kitchen') && (
-                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='kitchen staff' />
+                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='Kitchen staff' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'wait') && (
-                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='Wait staff' selected />
                   )}
                   {(staff !== 'wait') && (
-                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='Wait staff' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'manager') && (
-                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='manager' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='Manager' selected />
                   )}
                   {(staff !== 'manager') && (
-                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='manager' />
+                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='Manager' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 10 }}>
                   {staff && (
-                    <BigButton name='continue' confirm doSomething={() => setShowKey(true)} />
+                    <BigButton name='Continue' confirm doSomething={() => setShowKey(true)} />
                   )}
                   {!staff && (
-                    <BigButton name='continue' confirm={false} />
+                    <BigButton name='Continue' confirm={false} />
                   )}
                 </Box>
               </Box>

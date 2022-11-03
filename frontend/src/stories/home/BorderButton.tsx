@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 // 声明变量的数据格式
 interface ListProps {
@@ -25,12 +25,18 @@ export default function BorderButton({
     <>
       {!selected && (
         <Button disableRipple onClick={doSomething} sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
-          {number}
+          <Typography  sx={{fontWeight: 'bold'}}>
+            {number}
+          </Typography>
+          
         </Button>
       )}
       {selected && (
         <Button disableRipple onClick={doSomething} sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#503E9D' }}>
-          {number}
+          <Typography sx={{fontWeight: 'bold'}}>
+            {number}
+          </Typography>
+          
         </Button>
       )}
     </>

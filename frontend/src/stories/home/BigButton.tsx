@@ -25,7 +25,10 @@ export default function BigButton({
     <>
       {!confirm && (
         <Button disabled sx={{ width: '100%', background: '#EEECF6', color: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2 }}>
-          {name}
+          <Typography sx={{fontWeight: 'bold'}}>
+           {name} 
+          </Typography>
+          
         </Button>
       )}
       {confirm && (
@@ -34,7 +37,7 @@ export default function BigButton({
             backgroundColor: '#8475B0',
           }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2
         }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+          <Typography variant="subtitle1" sx={{  }}>
             {name}
           </Typography>
         </Button>

@@ -232,7 +232,12 @@ export default function DishCard({
                 m: 0.5,
                 fontWeight: 'bold',
               }}
-            >{calories}Cal
+              
+            >
+              <Typography sx={{ fontWeight: 'bold' }}>
+               {calories}Cal 
+                 </Typography>
+              
             </Box>
 
             <Box
@@ -248,7 +253,10 @@ export default function DishCard({
                 fontWeight: 'bold',
               }}
             >
-              $ {price}
+              <Typography sx={{ fontWeight: 'bold' }}> 
+              ${price}
+              </Typography>
+              
             </Box>
           </Box>
 

@@ -193,7 +193,7 @@ export default function ManagerAddKey({
               }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5
             }}>
               <Typography variant="h6" sx={{ color: '#ffffff' }} >
-                add
+                Add
               </Typography>
             </Button>
             <Button onClick={handleClose} sx={{
@@ -202,7 +202,7 @@ export default function ManagerAddKey({
               }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
             }}>
               <Typography variant="h6" sx={{ color: '#000000', }} >
-                cancel
+                Cancel
               </Typography>
             </Button>
           </Box>
