@@ -147,8 +147,15 @@ const Staff: React.FC<{}> = () => {
             backgroundPosition: "center",
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
+            display:'flex',
+            justifyContent:'right',
+            alignItems:'end'
           }}
-        />
+          >
+          <Typography variant="h4" sx={{m:3,fontWeight:'bold',color:'#ABA89E'}}>
+            New Bee
+          </Typography>
+        </Grid>
 
         {!showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
