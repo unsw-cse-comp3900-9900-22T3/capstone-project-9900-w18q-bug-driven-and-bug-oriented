@@ -16,9 +16,9 @@ import DishCard from "../stories/customer/dishCard/DishCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
-  typography:{
-     fontFamily: "Quicksand",
-     button: {
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
       textTransform: 'none'
     }
   }
@@ -92,7 +92,7 @@ const Customer: React.FC<{}> = () => {
       console.log('message', message);
       resetMenu(newOrder, message.itemList);
     }
-    setTimeout(() => setLoading(false), 100);
+    setTimeout(() => setLoading(false), 200);
   };
 
   const getOrder = async (e: any) => {
@@ -264,7 +264,6 @@ const Customer: React.FC<{}> = () => {
     setCountOfCal(tempCal);
   }, [totalOrder]);
 
-  console.log(menu.length)
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
@@ -274,8 +273,31 @@ const Customer: React.FC<{}> = () => {
 
 
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          {loading ? (
+        <Box sx={{
+          height:
+            '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column'
+        }} >
+
+            <Box sx={{
+              display: 'flex',
+              height: '100%',
+              flexGrow: 1,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'start',
+              backgroundImage: 'url(../../bgimg1.jpg)',
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "right",
+              flexDirection: 'column'
+
+            }} >
+
+              <Box sx={{ backdropFilter: "blur(5px)", height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column',overflow:'hidden' }}>
+              {loading ? (
             <Box
               sx={{
                 textAlign: "center",
@@ -289,51 +311,56 @@ const Customer: React.FC<{}> = () => {
               <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
-              <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
+                <Box sx={{  ml: 17, overflow: "auto",flexGrow:1, mt:5, width:'calc(100%)', height:'100%'}}>
+                  <Grid container rowSpacing={{ xs: 2, sm: 3, md: 5, lg: 1 }} sx={{  }} columnSpacing={{xs: 2, sm: 3, md: 5, lg: 8}} justifyContent='flex-start' alignItems='flex-start' >
 
-                {menu?.map((item: any) => {
-                  return (
-                    <Grid item xs={'auto'} key={item.dishId} >
-                      <DishCard
-                        dishId={item.dishId}
-                        dishName={item.title}
-                        description={item.description}
-                        ingredients={item.ingredient}
-                        calories={item.calorie}
-                        price={item.cost}
-                        picture={item.picture}
-                        initDishNum={item.dishNumber}
-                        passObj={setNewEdit}
-                      />
+                    {menu?.map((item: any) => {
+                      return (
+                        <Grid item xs={'auto'} key={item.dishId} sx={{width:500, height:350}}>
+                          <DishCard
+                            dishId={item.dishId}
+                            dishName={item.title}
+                            description={item.description}
+                            ingredients={item.ingredient}
+                            calories={item.calorie}
+                            price={item.cost}
+                            picture={item.picture}
+                            initDishNum={item.dishNumber}
+                            passObj={setNewEdit}
+                          />
 
-                    </Grid>
-                  )
-                })}
-                {menu.length === 0 && (
-                  <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant="h3">
-                      Upcoming......
-                    </Typography>
+                        </Grid>
+                      )
+                    })}
+                    {menu.length === 0 && (
+                      <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width:'100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Typography variant="h3">
+                          Upcoming......
+                        </Typography>
+                      </Grid>
+                    )
+                    }
                   </Grid>
-                )
-                }
-              </Grid>
-            </Box>)}
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
-            <OrderBar
-              haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
-              canSubmit={(numberOfItem >= 1) ? true : false}
-              number={numberOfItem}
-              price={Number(price.toFixed(2))}
-              ceilingOfCal={ceilingOfCal}
-              countOfCal={countOfCal}
-              submitFunc={() => postOrder()}
-              newOrder={newOrder}
-              oldOrder={oldOrder}
-              orderFunc={setNewEdit}
-            />
-          </Box>
+                </Box>)}
+                <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
+                  <OrderBar
+                    haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
+                    canSubmit={(numberOfItem >= 1) ? true : false}
+                    number={numberOfItem}
+                    price={Number(price.toFixed(2))}
+                    ceilingOfCal={ceilingOfCal}
+                    countOfCal={countOfCal}
+                    submitFunc={() => postOrder()}
+                    newOrder={newOrder}
+                    oldOrder={oldOrder}
+                    orderFunc={setNewEdit}
+                  />
+                </Box>
+
+              </Box>
+
+            </Box>
+
         </Box>
 
       </Box>

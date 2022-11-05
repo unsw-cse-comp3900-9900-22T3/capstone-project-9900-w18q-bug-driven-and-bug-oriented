@@ -175,9 +175,8 @@ const Waiter: React.FC<{}> = () => {
         >
           <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
-      ) : null}
-
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+      ) : (
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box>
           <Box sx={{ display: 'flex', width: 300, height: '100%', backgroundColor: '#F7F7F7', borderTopRightRadius: 10, borderBottomRightRadius: 10, flexDirection: 'column' }}>
             <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
@@ -320,6 +319,9 @@ const Waiter: React.FC<{}> = () => {
         </Box>
 
       </Box>
+      )}
+
+      
     </ThemeProvider>
   );
 };

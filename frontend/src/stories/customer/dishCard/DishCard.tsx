@@ -139,7 +139,7 @@ export default function DishCard({
         <Box sx={{
           height: 50,
           width: 50,
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
           color: '#fff',
           borderRadius: 10,
           fontWeight: 'bold',
