@@ -18,27 +18,63 @@ import { checkLogin } from "../api/login";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
-  typography:{
-     fontFamily: "Quicksand",
-     button: {
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
       textTransform: 'none'
     }
   }
 });
 
 const tableList = [
-  { number: '1' },
-  { number: '2' },
-  { number: '3' },
-  { number: '4' },
-  { number: '5' },
-  { number: '6' },
-  { number: '7' },
-  { number: '8' },
-  { number: '9' },
-  { number: '10' },
-  { number: '11' },
-  { number: '12' },
+  {
+    number: '1',
+    status: true,
+  },
+  {
+    number: '2',
+    status: true,
+  },
+  {
+    number: '3',
+    status: true,
+  },
+  {
+    number: '4',
+    status: true,
+  },
+  {
+    number: '5',
+    status: true,
+  },
+  {
+    number: '6',
+    status: true,
+  },
+  {
+    number: '7',
+    status: true,
+  },
+  {
+    number: '8',
+    status: true,
+  },
+  {
+    number: '9',
+    status: false,
+  },
+  {
+    number: '10',
+    status: true,
+  },
+  {
+    number: '11',
+    status: true,
+  },
+  {
+    number: '12',
+    status: true,
+  },
 ];
 
 const dinerList = [
@@ -56,7 +92,7 @@ const Home: React.FC<{}> = () => {
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    setTimeout(()=>setLoading(false),1000);
+    setTimeout(() => setLoading(false), 1000);
   }, []);
 
   const goToOrder = async () => {
@@ -96,23 +132,23 @@ const Home: React.FC<{}> = () => {
     console.log('table = ', table, 'diner = ', diner)
   }, [table, diner])
 
-  useEffect(()=>{
+  useEffect(() => {
     const keyDownHandler = (e: any) => {
       console.log('now pressed:', e.key);
-      if (e.key === 'Enter'){
+      if (e.key === 'Enter') {
         e.preventDefault();
         if (table !== '' && diner !== '') {
           console.log('here we r');
           goToOrder();
         }
-        
+
       }
     }
-    document.addEventListener('keydown',keyDownHandler);
+    document.addEventListener('keydown', keyDownHandler);
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     }
-  },[table,diner])
+  }, [table, diner])
 
   return (
     <ThemeProvider theme={theme}>
@@ -146,7 +182,7 @@ const Home: React.FC<{}> = () => {
         />
         <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Box sx={{ height: 800, width: 900 }}>
-            <Typography  variant="h4" gutterBottom >
+            <Typography variant="h4" gutterBottom >
               Welcome!
             </Typography>
             <Typography variant="subtitle1" sx={{ color: '#626264' }}>
@@ -160,25 +196,37 @@ const Home: React.FC<{}> = () => {
                 </Typography>
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
-                {tableList.map((tableList,index) => {
-                  return (
-                    <Grid item xs={2} key={'table' + index}>
-                      {
-                        tableList.number == table && (
-                          <BorderButton doSomething={() => selectTable(tableList.number)}
-                            number={tableList.number}
-                            selected={true}
-                          />
-                        )}
-                      {
-                        tableList.number !== table && (
-                          <BorderButton doSomething={() => selectTable(tableList.number)}
-                            number={tableList.number}
-                            selected={false}
-                          />
-                        )}
-                    </Grid>
-                  )
+                {tableList.map((tableList, index) => {
+                  if (tableList.status)
+                    return (
+                      <Grid item xs={2} key={'table' + index}>
+                        {
+                          tableList.number == table && (
+                            <BorderButton doSomething={() => selectTable(tableList.number)}
+                              number={tableList.number}
+                              selected={true}
+                            />
+                          )}
+                        {
+                          tableList.number !== table && (
+                            <BorderButton doSomething={() => selectTable(tableList.number)}
+                              number={tableList.number}
+                              selected={false}
+                            />
+                          )}
+                      </Grid>
+                    )
+                  if (!tableList.status)
+                    return (
+                      <Grid item xs={2} key={'table' + index}>
+                        <Button disableRipple disabled sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
+                          <Typography sx={{ fontWeight: 'bold' }}>
+                            {tableList.number}
+                          </Typography>
+
+                        </Button>
+                      </Grid>
+                    )
                 })}
               </Grid>
 
@@ -190,7 +238,7 @@ const Home: React.FC<{}> = () => {
 
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
-                {dinerList.map((dinerList,index) => {
+                {dinerList.map((dinerList, index) => {
                   return (
                     <Grid item xs={2} key={'diner' + index}>
                       {
@@ -235,7 +283,7 @@ const Home: React.FC<{}> = () => {
 
       </Grid>)}
 
-      
+
     </ThemeProvider>
   );
 };
