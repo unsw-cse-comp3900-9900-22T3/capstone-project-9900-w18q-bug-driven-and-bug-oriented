@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 // 声明变量的数据格式
 interface ListProps {
@@ -39,20 +39,29 @@ export default function AddNumberBox({
           onClick={delTryDish}
           sx={{ m: 1, fontSize: 22, ":hover": { cursor: 'pointer' } }}
         >
-          -
+          <Typography sx={{fontWeight: 'bold'}}>
+           - 
+          </Typography>
+          
         </Box>
 
         <Box
           sx={{ m: 1, fontSize: 16 }}
         >
-          {dishTryNum}
+          <Typography sx={{fontWeight: 'bold'}}>
+            {dishTryNum}
+          </Typography>
+          
         </Box>
 
         <Box
           onClick={addTryDish}
           sx={{ m: 1, fontSize: 22, ":hover": { cursor: 'pointer' } }}
         >
-          +
+          <Typography sx={{fontWeight: 'bold'}}>
+           + 
+          </Typography>
+          
         </Box>
 
       </Box>

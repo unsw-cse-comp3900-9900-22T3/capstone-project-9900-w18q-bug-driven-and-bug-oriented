@@ -13,55 +13,17 @@ import OrderBar from "../stories/customer/orderBar/OrderBar";
 import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
-
-const theme = createTheme();
-
-const haveOrder = [
-  {
-    dishId: 1,
-    title: 'meat',
-    calorie: 50,
-    cost: 10,
-    dishNumber: 1,
-    picture: 'dishImg/img1.png'
-  },
-  {
-    dishId: 2,
-    title: 'vegetable',
-    calorie: 40,
-    cost: 5,
-    dishNumber: 1,
-    picture: 'dishImg/img2.png'
-  },
-  {
-    dishId: 3,
-    title: 'rice',
-    calorie: 48,
-    cost: 3,
-    dishNumber: 1,
-    picture: 'dishImg/img2.png'
-  },
-]
-
-const nextOrder =
-{
-  dishId: 11,
-  title: 'Szechuan Dan Dan Noodles',
-  calorie: 288,
-  cost: 15.9,
-  dishNumber: 5,
-}
-
-const ord = {
-  "orderList": [
-    {
-      "dishId": 1,
-      "title": "Chicken Grill",
-      "dishNumber": 1
+const theme = createTheme({
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
+      textTransform: 'none'
     }
-  ]
-}
+  }
+});
+
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -84,6 +46,12 @@ const Customer: React.FC<{}> = () => {
     picture: '',
   });
 
+  // loading
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
 
   //init
   useEffect(() => {
@@ -103,15 +71,17 @@ const Customer: React.FC<{}> = () => {
     console.log('message', message);
     setNav(message.categoryList);
     setCeilingOfCal(message.diner * 2000);
+
     // setMenu(message.itemList);
   };
 
   const askHelp = async () => {
     const message = await postCustomerRequest(id);
-    console.log('ask for help',message.message, id);
+    console.log('ask for help', message.message, id);
   };
 
   const getCategory = async () => {
+    setLoading(true);
     const arr = location.pathname.split('/');
     if (arr[3] !== 'hot') {
       const message = await getCustomerCategory(arr[2], arr[3]);
@@ -122,6 +92,7 @@ const Customer: React.FC<{}> = () => {
       console.log('message', message);
       resetMenu(newOrder, message.itemList);
     }
+    setTimeout(() => setLoading(false), 200);
   };
 
   const getOrder = async (e: any) => {
@@ -143,6 +114,7 @@ const Customer: React.FC<{}> = () => {
   }
 
   const postOrder = async () => {
+    // setLoading(true);
     const order = {
       'orderList': new Array
     }
@@ -163,6 +135,7 @@ const Customer: React.FC<{}> = () => {
     console.log('now is', message);
     // navigate(`/customer/${id}/hot`);
     navigate(0);
+    // setLoading(false);
   }
 
 
@@ -291,71 +264,107 @@ const Customer: React.FC<{}> = () => {
     setCountOfCal(tempCal);
   }, [totalOrder]);
 
-  console.log(menu.length)
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
-          <NavBar canBack={oldOrder.length === 0? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
+          <NavBar canBack={oldOrder.length === 0 ? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
 
-              { menu?.map((item: any) => {
-                return (
-                  <Grid item xs={'auto'} key={item.dishId} >
-                    <DishCard
-                      dishId={item.dishId}
-                      dishName={item.title}
-                      description={item.description}
-                      ingredients={item.ingredient}
-                      calories={item.calorie}
-                      price={item.cost}
-                      picture={item.picture}
-                      initDishNum={item.dishNumber}
-                      passObj={setNewEdit}
-                    />
-                    
+
+        <Box sx={{
+          height:
+            '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column'
+        }} >
+
+            <Box sx={{
+              display: 'flex',
+              height: '100%',
+              flexGrow: 1,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'start',
+              backgroundImage: 'url(../../bgimg1.jpg)',
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "right",
+              flexDirection: 'column'
+
+            }} >
+
+              <Box sx={{ backdropFilter: "blur(5px)", height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column',overflow:'hidden' }}>
+              {loading ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+            </Box>
+          ) : (
+                <Box sx={{  ml: 17, overflow: "auto",flexGrow:1, mt:5, width:'calc(100%)', height:'100%'}}>
+                  <Grid container rowSpacing={{ xs: 2, sm: 3, md: 5, lg: 1 }} sx={{  }} columnSpacing={{xs: 2, sm: 3, md: 5, lg: 8}} justifyContent='flex-start' alignItems='flex-start' >
+
+                    {menu?.map((item: any) => {
+                      return (
+                        <Grid item xs={'auto'} key={item.dishId} sx={{width:500, height:350}}>
+                          <DishCard
+                            dishId={item.dishId}
+                            dishName={item.title}
+                            description={item.description}
+                            ingredients={item.ingredient}
+                            calories={item.calorie}
+                            price={item.cost}
+                            picture={item.picture}
+                            initDishNum={item.dishNumber}
+                            passObj={setNewEdit}
+                          />
+
+                        </Grid>
+                      )
+                    })}
+                    {menu.length === 0 && (
+                      <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width:'100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Typography variant="h3">
+                          Upcoming......
+                        </Typography>
+                      </Grid>
+                    )
+                    }
                   </Grid>
-                )
-              })}
-              { menu.length === 0 && ( 
-                  <Grid item xs={12} sx={{height:'calc(100vh - 95px)' ,display:'flex', justifyContent:'center',alignItems:'center'}}>
-                    <Typography variant="h3">
-                      Upcoming......
-                      </Typography>
-                    </Grid>
-              )
+                </Box>)}
+                <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
+                  <OrderBar
+                    haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
+                    canSubmit={(numberOfItem >= 1) ? true : false}
+                    number={numberOfItem}
+                    price={Number(price.toFixed(2))}
+                    ceilingOfCal={ceilingOfCal}
+                    countOfCal={countOfCal}
+                    submitFunc={() => postOrder()}
+                    newOrder={newOrder}
+                    oldOrder={oldOrder}
+                    orderFunc={setNewEdit}
+                  />
+                </Box>
 
-              }
+              </Box>
 
+            </Box>
 
-
-            </Grid>
-
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
-
-            <OrderBar
-              haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
-              canSubmit={(numberOfItem >= 1) ? true : false}
-              number={numberOfItem}
-              price={Number(price.toFixed(2))}
-              ceilingOfCal={ceilingOfCal}
-              countOfCal={countOfCal}
-              submitFunc={() => postOrder()}
-              newOrder={newOrder}
-              oldOrder={oldOrder}
-              orderFunc={setNewEdit}
-            />
-
-
-          </Box>
         </Box>
+
       </Box>
+
 
 
     </ThemeProvider>

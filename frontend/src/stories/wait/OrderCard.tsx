@@ -126,7 +126,10 @@ export default function OrderCard({
                     <Box sx={{ display: 'flex', width: 170, justifyContent: 'end' }}>
                       {item.status === 'Completed' && (
                         <Box sx={{ width: 100, height: 25, backgroundColor: '#ECF6EC', color: '#419D3E', display: 'flex', justifyContent: 'center', alignItems: 'center', p: 0.5, fontWeight: 'bold', borderRadius: 2, mr: 2 }}>
-                          Completed
+                          <Typography sx={{ fontWeight: 'bold' }}>
+                            Completed
+                          </Typography>
+                          
                         </Box>
                       )}
 
@@ -144,13 +147,18 @@ export default function OrderCard({
             </Box>
           </Paper>
         </Collapse>
-        <Typography sx={{ p: 4, fontWeight: 'bold' }} variant='h4'>
+        <Typography sx={{ p: 4,  }} variant='h4'>
           Total: ${price}
         </Typography>
         <Box sx={{ width: '100%', justifyContent: 'center', display: 'flex', mt: 5, mb: 5 }}>
           {isRequest === 1 && (
             <>
-              <Button onClick={handleOpen} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2, mr: 3 }}>Pay</Button>
+              <Button onClick={handleOpen} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2, mr: 3 }}>
+              <Typography sx={{  }}> 
+              Pay
+              </Typography>
+                
+                </Button>
               <Modal
                 open={open}
                 onClose={handleClose}
@@ -198,7 +206,7 @@ export default function OrderCard({
                       }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
                     }}>
                       <Typography variant="h6" sx={{ color: '#000000', }} >
-                        cancel
+                        Cancel
                       </Typography>
                     </Button>
                   </Box>
@@ -210,10 +218,20 @@ export default function OrderCard({
 
           )}
           {isRequest === 0 && (
-            <Button variant="contained" color='warning' disabled sx={{ width: 190, borderRadius: 2, mr: 3 }}>Pay</Button>
+            <Button variant="contained" color='warning' disabled sx={{ width: 190, borderRadius: 2, mr: 3 }}>
+              <Typography sx={{  }}>
+                Pay
+              </Typography>
+              
+              </Button>
           )}
 
-          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2 }}>details</Button>
+          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2 }}>
+          <Typography sx={{ }}>
+            Details
+             </Typography>
+            
+            </Button>
         </Box>
       </Card>
     </>

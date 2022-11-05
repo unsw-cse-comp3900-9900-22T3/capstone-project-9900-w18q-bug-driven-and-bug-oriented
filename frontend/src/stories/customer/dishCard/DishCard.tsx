@@ -41,6 +41,12 @@ const theme = createTheme({
       contrastText: '#fff',
     },
   },
+  typography:{
+    fontFamily: "Quicksand",
+    button: {
+     textTransform: 'none'
+   }
+ }
 });
 
 declare module '@mui/material/styles' {
@@ -133,7 +139,7 @@ export default function DishCard({
         <Box sx={{
           height: 50,
           width: 50,
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
           color: '#fff',
           borderRadius: 10,
           fontWeight: 'bold',
@@ -176,9 +182,13 @@ export default function DishCard({
                 textAlign: 'center',
                 p: 0.5,
                 m: 0.5,
-                fontWeight: 'bold',
+                
               }}
-            >{calories}Cal
+            >
+              <Typography sx={{fontWeight: 'bold'}}>
+                {calories}Cal
+              </Typography>
+              
             </Box>
 
             <Box
@@ -194,7 +204,10 @@ export default function DishCard({
                 fontWeight: 'bold',
               }}
             >
-              $ {price}
+              <Typography sx={{fontWeight: 'bold'}}>
+                $ {price}
+              </Typography>
+              
             </Box>
           </Box>
 
@@ -210,7 +223,10 @@ export default function DishCard({
                 onClick={handleOpen}
                 sx={{ borderRadius: 2 }}
               >
-                Select
+                <Typography sx={{}}>
+                 Select 
+                </Typography>
+                
               </Button>
 
               <Modal
@@ -262,7 +278,10 @@ export default function DishCard({
 
                             fontWeight: 'bold',
                           }}>
-                          {calories}Cal
+                            <Typography sx={{fontWeight: 'bold'}}>
+                              {calories}Cal
+                            </Typography>
+                          
                         </Box>
 
                       </Box>
@@ -303,9 +322,13 @@ export default function DishCard({
                             variant="contained"
                             color='neutral'
                             onClick={selectDishNum}
-                            sx={{ borderRadius: 2, px: 3 }}
+                            sx={{ borderRadius: 2, px: 3, }}
+                            
                           >
-                            Select
+                            <Typography sx={{}}>
+                              Select
+                            </Typography>
+                            
                           </Button>
                         </Box>
 

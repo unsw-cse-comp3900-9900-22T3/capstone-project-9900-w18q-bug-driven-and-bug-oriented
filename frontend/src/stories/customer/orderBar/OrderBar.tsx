@@ -79,7 +79,7 @@ export default function OrderBar({
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Collapse in={checked}>
+      <Collapse in={haveItem? checked : false}>
         <Paper elevation={3} sx={{ width: '100%', height: 'calc(100vh - 135px)', display: 'flex', flexDirection: 'column', overflow: "auto", borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
           <Box sx={{ m: 5, mt: 0 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >

@@ -11,6 +11,7 @@ interface ListProps {
   categoryName?: string;
   lastModified?: string;
   canMove?: boolean;
+  selected?: boolean;
   //预留空函数
   preFunc?: (params: any) => any;
   nextFunc?: (params: any) => any;
@@ -24,6 +25,7 @@ export default function ManagerCategoryCard({
   categoryName = '',
   lastModified = '',
   canMove = false,
+  selected = false,
   preFunc= () => { },
   nextFunc= () => { },
   fatherListener = () => { },
@@ -40,10 +42,8 @@ export default function ManagerCategoryCard({
   return (
     <>
       {!move && (
-        <Paper elevation={0} onClick={move ? () => {setMove(false); fatherListener(-1)} : () => {setMove(true); fatherListener(categoryId)}} sx={{
-          width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
-            cursor: 'pointer'
-          }
+        <Paper elevation={0}  sx={{
+          width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', 
         }}>
           <Typography sx={{ ml: 5, mt: 5, fontWeight: 'bold' }} variant="h5">
             {categoryName}
@@ -61,17 +61,17 @@ export default function ManagerCategoryCard({
         </Paper>
       )}
       {move && (
-        <Box sx={{ width: '100%', height: 150, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <Button disableRipple onClick={preFunc} sx={{ width: '100%' }}> <ExpandLessIcon sx={{ color: '#503E9D' }} /></Button>
-          <Paper elevation={0} onClick={move ? () => {setMove(false); fatherListener(-1)} : () => {setMove(true); fatherListener(categoryId)}} sx={{
-            width: '100%', height: 100, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
+        <Box sx={{ width: '100%', height: 182, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+           <ExpandLessIcon sx={{ color: '#503E9D' }} />
+          <Paper elevation={0}  sx={{
+            width: '100%', height: 140, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
               cursor: 'pointer'
-            }, border: '3px solid #503E9D'
+            }, alignContent:'space-between', border: selected? '2px solid #503E9D': '2px solid #ffffff'
           }}>
-            <Typography sx={{ ml: 5, mt: 1, fontWeight: 'bold' }} variant="h5">
+            <Typography sx={{ ml: 5, mt: 2, fontWeight: 'bold' }} variant="h5">
               {categoryName}
             </Typography>
-            <Box sx={{ m: 4, mt: 2, flexDirection: 'row', display: 'flex' }}>
+            <Box sx={{ m: 4, mt: 6, flexDirection: 'row', display: 'flex' }}>
               <Box sx={{ bgcolor: '#f8eae5', height: 25, width: 180, color: '#FB6D3A', borderRadius: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Typography sx={{ fontWeight: 'bold' }} variant="subtitle2">
                   Last modified:
@@ -82,7 +82,7 @@ export default function ManagerCategoryCard({
               </Typography>
             </Box>
           </Paper>
-          <Button disableRipple onClick={nextFunc} sx={{ width: '100%' }}> <ExpandMoreIcon sx={{ color: '#503E9D' }} /></Button>
+           <ExpandMoreIcon sx={{ color: '#503E9D' }} />
         </Box>
 
       )}

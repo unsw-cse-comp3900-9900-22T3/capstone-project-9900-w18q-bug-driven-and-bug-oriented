@@ -429,6 +429,8 @@ def update_items(order_id):
     index_post = int(post_data["itemIndex"])
     status_post = str(post_data["itemStatus"])
     db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"status": status_post})
+    if status_post=="Prepared":
+        db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"finish": 0})
     db.session.commit()  # 更新item的status
 
     # 更新order的status

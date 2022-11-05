@@ -14,9 +14,17 @@ import NavBar from "../stories/NavBar";
 import ManagerAddKey from "../stories/manager/managerKeyCard/ManagerAddKey";
 import { deleteManagerKey, getManagerKey, postManagerKey } from "../api/manager";
 import ManagerKeyCard from "../stories/manager/managerKeyCard/ManagerKeyCard";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
+  }
+});
 
 interface keyListInterface {
   keyList: {
@@ -44,6 +52,12 @@ const ManagerKey: React.FC<{}> = () => {
   const [keyList, setKeyList] = useState<keyListInterface>()
   const [showName, setShowName] = useState<string>('All');
 
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
+
   const handleRoleNameSelectChange = (event: SelectChangeEvent) => {
     setShowName(event.target.value);
   };
@@ -51,6 +65,7 @@ const ManagerKey: React.FC<{}> = () => {
     const message = await getManagerKey();
     setKeyList(message);
     console.log(message);
+    setLoading(false);
   }
 
   const postKey = async (e: keyInterface) => {
@@ -80,13 +95,24 @@ const ManagerKey: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+ <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
         <Box>
           <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
+        </Box>      
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
-
-
-        <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
+      ) : (<Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ alignItems: 'end', justifyContent: 'space-between', height: 250, width: '100%', display: 'flex' }}>
             <Box sx={{ ml: 20, display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1, mt: 5 }}  >
@@ -129,8 +155,8 @@ const ManagerKey: React.FC<{}> = () => {
               })
             }
           </Box>
-        </Box>
-
+        </Box>)}
+     
 
       </Box>
 
