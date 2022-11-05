@@ -298,7 +298,7 @@ const Customer: React.FC<{}> = () => {
 
           }} >
 
-            <Box sx={{ backdropFilter: "blur(3px)", height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column',  }}>
+            <Box sx={{ backdropFilter: "blur(3px)",flexGrow:1, height: 'calc(100%)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow:'hidden' }}>
               {loading ? (
                 <Box
                   sx={{
@@ -308,14 +308,16 @@ const Customer: React.FC<{}> = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     width: "100%",
-                    height: "100vh",
+                    height: "100%",
+                    flexGrow:1,
+                    mb:-1.5
                   }}
                 >
                   <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
                 </Box>
               ) : (
-                <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                  <Box sx={{ ml: 7, overflow: "auto", flexGrow: 1, mt: 5, width: '100%', height: '100%' }}>
+                <Box sx={{ height: 'calc(100vh - 115px)', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1,position:'relative' }}>
+                  <Box sx={{ ml: 7, overflow: "auto", flexGrow: 1, mt: 5, width: '100%', height: '100%', mb:1 }}>
                     <Grid container rowSpacing={{ xs: 2, sm: 3, md: 5, lg: 1 }} sx={{}} columnSpacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} justifyContent='flex-start' alignItems='flex-start' >
 
                       {menu?.map((item: any) => {
@@ -349,13 +351,14 @@ const Customer: React.FC<{}> = () => {
                   </Box>
 
                   {(numberOfItem >= 1 && !checked) &&
-                    <Box sx={{ height: 180, width: '100%', bgcolor: '#fff' }}>
+                    <Box sx={{ height: 180, width: '100%', bgcolor: '#fff', mb:-5 }}>
+                    
                     </Box>
                   }
                 </Box>
 
               )}
-              <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
+              <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50, height:115 }}>
                 <OrderBar
                   haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
                   canSubmit={(numberOfItem >= 1) ? true : false}
