@@ -220,12 +220,18 @@ def get_order_detail(order_id):
     target_order = model_to_dict(target_order)
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))  # 排序
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"])  # 按照dishId聚类
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
-        dish_info[0].pop("id")  # 舍弃id
-        dish_info[0].pop("lastModified")  # 舍弃修改时间
-        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
-        return_json.append(dish_info[0])
+        if key in current_dish_id:
+            dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+            dish_info[0].pop("id")  # 舍弃id
+            dish_info[0].pop("lastModified")  # 舍弃修改时间
+            dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
+            return_json.append(dish_info[0])
+        else:
+            pass
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
@@ -238,12 +244,18 @@ def get_bill(order_id):
     target_order = model_to_dict(target_order)
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"])
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
-        dish_info[0].pop("id")  # 舍弃id
-        dish_info[0].pop("lastModified")  # 舍弃修改时间
-        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
-        return_json.append(dish_info[0])
+        if key in current_dish_id:
+            dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+            dish_info[0].pop("id")  # 舍弃id
+            dish_info[0].pop("lastModified")  # 舍弃修改时间
+            dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
+            return_json.append(dish_info[0])
+        else:
+            pass
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
@@ -251,14 +263,12 @@ def get_bill(order_id):
 def hot_dishes(order_id):
     order_id_post = int(order_id)
     diner_post = Orders.query.get_or_404(order_id_post).diner
-    print(order_id_post)
     hot_dish_dict = Menuitem.query.order_by(Menuitem.orderTimes.desc()).limit(9)
     hot_dish_dict = model_to_dict(hot_dish_dict)
     for line in hot_dish_dict:
         line.pop("lastModified")
         line.pop("id")
         line["dishNumber"] = 0
-    print(hot_dish_dict)
     category_post = Category.query.all()
     category_post = model_to_dict(category_post)
     for line in category_post:
@@ -286,7 +296,6 @@ def category_dishes(order_id, category_id):
 @app.route('/customer/<int:order_id>/help', methods=["POST"])
 def ask_help(order_id):
     table_no = Orders.query.get_or_404(order_id).table
-    print(table_no)
     service_info = Services(table=table_no, startTime=datetime.now())
     service_info.save()
     return_json = {"message": "success"}
@@ -324,6 +333,9 @@ def request_finish(request_id):
 def get_uncompleted_order_item():
     uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status == "Prepared", Orderitem.finish == 0)
                                            .order_by(Orderitem.itemTime.asc()).all())
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for line in uncompleted_order_item:
         line["table"] = Orders.query.get_or_404(line["orderId"]).table
         line.pop("orderId")
@@ -332,7 +344,10 @@ def get_uncompleted_order_item():
         # line.pop("itemTime")
         if line["itemTime"] is not None:
             line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
-        line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
+        if line["dishId"] in current_dish_id:
+            line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
+        else:
+            line["dishName"] = "Dish deleted"
         line.pop("dishId")
     return_json = {"itemsList": uncompleted_order_item}
     return Response(json.dumps(return_json), mimetype="application/json")
@@ -348,21 +363,32 @@ def item_complete(item_index):
 
 @app.route('/wait/order', methods=["GET"])
 def get_unpayed_order():
-    unpayed_order = model_to_dict(
-        Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
+    unpayed_order = model_to_dict(Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
     for line in unpayed_order:
         total_cost = 0
         order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
         for each_item in order_items:
-            menu_item = model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())
-            total_cost += menu_item[0]["cost"]
-            each_item["price"] = menu_item[0]["cost"]
-            each_item["dishName"] = menu_item[0]["title"]
-            each_item.pop("itemTime")
-            each_item.pop("itemIndex")
-            each_item.pop("dishId")
-            each_item.pop("finish")
-            # each_item.pop("orderId")
+            if each_item["dishId"] in current_dish_id:
+                menu_item = model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).first())
+                total_cost += menu_item["cost"]
+                each_item["price"] = menu_item["cost"]
+                each_item["dishName"] = menu_item["title"]
+                each_item.pop("itemTime")
+                each_item.pop("itemIndex")
+                each_item.pop("dishId")
+                each_item.pop("finish")
+                # each_item.pop("lastModified")
+                # each_item.pop("orderId")
+            else:
+                each_item.pop("itemTime")
+                each_item.pop("finish")
+                each_item.pop("dishId")
+                each_item.pop("itemIndex")
+                each_item["dishName"] = "Dish deleted"
+                each_item["price"] = 0
         line["price"] = round(total_cost, 1)
         line["itemList"] = order_items
         line.pop("diner")
@@ -372,6 +398,7 @@ def get_unpayed_order():
         # line.pop("orderTime")
         if line["orderTime"] is not None:
             line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
+    print("unpayed order: ", unpayed_order)
     return_json = {"orderList": unpayed_order}
     return Response(json.dumps(return_json), mimetype="application/json")
 
@@ -429,8 +456,6 @@ def update_items(order_id):
     index_post = int(post_data["itemIndex"])
     status_post = str(post_data["itemStatus"])
     db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"status": status_post})
-    if status_post=="Prepared":
-        db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"finish": 0})
     db.session.commit()  # 更新item的status
 
     # 更新order的status
