@@ -129,7 +129,7 @@ export default function DishCard({
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           position: 'relative',
           zIndex: 15,
-          ml: 48,
+          ml: 55,
         }}>
           {((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : dishNum}
         </Box>
@@ -147,13 +147,13 @@ export default function DishCard({
           display: 'flex', justifyContent: 'center', alignItems: 'center',
           position: 'relative',
           zIndex: 5,
-          ml: 48,
+          ml: 55,
         }}>
 
         </Box>
       )}
 
-      <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
+      <Card variant='outlined' sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
 
         <CardMedia
           component="img"

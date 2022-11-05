@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Collapse, Divider, Paper, Typography } from "@mui/material";
 import OrderIcon from "./OrderIcon";
 import PriceTag from "./PriceTag";
@@ -22,6 +22,7 @@ interface ListProps {
   orderFunc?: (params: any) => any;
   submitFunc: (params: any) => any;
   editFunc?: (params: any) => any;
+  ifCheck?:(params: any) => any;
   oldOrder?:
   {
     dishId: number,
@@ -53,6 +54,7 @@ export default function OrderBar({
   orderFunc,
   submitFunc,
   editFunc,
+  ifCheck = ()=>{},
   oldOrder,
   newOrder,
 
@@ -76,6 +78,18 @@ export default function OrderBar({
     const arr = location.pathname.split('/');
     navigate(`/customer/${arr[2]}/bill`);
   };
+
+  useEffect(()=>{
+    if (!haveItem){
+      setChecked(false);
+    }
+    // console.log('now is', haveItem)
+  },[haveItem])
+
+  useEffect(()=>{
+    ifCheck(checked);
+    // console.log('now is', haveItem)
+  },[checked])
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>

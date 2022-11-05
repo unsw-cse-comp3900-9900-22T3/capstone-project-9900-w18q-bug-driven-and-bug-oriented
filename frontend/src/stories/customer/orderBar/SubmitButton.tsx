@@ -53,7 +53,7 @@ export default function SubmitButton({
             }
           }}>
             <Typography variant="h4" >
-              submit
+              Submit
             </Typography>
           </Button>
           <Modal
