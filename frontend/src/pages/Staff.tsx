@@ -47,9 +47,13 @@ const Staff: React.FC<{}> = () => {
   const [key, setKey] = useState('')
 
   const [open, setOpen] = React.useState(false);
+  const [successOpen, setSuccessOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(true);
+  };
+  const handleSucessClick = () => {
+    setSuccessOpen(true);
   };
 
 
@@ -63,22 +67,26 @@ const Staff: React.FC<{}> = () => {
     console.log('message', message);
     if (message.data.message === 'Login success') {
       console.log('login success');
-      navigate(`/${message.data.staff}`);
+      handleSucessClick();
+      setTimeout(() => {navigate(`/${message.data.staff}`);}, 1000);
     } else {
       console.log('error key');
       handleClick();
     }
   };
 
-
-
-
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
+  };
+
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
   };
 
   useEffect(() => {
@@ -133,6 +141,16 @@ const Staff: React.FC<{}> = () => {
         >
           <Alert onClose={handleClose} severity="warning" sx={{ width: 600 }}>
             Wrong key. Please try again.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={3000}
+          onClose={handleSuccessClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+            Welcome back!
           </Alert>
         </Snackbar>
         <Grid

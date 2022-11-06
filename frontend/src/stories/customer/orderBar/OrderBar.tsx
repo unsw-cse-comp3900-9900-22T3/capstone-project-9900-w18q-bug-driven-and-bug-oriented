@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
-import { Button, Collapse, Divider, Paper, Typography } from "@mui/material";
+import { Alert, Button, Collapse, Divider, Paper, Snackbar, Typography } from "@mui/material";
 import OrderIcon from "./OrderIcon";
 import PriceTag from "./PriceTag";
 import CalorieTag from "./CalorieTag";
@@ -73,10 +73,27 @@ export default function OrderBar({
 
   };
 
+    //for alert information when making a successful operation
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const [alertInformation, setAlertInformation] = React.useState('');
+    const handleSuccessSubmit = (message : string) => {
+      setAlertInformation(message);
+      setSuccessOpen(true);
+    };
+    const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setSuccessOpen(false);
+    };
+
   const navigate = useNavigate();
   const toBill = () => {
     const arr = location.pathname.split('/');
-    navigate(`/customer/${arr[2]}/bill`);
+    handleSuccessSubmit("Your order has been checked!");
+    setTimeout(() => {
+      navigate(`/customer/${arr[2]}/bill`);
+    }, 1000);
   };
 
   useEffect(()=>{
@@ -212,9 +229,17 @@ export default function OrderBar({
                   </Box>
 
                 </Box>
-
-
-
+                
+                <Snackbar
+                  open={successOpen}
+                  autoHideDuration={3000}
+                  onClose={handleSuccessClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                  <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+                    {alertInformation}
+                  </Alert>
+                </Snackbar>
               </>
             )}
             {(oldOrder?.length === 0 && newOrder?.length !== 1) && (

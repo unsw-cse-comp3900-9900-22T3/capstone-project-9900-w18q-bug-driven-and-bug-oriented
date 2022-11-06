@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   Button,
   createTheme,
   Grid,
   Paper,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -160,6 +162,17 @@ const Customer: React.FC<{}> = () => {
   const [checked, setChecked] = useState(false);
   const [recommendList, setRecommendList] = useState(testData);
 
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const handleSucessSubmit = () => {
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -247,9 +260,13 @@ const Customer: React.FC<{}> = () => {
     console.log('post', order);
     const message = await postCustomerOrder(order, id);
     console.log('now is', message);
-    // navigate(`/customer/${id}/hot`);
-    navigate(0);
-    // setLoading(false);
+    handleSucessSubmit();
+    setTimeout(() => {
+      // navigate(`/customer/${id}/hot`);
+
+      navigate(0);
+      // setLoading(false);
+    }, 1000);
   }
 
 
@@ -498,6 +515,16 @@ const Customer: React.FC<{}> = () => {
                   orderFunc={setNewEdit}
                   ifCheck={(e) => setChecked(e)}
                 />
+                <Snackbar
+                  open={successOpen}
+                  autoHideDuration={3000}
+                  onClose={handleSuccessClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                  <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+                    Your order has been submitted!
+                  </Alert>
+                </Snackbar>
               </Box>
 
             </Box>
