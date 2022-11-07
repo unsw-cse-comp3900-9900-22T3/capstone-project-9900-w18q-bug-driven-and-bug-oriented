@@ -1,27 +1,16 @@
-import * as React from 'react';
+import { Box } from "@mui/system";
+import React, { useEffect } from "react";
+import { Button, createTheme, IconButton, Modal, Paper, ThemeProvider, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Modal from '@mui/material/Modal';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 
-import AddNumberBox from "./AddNumberBox";
-import { useEffect } from 'react';
+import AddNumberBox from "../dishCard/AddNumberBox";
 
 // 声明变量的数据格式
 interface ListProps {
-  //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
-  //预留空函数
-  doSomething?: (params: any) => any;
 
   dishId?: string;
   dishName?: string;
@@ -32,6 +21,7 @@ interface ListProps {
   picture?: string;
   initDishNum?: number;
   passObj?: (params: any) => any;
+
 }
 
 const theme = createTheme({
@@ -67,8 +57,9 @@ declare module '@mui/material/Button' {
   }
 }
 
+
 // 别忘了修改函数名
-export default function DishCard({
+export default function RecommendationCard({
   // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
   dishId = '123',
@@ -83,7 +74,7 @@ export default function DishCard({
 
   ...props
 }: ListProps) {
-
+  
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -99,11 +90,11 @@ export default function DishCard({
   const selectDishNum = () => {
     setDishNum(dishTryNum);
     const obj = {
-      dishId: dishId,
+      dishId: Number(dishId),
       title: dishName,
-      calorie: calories,
-      cost: price,
-      dishNumber: dishTryNum,
+      calorie: Number(calories),
+      cost: Number(price),
+      dishNumber: Number(dishTryNum),
       picture: picture,
     };
     passObj(obj);
@@ -114,114 +105,67 @@ export default function DishCard({
   useEffect(() => {
     setDishNum(0);
   }, [initDishNum]);
-
+  
+  
   return (
-    <>
-      {((dishNum !== 0) || (initDishNum !== 0 && initDishNum)) && (
-        <Box sx={{
-          height: 50,
-          width: 50,
-          backgroundColor: '#FB6D3A',
-          color: '#fff',
-          borderRadius: 10,
-          fontWeight: 'bold',
-          fontSize: 20,
-          display: 'flex', justifyContent: 'center', alignItems: 'center',
-          position: 'relative',
-          zIndex: 15,
-          ml: 55,
-        }}>
-          {((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : dishNum}
-        </Box>
-      )}
+    <Card elevation={1} sx={{width: 400, height: 130, borderRadius: 3, display: 'flex'}}>
+      
+      <Box sx={{ display: 'flex', alignItems: 'center'}}>
+        <img src={picture} alt={dishName} style={{borderRadius: 8, width: 180, height:105, objectFit:'cover', marginLeft:10 }}/>
+      </Box>
 
-      {((dishNum === 0) && (initDishNum === 0)) && (
-        <Box sx={{
-          height: 50,
-          width: 50,
-          // backgroundColor: '#fff',
-          color: '#fff',
-          borderRadius: 10,
-          fontWeight: 'bold',
-          fontSize: 20,
-          display: 'flex', justifyContent: 'center', alignItems: 'center',
-          position: 'relative',
-          zIndex: 5,
-          ml: 55,
-        }}>
-
-        </Box>
-      )}
-
-      <Card  sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
-
-        <CardMedia
-          component="img"
-          height="180"
-          sx={{ width: '100%', borderRadius: 5 }}
-          image={picture}
-          alt={dishName}
-        />
-
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-
-          <Box sx={{ display: 'flex', height: 50 }}>
-            <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height:'100%', width:'100%', maxWidth:210}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 1.5, }}>
+            <Typography gutterBottom component="div" noWrap sx={{ fontWeight: 'bold', }}>
               {dishName}
             </Typography>
-          </Box>
+        </Box>
 
-          <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', ml:2,}}>
             <Box
               sx={{
-                minWidth: 50,
-                height: 23,
+                minWidth: 50,         
                 borderRadius: 2,
                 backgroundColor: '#EEECF5',
                 color: '#503E9D',
-                textAlign: 'center',
-                p: 0.5,
-                m: 0.5,
-                
+                textAlign: 'center',  
+                alignItems: 'center',
+                px: 0.5, 
               }}
             >
               <Typography sx={{fontWeight: 'bold'}}>
                 {calories}Cal
               </Typography>
-              
             </Box>
 
             <Box
               sx={{
                 minWidth: 50,
-                height: 23,
+                
                 borderRadius: 2,
                 backgroundColor: '#EEECF5',
                 color: '#503E9D',
                 textAlign: 'center',
-                p: 0.5,
-                m: 0.5,
+                alignItems: 'center',
                 fontWeight: 'bold',
+                px: 0.5, 
+                ml: 2,
               }}
             >
               <Typography sx={{fontWeight: 'bold'}}>
                 $ {price}
-              </Typography>
-              
-            </Box>
-          </Box>
+              </Typography>             
+            </Box>                
+        </Box>
 
-        </CardContent>
-
-        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
+        <Box sx={{display:'flex', justifyContent:'right', alignItems:'end', height:'100%', width:'100%'}}>
+            <ThemeProvider theme={theme}>
               <Button
                 size="small"
                 variant="contained"
                 color='neutral'
                 onClick={handleOpen}
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, mr:1.5,mb:1}}
               >
                 <Typography sx={{}}>
                  Select 
@@ -325,7 +269,7 @@ export default function DishCard({
                             sx={{ borderRadius: 2, px: 3, }}
                             
                           >
-                            <Typography sx={{}}>
+                            <Typography>
                               Select
                             </Typography>
                             
@@ -339,10 +283,17 @@ export default function DishCard({
                   </Card>
                 </Box>
               </Modal>
-            </Box>
-          </ThemeProvider>
-        </CardActions>
-      </Card>
-    </>
+         
+            </ThemeProvider>
+            <Box/>
+        
+      </Box> 
+
+      </Box>
+
+      
+
+    </Card>
+      
   );
 }
