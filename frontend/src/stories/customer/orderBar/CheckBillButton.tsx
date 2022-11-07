@@ -90,7 +90,7 @@ export default function CheckBillButton({
               }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
             }}>
               <Typography variant="h6" sx={{ color: '#000000', }} >
-                cancel
+                Cancel
               </Typography>
             </Button>
           </Box>

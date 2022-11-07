@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 // 声明变量的数据格式
@@ -25,12 +25,18 @@ export default function OrderNowButton({
     <>
       {isStaff && (
         <Button onClick={doSomething} color='warning' sx={{ width: '100%', height: 60, borderRadius: 2, fontWeight: 'bold' }}>
-          I'm Staff
+          <Typography sx={{fontWeight: 'bold'}}>
+            I'm Staff
+          </Typography>
+          
         </Button>
       )}
       {(!confirm && !isStaff) && (
         <Button disabled sx={{ width: '100%', background: '#EEECF6', color: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2 }}>
-          Order now<ArrowForwardIcon />
+          <Typography sx={{fontWeight: 'bold'}}>
+           Order now
+          </Typography>
+          <ArrowForwardIcon /> 
         </Button>
       )}
       {(confirm && !isStaff) && (
@@ -39,7 +45,10 @@ export default function OrderNowButton({
             backgroundColor: '#8475B0',
           }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 60, borderRadius: 2
         }}>
-          Order now<ArrowForwardIcon />
+                    <Typography sx={{fontWeight: 'bold'}}>
+           Order now
+          </Typography>
+          <ArrowForwardIcon /> 
         </Button>
       )}
     </>

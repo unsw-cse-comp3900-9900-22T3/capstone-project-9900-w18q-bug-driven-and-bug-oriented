@@ -22,7 +22,14 @@ import ButtonIcon from "../stories/home/ButtonIcon";
 import { checkLogin } from "../api/login";
 import DishCard from "../stories/customer/dishCard/DishCard";
 
-const theme = createTheme();
+const theme = createTheme({
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
+      textTransform: 'none'
+    }
+  }
+});
 
 
 
@@ -40,9 +47,13 @@ const Staff: React.FC<{}> = () => {
   const [key, setKey] = useState('')
 
   const [open, setOpen] = React.useState(false);
+  const [successOpen, setSuccessOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(true);
+  };
+  const handleSucessClick = () => {
+    setSuccessOpen(true);
   };
 
 
@@ -56,22 +67,26 @@ const Staff: React.FC<{}> = () => {
     console.log('message', message);
     if (message.data.message === 'Login success') {
       console.log('login success');
-      navigate(`/${message.data.staff}`);
+      handleSucessClick();
+      setTimeout(() => {navigate(`/${message.data.staff}`);}, 1000);
     } else {
       console.log('error key');
       handleClick();
     }
   };
 
-
-
-
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
+  };
+
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
   };
 
   useEffect(() => {
@@ -96,19 +111,48 @@ const Staff: React.FC<{}> = () => {
   //   }
   // };
 
+  useEffect(() => {
+    const keyDownHandler = (e: any) => {
+      console.log('now pressed:', e.key);
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!showKey && staff){
+          setShowKey(true);
+        } else if (showKey && key) {
+          gotToStaff();
+        }
+
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler);
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    }
+  }, [key, staff,showKey,])
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh", minWidth: 1100, minHeight: 1000 }}>
-      <Snackbar 
-      open={open} 
-      autoHideDuration={3000} 
-      onClose={handleClose} 
-      anchorOrigin={{ vertical: 'top', horizontal: 'center'}}
-      >
-        <Alert onClose={handleClose} severity="warning" sx={{ width: 600 }}>
-        Wrong key. Please try again.
-        </Alert>
-      </Snackbar>
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleClose} severity="warning" sx={{ width: 600 }}>
+            Wrong key. Please try again.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={3000}
+          onClose={handleSuccessClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+            Welcome back!
+          </Alert>
+        </Snackbar>
         <Grid
           item
           xs={3}
@@ -121,9 +165,16 @@ const Staff: React.FC<{}> = () => {
             backgroundPosition: "center",
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
+            display:'flex',
+            justifyContent:'right',
+            alignItems:'end'
           }}
-        />
-        
+          >
+          <Typography variant="h4" sx={{m:3,fontWeight:'bold',color:'#ABA89E'}}>
+            New Bee
+          </Typography>
+        </Grid>
+
         {!showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ justifyContent: 'left', margin: 10 }}>
@@ -141,34 +192,34 @@ const Staff: React.FC<{}> = () => {
                 </Typography>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'kitchen') && (
-                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='kitchen staff' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='Kitchen staff' selected />
                   )}
                   {(staff !== 'kitchen') && (
-                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='kitchen staff' />
+                    <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='Kitchen staff' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'wait') && (
-                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='Wait staff' selected />
                   )}
                   {(staff !== 'wait') && (
-                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='wait staff' />
+                    <StaffSelectButton doSomething={() => selectStaff('wait')} role='Wait staff' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
                   {(staff == 'manager') && (
-                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='manager' selected />
+                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='Manager' selected />
                   )}
                   {(staff !== 'manager') && (
-                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='manager' />
+                    <StaffSelectButton doSomething={() => selectStaff('manager')} role='Manager' />
                   )}
                 </Box>
                 <Box sx={{ marginTop: 10 }}>
                   {staff && (
-                    <BigButton name='continue' confirm doSomething={() => setShowKey(true)} />
+                    <BigButton name='Continue' confirm doSomething={() => setShowKey(true)} />
                   )}
                   {!staff && (
-                    <BigButton name='continue' confirm={false} />
+                    <BigButton name='Continue' confirm={false} />
                   )}
                 </Box>
               </Box>
@@ -216,7 +267,7 @@ const Staff: React.FC<{}> = () => {
                   {!key && (
                     <BigButton name='Log in' confirm={false} />
                   )}
-                  <Box sx={{ display: 'flex', justifyContent:'center',marginTop:5 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
                     <Typography variant="subtitle1" sx={{ color: '#626264' }}>
                       Forgot key? Please contact to the manager.
                     </Typography>

@@ -49,19 +49,23 @@ export default function NavBar({
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', margin: 5 }}>
             Customer
           </Typography>
-          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', overflow:'auto', height:'100%' }}>
-            {location.pathname !== `/customer/${id}/hot` && (
+          <Box sx={{ marginTop: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', overflow:'auto', height:'70vh',width: 300 }}>
+            <Box>
+              {location.pathname !== `/customer/${id}/hot` && (
               <NavButton item='hot' selected={false} doSomething={(e) => { navigate(`/customer/${id}/hot`); doSomething(e); }} />
             )}
             {location.pathname === `/customer/${id}/hot` && (
               <NavButton item='hot' selected />
             )}
+            </Box>
+            
 
             {obj.map((objs) => {
               return (
-                <React.Fragment key={objs.categoryId}>
+                <Box key={objs.categoryId}>
                   {
                     location.pathname !== `/customer/${id}/${objs.categoryId}` && (
+                      
                       <NavButton item='category' selected={false} name={objs.categoryName} doSomething={(e) => { navigate(`/customer/${id}/${objs.categoryId}`); doSomething(e); }} />
                     )
                   }
@@ -70,12 +74,12 @@ export default function NavBar({
                       <NavButton item='category' selected name={objs.categoryName} />
                     )
                   }
-                </React.Fragment>
+                </Box>
               )
             })}
           </Box>
-          <Box sx={{ display: 'flex', height: '100%', }}></Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 3 }}>
+      
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 3, flexGrow:1}}>
             <AskHelpButton doSomething={postRequest} />
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', mb: 5 }}>
@@ -105,7 +109,7 @@ export default function NavBar({
           <NavButton name='Category' item='category' selected={false} doSomething={(e) => { navigate(`/manager/category`); doSomething(e); }} />
         )}
         {location.pathname === `/manager/category` && (
-          <NavButton name='category' item='category' selected />
+          <NavButton name='Category' item='category' selected />
         )}
 
         {location.pathname !== `/manager/menu` && (

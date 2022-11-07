@@ -16,9 +16,17 @@ import NavBar from "../stories/NavBar";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { getKitchenEachOrder, postKitchenEachOrder } from "../api/kitchen";
 import ItemRecord from "../stories/kitchen/ItemRecord";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 
-const theme = createTheme();
+const theme = createTheme({
+  typography:{
+     fontFamily: "Quicksand",
+     button: {
+      textTransform: 'none'
+    }
+  }
+});
 
 interface itemListInterface {
   itemList: {
@@ -46,6 +54,10 @@ const KitchenOrder: React.FC<{}> = () => {
   const [page, setPage] = useState(1);
   const [newStatus, setNewStatus] = useState<newStatusInterface>();
 
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   const getList = async () => {
     const orderId = location.pathname.split('/')[2];
@@ -55,6 +67,7 @@ const KitchenOrder: React.FC<{}> = () => {
       setTable(message.tableNumber);
     }
     setItemList(message);
+    setLoading(false);
     // console.log(message);
   };
 
@@ -71,7 +84,7 @@ const KitchenOrder: React.FC<{}> = () => {
   useEffect(() => {
     if (newStatus)
       postItem(newStatus.itemIndex, newStatus?.status);
-      console.log(newStatus);
+    console.log(newStatus);
   }, [newStatus])
 
 
@@ -105,7 +118,22 @@ const KitchenOrder: React.FC<{}> = () => {
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
         <Box>
           <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
+        </Box>      
+      {loading ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
         </Box>
+      ) : (
+
         <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', flexDirection: 'column' }}>
 
           <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', alignItems: 'start', mt: 20, mb: 5, height: 200 }}>
@@ -150,6 +178,14 @@ const KitchenOrder: React.FC<{}> = () => {
 
                   )
                 })}
+                {(!pageOrder || pageOrder?.itemList.length === 0) && (
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
+                    <Typography variant="h3">
+                      No item now......
+                    </Typography>
+                  </Grid>
+                )
+                }
               </Box>
             </Box>
           </Box>
@@ -163,7 +199,9 @@ const KitchenOrder: React.FC<{}> = () => {
           </Box>
 
         </Box>
+        )}
       </Box>
+
     </ThemeProvider>
   );
 };

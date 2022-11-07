@@ -53,7 +53,7 @@ export default function SubmitButton({
             }
           }}>
             <Typography variant="h4" >
-              submit
+              Submit
             </Typography>
           </Button>
           <Modal
@@ -92,7 +92,7 @@ export default function SubmitButton({
                   }, backgroundColor: '#F7F7F7', fontWeight: 'bold', height: 55, borderRadius: 3,
                 }}>
                   <Typography variant="h6" sx={{ color: '#000000', }} >
-                    cancel
+                    Cancel
                   </Typography>
                 </Button>
               </Box>
@@ -111,7 +111,7 @@ export default function SubmitButton({
             }
           }}>
             <Typography variant="h4" sx={{color:'#ffffff'}}>
-              submit
+              Submit
             </Typography>
           </Button>
         </>

@@ -87,7 +87,7 @@ class Menuitem(Base):
     cost = db.Column(db.Float, default=0)
     picture = db.Column(db.String(255))
     calorie = db.Column(db.Float, default=0)
-    orderTimes = db.Column(db.Integer, default=0)
+    orderTimes = db.Column(db.INT, default=0)
     lastModified = db.Column(db.DateTime, nullable=False)
 
 
@@ -112,7 +112,8 @@ class Orderitem(Base):
     dishId = db.Column(db.INT, nullable=False)
     orderId = db.Column(db.INT, db.ForeignKey("orders.orderId"))
     itemTime = db.Column(db.DateTime)
-    status = status = db.Column(db.String(45), nullable=False, default="Wait")
+    status = db.Column(db.String(45), nullable=False, default="Wait")
+    finish = db.Column(db.INT, nullable=False, default=0)
 
 
 # 数据库查询query转为字典格式
@@ -132,9 +133,24 @@ def model_to_dict(result):
         print(e.args)
         raise TypeError('Type error of parameter')
 
+engine = create_engine(
+    'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
 
 ########################################################################################################################
 ######################################### Login Module #################################################################
+@app.route('/', methods=["GET"])
+def get_table():
+    table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
+    return_josn={}
+    with engine.connect() as conn:
+        result_proxy = conn.execute(table_sql)  # 返回值为ResultProxy类型
+        table_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        res = pd.DataFrame(list(table_result), columns=['number', 'status'])
+        return_josn={"tableList":res.to_dict(orient='records')}
+    return Response(json.dumps(return_josn), mimetype="application/json")
+
+
+
 @app.route('/staff', methods=["POST"])  # login interface
 def login():
     return_json = {}
@@ -219,12 +235,18 @@ def get_order_detail(order_id):
     target_order = model_to_dict(target_order)
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))  # 排序
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"])  # 按照dishId聚类
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
-        dish_info[0].pop("id")  # 舍弃id
-        dish_info[0].pop("lastModified")  # 舍弃修改时间
-        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
-        return_json.append(dish_info[0])
+        if key in current_dish_id:
+            dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+            dish_info[0].pop("id")  # 舍弃id
+            dish_info[0].pop("lastModified")  # 舍弃修改时间
+            dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
+            return_json.append(dish_info[0])
+        else:
+            pass
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
@@ -237,12 +259,18 @@ def get_bill(order_id):
     target_order = model_to_dict(target_order)
     dish_sort = sorted(target_order, key=lambda x: (x["dishId"], x["status"]))
     dish_group = groupby(dish_sort, key=lambda x: x["dishId"])
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for key, group in dish_group:
-        dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
-        dish_info[0].pop("id")  # 舍弃id
-        dish_info[0].pop("lastModified")  # 舍弃修改时间
-        dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
-        return_json.append(dish_info[0])
+        if key in current_dish_id:
+            dish_info = model_to_dict(Menuitem.query.filter_by(dishId=key).all())
+            dish_info[0].pop("id")  # 舍弃id
+            dish_info[0].pop("lastModified")  # 舍弃修改时间
+            dish_info[0]["dishNumber"] = len(list(group))  # 点的dish的数量
+            return_json.append(dish_info[0])
+        else:
+            pass
     return Response(json.dumps({"itemList": return_json}), mimetype="application/json")
 
 
@@ -250,14 +278,12 @@ def get_bill(order_id):
 def hot_dishes(order_id):
     order_id_post = int(order_id)
     diner_post = Orders.query.get_or_404(order_id_post).diner
-    print(order_id_post)
     hot_dish_dict = Menuitem.query.order_by(Menuitem.orderTimes.desc()).limit(9)
     hot_dish_dict = model_to_dict(hot_dish_dict)
     for line in hot_dish_dict:
         line.pop("lastModified")
         line.pop("id")
         line["dishNumber"] = 0
-    print(hot_dish_dict)
     category_post = Category.query.all()
     category_post = model_to_dict(category_post)
     for line in category_post:
@@ -285,7 +311,6 @@ def category_dishes(order_id, category_id):
 @app.route('/customer/<int:order_id>/help', methods=["POST"])
 def ask_help(order_id):
     table_no = Orders.query.get_or_404(order_id).table
-    print(table_no)
     service_info = Services(table=table_no, startTime=datetime.now())
     service_info.save()
     return_json = {"message": "success"}
@@ -321,16 +346,23 @@ def request_finish(request_id):
 
 @app.route('/wait/item', methods=["GET"])
 def get_uncompleted_order_item():
-    uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status != "Prepared")
+    uncompleted_order_item = model_to_dict(Orderitem.query.filter(Orderitem.status == "Prepared", Orderitem.finish == 0)
                                            .order_by(Orderitem.itemTime.asc()).all())
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
     for line in uncompleted_order_item:
         line["table"] = Orders.query.get_or_404(line["orderId"]).table
         line.pop("orderId")
         line.pop("status")
+        line.pop("finish")
         # line.pop("itemTime")
         if line["itemTime"] is not None:
             line["itemTime"] = line["itemTime"].strftime("%Y-%m-%d-%H:%M:%S")
-        line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
+        if line["dishId"] in current_dish_id:
+            line["dishName"] = model_to_dict(Menuitem.query.filter_by(dishId=line["dishId"]).all())[0]["title"]
+        else:
+            line["dishName"] = "Dish deleted"
         line.pop("dishId")
     return_json = {"itemsList": uncompleted_order_item}
     return Response(json.dumps(return_json), mimetype="application/json")
@@ -338,7 +370,7 @@ def get_uncompleted_order_item():
 
 @app.route('/wait/item/<int:item_index>', methods=["POST"])
 def item_complete(item_index):
-    Orderitem.query.filter_by(itemIndex=item_index).update({Orderitem.status: "Prepared"})
+    Orderitem.query.filter_by(itemIndex=item_index).update({Orderitem.finish: 1})
     db.session.commit()
     return_json = {"message": "success"}
     return Response(json.dumps(return_json), mimetype="application/json")
@@ -346,20 +378,32 @@ def item_complete(item_index):
 
 @app.route('/wait/order', methods=["GET"])
 def get_unpayed_order():
-    unpayed_order = model_to_dict(
-        Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
+    current_dish_id = []
+    for line in model_to_dict(Menuitem.query.all()):
+        current_dish_id.append(int(line["dishId"]))
+    unpayed_order = model_to_dict(Orders.query.filter(Orders.orderTime.isnot(None), Orders.isPay == 0).order_by(Orders.orderTime.asc()).all())
     for line in unpayed_order:
         total_cost = 0
         order_items = model_to_dict(Orders.query.get_or_404(line["orderId"]).orderitems)
         for each_item in order_items:
-            menu_item = model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).all())
-            total_cost += menu_item[0]["cost"]
-            each_item["price"] = menu_item[0]["cost"]
-            each_item["dishName"] = menu_item[0]["title"]
-            each_item.pop("itemTime")
-            each_item.pop("itemIndex")
-            each_item.pop("dishId")
-            # each_item.pop("orderId")
+            if each_item["dishId"] in current_dish_id:
+                menu_item = model_to_dict(Menuitem.query.filter_by(dishId=each_item["dishId"]).first())
+                total_cost += menu_item["cost"]
+                each_item["price"] = menu_item["cost"]
+                each_item["dishName"] = menu_item["title"]
+                each_item.pop("itemTime")
+                each_item.pop("itemIndex")
+                each_item.pop("dishId")
+                each_item.pop("finish")
+                # each_item.pop("lastModified")
+                # each_item.pop("orderId")
+            else:
+                each_item.pop("itemTime")
+                each_item.pop("finish")
+                each_item.pop("dishId")
+                each_item.pop("itemIndex")
+                each_item["dishName"] = "Dish deleted"
+                each_item["price"] = 0
         line["price"] = round(total_cost, 1)
         line["itemList"] = order_items
         line.pop("diner")
@@ -369,6 +413,7 @@ def get_unpayed_order():
         # line.pop("orderTime")
         if line["orderTime"] is not None:
             line["orderTime"] = line["orderTime"].strftime("%Y-%m-%d-%H:%M:%S")
+    print("unpayed order: ", unpayed_order)
     return_json = {"orderList": unpayed_order}
     return Response(json.dumps(return_json), mimetype="application/json")
 
@@ -383,8 +428,7 @@ def confirm_pay_order(order_id):
 
 ########################################################################################################################
 ############################################   kitchen Staff Module  ###################################################
-engine = create_engine(
-    'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
+
 
 
 @app.route('/kitchen', methods=["GET", "POST"])
@@ -471,7 +515,8 @@ def update_function(original_data, update_data):  # 更新功能
                 setattr(original_data, "categoryId", update_category_id)
                 flag = 1
             if key == "picture":
-                delete_picture(original_data.picture)
+                #original_data_address = original_data.picture
+                #delete_picture(original_data_address)
                 if update_data["picture"][0:3] != "../":
                     update_data["picture"] = ".." + update_data["picture"]
                 new_img_address = upload_picture(update_data["picture"])
@@ -487,22 +532,20 @@ def update_function(original_data, update_data):  # 更新功能
 
 def upload_picture(original_local_picture_address):  # 图片转存功能
     root = "../frontend/public/dishImg"
+    upload_picture_address = "../frontend/public" + str(original_local_picture_address[2:])
+    print(upload_picture_address)
     end_name = original_local_picture_address.rsplit('.')[-1]  # 判定图片的文件格式
+    print(end_name)
     if end_name not in ["jpg", "png", "jpeg"]:
         return {"msg": "the format is not a valid picture"}
-    all_files = os.listdir(root)  # 读取这个路径下的文件
-    file_list = []
-    for file in all_files:
-        if file[0:3] == "img":
-            file = file[3:]
-            file_num = file[:-4]
-            file_list.append(int(file_num))
-    cur_file_num = max(file_list) + 1
-    filename = str('img{}'.format(str(cur_file_num)) + "." + end_name)  # 生成新的文件名，避免重复
+    # all_files = os.listdir(root)  # 读取这个路径下的文件
+    filename = str(original_local_picture_address[11:])  # 生成新的文件名，避免重复
+    print(filename)
     img_path = os.path.join(root, filename)  # 拼接转存路径和新的文件名
     print("img_path: ", img_path)
-    shutil.copy(original_local_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
+    # shutil.copy(upload_picture_address, img_path)  # 把旧路径下的文件复制到新的路径下
     img_path_post = img_path[18:]
+    img_path_post = str(img_path_post).replace("\\", "/")
     return img_path_post  # 返回新的路径
 
 
@@ -531,17 +574,25 @@ def get_category_list(time_flag):  # 得到所有的类目
 
 
 def get_menu_item_list():  # 得到所有的类目
-    menu_item_list = model_to_dict(Menuitem.query.all())
-    for line in menu_item_list:
-        line["dishName"] = line["title"]
-        line["price"] = line["cost"]
-        line.pop("cost")
-        line.pop("title")
-        line.pop("id")
-        line.pop("lastModified")
-        line.pop("categoryId")
-        line.pop("orderTimes")
-    return {"itemList": menu_item_list}
+    category_id_list = []
+    item_list = []
+    all_category = get_category_list(1)
+    for each_category in all_category["categoryList"]:
+        category_id_list.append(each_category["categoryId"])
+    for category_id in category_id_list:
+        menu_item = model_to_dict(Menuitem.query.filter_by(categoryId=category_id).all())
+        for line in menu_item:
+            line["dishName"] = line["title"]
+            line["price"] = line["cost"]
+            line.pop("cost")
+            line.pop("title")
+            line.pop("id")
+            line.pop("lastModified")
+            line.pop("categoryId")
+            line.pop("orderTimes")
+        item_list.append({"categoryId": category_id, "itemList": menu_item})
+    return_json = {"itemList": item_list, "categoryList": all_category["categoryList"]}
+    return return_json
 
 
 @app.route('/manager/category', methods=["GET"])  # 获取所有类目
@@ -576,7 +627,6 @@ def add_category():
 @app.route('/manager/item', methods=["GET"])  # 获取所有菜品
 def get_menu_item():
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -633,20 +683,18 @@ def add_menu_item():
                               calorie=calorie_post, lastModified=datetime.now())
     menu_item_post.save()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
 @app.route('/manager/item/<int:dish_id>', methods=["POST"])  # 删除现有的菜品
 def delete_menu_item(dish_id):
     menu_item_delete = Menuitem.query.filter_by(dishId=dish_id).first()
-    menu_item_delete_dict = model_to_dict(menu_item_delete)
-    if menu_item_delete_dict["picture"] is not None:
-        delete_picture(str(menu_item_delete_dict["picture"]))
+    # menu_item_delete_dict = model_to_dict(menu_item_delete)
+    # if menu_item_delete_dict["picture"] is not None:
+        # delete_picture(str(menu_item_delete_dict["picture"]))
     db.session.delete(menu_item_delete)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -658,7 +706,6 @@ def edit_menu_item(dish_id):
     update_function(original_data, update_data)
     db.session.commit()
     return_json = get_menu_item_list()
-    return_json["categoryList"] = get_category_list(1)["categoryList"]
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
@@ -728,6 +775,43 @@ def delete_key():
         return_json = {"message": "Invalid role and key"}
     return Response(json.dumps(return_json), mimetype="application/json")
 
+
+@app.route('/manager/category', methods=["POST"])  # category sort
+def category_sort():
+    insert_id = 1
+    new_sorted_category_list = []
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    for line in sort_data["categoryList"]:
+        category_delete = Category.query.filter_by(categoryId=line["categoryId"]).first()
+        db.session.delete(category_delete)
+        new_sorted_category_list.append(Category(id=insert_id, categoryId=line["categoryId"],
+                                                 categoryName=line["categoryName"], lastModified=datetime.now()))
+        insert_id += 1
+    db.session.add_all(new_sorted_category_list)
+    db.session.commit()
+    return Response(json.dumps(get_category_list(0)), mimetype="application/json")
+
+
+@app.route('/manager/item', methods=["POST"])  # menu item sort
+def sort_menu_item():
+    sort_data = json.loads(json.dumps(request.get_json()))  # json格式传过来
+    new_sorted_menu_item_list = []
+    for line in sort_data["itemList"]:
+        each_category_id = Menuitem.query.filter_by(categoryName=line["categoryName"]).first().categoryId
+        each_item_order_times = Menuitem.query.filter_by(dishId=line["dishId"]).first().orderTimes
+        menu_item_delete = Menuitem.query.filter_by(dishId=line["dishId"]).first()
+        new_sorted_menu_item_list.append(Menuitem(dishId=line["dishId"], categoryId=each_category_id,
+                                                  categoryName=line["categoryName"], title=line["dishName"],
+                                                  description=line["description"],
+                                                  ingredient=line["ingredient"], cost=line["price"],
+                                                  picture=line["picture"],
+                                                  calorie=line["calorie"], orderTimes=each_item_order_times,
+                                                  lastModified=datetime.now()))
+        db.session.delete(menu_item_delete)
+    db.session.add_all(new_sorted_menu_item_list)
+    db.session.commit()
+    return_json = get_menu_item_list()
+    return Response(json.dumps(return_json), mimetype="application/json")
 
 ########################################################################################################################
 ###############################################   Manager Module  ######################################################

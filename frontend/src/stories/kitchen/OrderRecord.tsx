@@ -55,19 +55,24 @@ export default function OrderRecord({
   return (
     <>
 
-      <Box sx={{ width:'100%' }}>
+      <Box sx={{ width: '100%' }}>
         <Grid container spacing={1} >
           <Grid item xs={3}>
-            <Typography sx={{ml:2}} variant="subtitle1">{table.toString()}</Typography>
+            <Typography sx={{ ml: 2 }} variant="subtitle1">{table.toString()}</Typography>
           </Grid>
           <Grid item xs={3}>
-            <Typography sx={{ml:1.7}} variant="subtitle1">{orderTime.split(' ')[4]}</Typography>
+            <Typography sx={{ ml: 1.7 }} variant="subtitle1">{orderTime.split(' ')[4]}</Typography>
           </Grid>
           <Grid item xs={3}>
-            <Typography sx={{ml:11}} variant="subtitle1">{waitCount.toString()}</Typography>
+            <Typography sx={{ ml: 11 }} variant="subtitle1">{waitCount.toString()}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Box sx={{ height: 25, display: 'inline-block',zoom:1, justifyContent: 'center', alignItems: 'center', py: 0.5,px:1,  borderRadius: 2, ml: 0.5 , marginTop: -1, color: { color }, backgroundColor: { backgroundColor }, }}>{status}</Box>
+            <Box sx={{ height: 25, display: 'inline-block', zoom: 1, justifyContent: 'center', alignItems: 'center', py: 0.5, px: 1, borderRadius: 2, ml: 0.5, marginTop: -1, color: { color }, backgroundColor: { backgroundColor }, }}>
+              <Typography sx={{  }}>
+                {status}
+              </Typography>
+
+            </Box>
           </Grid>
           <Grid item xs={1}>
             <IconButton onClick={doSomething} sx={{ marginTop: -0.3, }}><NavigateNextIcon /></IconButton>

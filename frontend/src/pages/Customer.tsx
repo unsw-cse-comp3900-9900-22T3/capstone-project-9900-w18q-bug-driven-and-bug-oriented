@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   Button,
   createTheme,
   Grid,
+  Paper,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -13,55 +16,127 @@ import OrderBar from "../stories/customer/orderBar/OrderBar";
 import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
-
-const theme = createTheme();
-
-const haveOrder = [
-  {
-    dishId: 1,
-    title: 'meat',
-    calorie: 50,
-    cost: 10,
-    dishNumber: 1,
-    picture: 'dishImg/img1.png'
-  },
-  {
-    dishId: 2,
-    title: 'vegetable',
-    calorie: 40,
-    cost: 5,
-    dishNumber: 1,
-    picture: 'dishImg/img2.png'
-  },
-  {
-    dishId: 3,
-    title: 'rice',
-    calorie: 48,
-    cost: 3,
-    dishNumber: 1,
-    picture: 'dishImg/img2.png'
-  },
-]
-
-const nextOrder =
-{
-  dishId: 11,
-  title: 'Szechuan Dan Dan Noodles',
-  calorie: 288,
-  cost: 15.9,
-  dishNumber: 5,
-}
-
-const ord = {
-  "orderList": [
-    {
-      "dishId": 1,
-      "title": "Chicken Grill",
-      "dishNumber": 1
+const theme = createTheme({
+  typography: {
+    fontFamily: "Quicksand",
+    button: {
+      textTransform: 'none'
     }
+  }
+});
+
+const testData = {
+  "itemList": [
+    {
+      "categoryName": "Broiled Food",
+      "dishId": 1,
+      "description": "Grilled chicken with lemongross",
+      "cost": 18.9,
+      "calorie": 200.0,
+      "categoryId": 3,
+      "title": "Chicken Grill",
+      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
+      "picture": "/dishImg/img1.png",
+      "orderTimes": 35,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 2,
+      "description": "Delicious chicken Shish",
+      "cost": 17.9,
+      "calorie": 250.0,
+      "categoryId": 2,
+      "title": "Char-Brolled Chicken Shish",
+      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
+      "picture": "/dishImg/img2.png",
+      "orderTimes": 72,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 10,
+      "description": "Traditional thailand noodle soup",
+      "cost": 13.9,
+      "calorie": 210.0,
+      "categoryId": 2,
+      "title": "Spicy Na Thai Town",
+      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
+      "picture": "/dishImg/img10.png",
+      "orderTimes": 75,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 11,
+      "description": "Traditional chinese spicy noodle",
+      "cost": 15.9,
+      "calorie": 288.0,
+      "categoryId": 2,
+      "title": "Szechuan Dan Dan Noodles",
+      "ingredient": "chilli sauce, peppers, pork, noodles",
+      "picture": "/dishImg/img11.png",
+      "orderTimes": 118,
+      "dishNumber": 4
+    },
+    {
+      "categoryName": "Broiled Food",
+      "dishId": 1,
+      "description": "Grilled chicken with lemongross",
+      "cost": 18.9,
+      "calorie": 200.0,
+      "categoryId": 3,
+      "title": "Chicken Grill",
+      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
+      "picture": "/dishImg/img1.png",
+      "orderTimes": 35,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 2,
+      "description": "Delicious chicken Shish",
+      "cost": 17.9,
+      "calorie": 250.0,
+      "categoryId": 2,
+      "title": "Char-Brolled Chicken Shish",
+      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
+      "picture": "/dishImg/img2.png",
+      "orderTimes": 72,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 10,
+      "description": "Traditional thailand noodle soup",
+      "cost": 13.9,
+      "calorie": 210.0,
+      "categoryId": 2,
+      "title": "Spicy Na Thai Town",
+      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
+      "picture": "/dishImg/img10.png",
+      "orderTimes": 75,
+      "dishNumber": 1
+    },
+    {
+      "categoryName": "Asian Food",
+      "dishId": 11,
+      "description": "Traditional chinese spicy noodle",
+      "cost": 15.9,
+      "calorie": 288.0,
+      "categoryId": 2,
+      "title": "Szechuan Dan Dan Noodles",
+      "ingredient": "chilli sauce, peppers, pork, noodles",
+      "picture": "/dishImg/img11.png",
+      "orderTimes": 118,
+      "dishNumber": 4
+    }
+
   ]
 }
+
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -84,6 +159,26 @@ const Customer: React.FC<{}> = () => {
     picture: '',
   });
 
+  const [checked, setChecked] = useState(false);
+  const [recommendList, setRecommendList] = useState(testData);
+
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const handleSucessSubmit = () => {
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
+  // loading
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
 
   //init
   useEffect(() => {
@@ -103,15 +198,17 @@ const Customer: React.FC<{}> = () => {
     console.log('message', message);
     setNav(message.categoryList);
     setCeilingOfCal(message.diner * 2000);
+
     // setMenu(message.itemList);
   };
 
   const askHelp = async () => {
     const message = await postCustomerRequest(id);
-    console.log('ask for help',message.message, id);
+    console.log('ask for help', message.message, id);
   };
 
   const getCategory = async () => {
+    setLoading(true);
     const arr = location.pathname.split('/');
     if (arr[3] !== 'hot') {
       const message = await getCustomerCategory(arr[2], arr[3]);
@@ -122,6 +219,7 @@ const Customer: React.FC<{}> = () => {
       console.log('message', message);
       resetMenu(newOrder, message.itemList);
     }
+    setTimeout(() => setLoading(false), 200);
   };
 
   const getOrder = async (e: any) => {
@@ -143,6 +241,7 @@ const Customer: React.FC<{}> = () => {
   }
 
   const postOrder = async () => {
+    // setLoading(true);
     const order = {
       'orderList': new Array
     }
@@ -161,8 +260,13 @@ const Customer: React.FC<{}> = () => {
     console.log('post', order);
     const message = await postCustomerOrder(order, id);
     console.log('now is', message);
-    // navigate(`/customer/${id}/hot`);
-    navigate(0);
+    handleSucessSubmit();
+    setTimeout(() => {
+      // navigate(`/customer/${id}/hot`);
+
+      navigate(0);
+      // setLoading(false);
+    }, 1000);
   }
 
 
@@ -291,71 +395,146 @@ const Customer: React.FC<{}> = () => {
     setCountOfCal(tempCal);
   }, [totalOrder]);
 
-  console.log(menu.length)
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', minWidth:800 }}>
         <Box>
-          <NavBar canBack={oldOrder.length === 0? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
+          <NavBar canBack={oldOrder.length === 0 ? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
 
-        <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }} >
-          <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, overflow: "auto", justifyContent: 'center', alignItems: 'start', ml: 17, mt: 5 }} >
-            <Grid container spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }}  >
+        <Box sx={{
+          height:
+            '100%',
+          width: '100%',
+          maxWidth:'calc(100vw - 316.6px)',
+          display: 'flex',
+          flexDirection: 'column'
+        }} >
 
-              { menu?.map((item: any) => {
-                return (
-                  <Grid item xs={'auto'} key={item.dishId} >
-                    <DishCard
-                      dishId={item.dishId}
-                      dishName={item.title}
-                      description={item.description}
-                      ingredients={item.ingredient}
-                      calories={item.calorie}
-                      price={item.cost}
-                      picture={item.picture}
-                      initDishNum={item.dishNumber}
-                      passObj={setNewEdit}
-                    />
-                    
-                  </Grid>
-                )
-              })}
-              { menu.length === 0 && ( 
-                  <Grid item xs={12} sx={{height:'calc(100vh - 95px)' ,display:'flex', justifyContent:'center',alignItems:'center'}}>
-                    <Typography variant="h3">
-                      Upcoming......
-                      </Typography>
+          <Box sx={{
+            display: 'flex',
+            height: '100%',
+            flexGrow: 1,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'start',
+            backgroundImage: 'url(../../bgimg3.jpg)',
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "right",
+            flexDirection: 'column'
+
+          }} >
+
+            <Box sx={{ backdropFilter: "blur(3px)", flexGrow: 1, height: 'calc(100%)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow: 'hidden' }}>
+              {loading ? (
+                <Box
+                  sx={{
+                    textAlign: "center",
+                    display: "flex",
+                    backgroundColor: '#ffffff',
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    flexGrow: 1,
+                    mb: -1.5
+                  }}
+                >
+                  <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
+                </Box>
+              ) : (
+                <Box sx={{ height: 'calc(100vh - 115px)', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative',justifyContent:'center' }}>
+                  <Box sx={{ ml: 7, overflow: "auto", flexGrow: 1, mt: 5, width: '100%', height: '100%', mb: 1 }}>
+                    <Grid container rowSpacing={{ xs: 2, sm: 3, md: 5, lg: 1 }} sx={{}} columnSpacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} justifyContent='flex-start' alignItems='flex-start' >
+
+                      {menu?.map((item: any) => {
+                        return (
+                          <Grid item xs={'auto'} key={item.dishId} sx={{ width: 500, height: 350 }}>
+                            <DishCard
+                              dishId={item.dishId}
+                              dishName={item.title}
+                              description={item.description}
+                              ingredients={item.ingredient}
+                              calories={item.calorie}
+                              price={item.cost}
+                              picture={item.picture}
+                              initDishNum={item.dishNumber}
+                              passObj={setNewEdit}
+                            />
+
+                          </Grid>
+                        )
+                      })}
+                      {menu.length === 0 && (
+                        <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                          <Typography variant="h3">
+                            Upcoming......
+                          </Typography>
+                        </Grid>
+                      )
+                      }
                     </Grid>
-              )
 
-              }
+                  </Box>
 
+                  {(numberOfItem >= 1 && !checked) &&
 
+                    <Box sx={{ height: 255, bgcolor: '#F3F2F7', mb: -5, borderRadius: 3, display: 'flex', flexDirection: 'column',ml:1,mr:1,  flexGrow:1}}>
+                      <Typography variant="h6" sx={{ m: 1, ml: 3, fontWeight: 'bold' }}>
+                        You may also like:
+                      </Typography>
+                      <Box sx={{  height: '100%', ml: 5,mr:5, display:'flex', flexDirection:'row',  overflowX:'auto', whiteSpace:'nowrap' }}>
+                        {recommendList.itemList.map((item, index)=>{
+                          return(
+                        <Box sx={{ minWidth: 400,lineHeight:130, height: 130, bgcolor: '#000000', ml:2,display:'inline-block' }}>
+                          
+                        </Box>
+                        )
+                        })}
 
-            </Grid>
+                      </Box>
+                    </Box>
+
+                    
+                  }
+                </Box>
+
+              )}
+              <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50, height: 115 }}>
+                <OrderBar
+                  haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
+                  canSubmit={(numberOfItem >= 1) ? true : false}
+                  number={numberOfItem}
+                  price={Number(price.toFixed(2))}
+                  ceilingOfCal={ceilingOfCal}
+                  countOfCal={countOfCal}
+                  submitFunc={() => postOrder()}
+                  newOrder={newOrder}
+                  oldOrder={oldOrder}
+                  orderFunc={setNewEdit}
+                  ifCheck={(e) => setChecked(e)}
+                />
+                <Snackbar
+                  open={successOpen}
+                  autoHideDuration={3000}
+                  onClose={handleSuccessClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                  <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+                    Your order has been submitted!
+                  </Alert>
+                </Snackbar>
+              </Box>
+
+            </Box>
 
           </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50 }}>
-
-            <OrderBar
-              haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
-              canSubmit={(numberOfItem >= 1) ? true : false}
-              number={numberOfItem}
-              price={Number(price.toFixed(2))}
-              ceilingOfCal={ceilingOfCal}
-              countOfCal={countOfCal}
-              submitFunc={() => postOrder()}
-              newOrder={newOrder}
-              oldOrder={oldOrder}
-              orderFunc={setNewEdit}
-            />
-
-
-          </Box>
         </Box>
+
       </Box>
+
 
 
     </ThemeProvider>

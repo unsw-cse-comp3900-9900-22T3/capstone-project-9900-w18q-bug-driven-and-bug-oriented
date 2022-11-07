@@ -89,7 +89,7 @@ export default function ItemRecord({
       setColor("#FF6D4D")
       setBackgroundColor("#FFF1EE")
       doSomething({
-        itemIndex:itemIndex,
+        itemIndex: itemIndex,
         status: e,
       })
     }
@@ -98,7 +98,7 @@ export default function ItemRecord({
       setColor("#2F4CDD")
       setBackgroundColor("#F7F8FE")
       doSomething({
-        itemIndex:itemIndex,
+        itemIndex: itemIndex,
         status: e,
       })
     }
@@ -106,7 +106,7 @@ export default function ItemRecord({
       setColor("#2BC155")
       setBackgroundColor("#F4FCF6")
       doSomething({
-        itemIndex:itemIndex,
+        itemIndex: itemIndex,
         status: e,
       })
     }
@@ -139,10 +139,20 @@ export default function ItemRecord({
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={5}>
-            <Box sx={{ marginTop: 1, }}>{itemName}</Box>
+            <Box sx={{ marginTop: 1, }}>
+              <Typography sx={{}}>
+                {itemName}
+              </Typography>
+
+            </Box>
           </Grid>
           <Grid item xs={5}>
-            <Box sx={{ marginTop: 1, }}>{itemCategory}</Box>
+            <Box sx={{ marginTop: 1, }}>
+            <Typography sx={{  }}> 
+             {itemCategory}
+            </Typography>
+             
+              </Box>
           </Grid>
           <Grid item xs={2}>
             <div>
@@ -172,6 +182,7 @@ export default function ItemRecord({
                 <Typography variant="subtitle1" marginLeft={1.5} sx={{ color: { color }, }}>
                   {method}
                 </Typography>
+                
               </Button>
               <StyledMenu
                 id="demo-customized-menu"
