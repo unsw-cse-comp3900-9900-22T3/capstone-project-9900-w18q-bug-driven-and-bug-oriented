@@ -17,6 +17,7 @@ import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrd
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import RecommendationCard from "../stories/customer/recommendationCard/RecommendationCard";
 
 const theme = createTheme({
   typography: {
@@ -397,7 +398,7 @@ const Customer: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', minWidth:800 }}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', minWidth: 800 }}>
         <Box>
           <NavBar canBack={oldOrder.length === 0 ? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
@@ -406,7 +407,7 @@ const Customer: React.FC<{}> = () => {
           height:
             '100%',
           width: '100%',
-          maxWidth:'calc(100vw - 316.6px)',
+          maxWidth: 'calc(100vw - 316.6px)',
           display: 'flex',
           flexDirection: 'column'
         }} >
@@ -444,7 +445,7 @@ const Customer: React.FC<{}> = () => {
                   <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
                 </Box>
               ) : (
-                <Box sx={{ height: 'calc(100vh - 115px)', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative',justifyContent:'center' }}>
+                <Box sx={{ height: 'calc(100vh - 115px)', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative', justifyContent: 'center' }}>
                   <Box sx={{ ml: 7, overflow: "auto", flexGrow: 1, mt: 5, width: '100%', height: '100%', mb: 1 }}>
                     <Grid container rowSpacing={{ xs: 2, sm: 3, md: 5, lg: 1 }} sx={{}} columnSpacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} justifyContent='flex-start' alignItems='flex-start' >
 
@@ -480,23 +481,33 @@ const Customer: React.FC<{}> = () => {
 
                   {(numberOfItem >= 1 && !checked) &&
 
-                    <Box sx={{ height: 255, bgcolor: '#F3F2F7', mb: -5, borderRadius: 3, display: 'flex', flexDirection: 'column',ml:1,mr:1,  flexGrow:1}}>
+                    <Box sx={{ height: 255, bgcolor: '#F3F2F7', mb: -5, borderRadius: 3, display: 'flex', flexDirection: 'column', ml: 1, mr: 1, flexGrow: 1 }}>
                       <Typography variant="h6" sx={{ m: 1, ml: 3, fontWeight: 'bold' }}>
                         You may also like:
                       </Typography>
-                      <Box sx={{  height: '100%', ml: 5,mr:5, display:'flex', flexDirection:'row',  overflowX:'auto', whiteSpace:'nowrap' }}>
-                        {recommendList.itemList.map((item, index)=>{
-                          return(
-                        <Box sx={{ minWidth: 400,lineHeight:130, height: 130, bgcolor: '#000000', ml:2,display:'inline-block' }}>
-                          
-                        </Box>
-                        )
+                      <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+                        {recommendList.itemList.map((item, index) => {
+                          return (
+                            <Box key={'recom' + index} sx={{ height: 130, ml: 2, display: 'inline-block', minWidth: 400, width: 500, }}>
+                              <RecommendationCard
+                                dishId={item.dishId.toString()}
+                                dishName={item.title}
+                                description={item.description}
+                                ingredients={item.ingredient}
+                                calories={item.calorie.toString()}
+                                price={item.cost.toString()}
+                                picture={item.picture}
+                                initDishNum={item.dishNumber}
+                                passObj={setNewEdit}
+                              />
+                            </Box>
+                          )
                         })}
 
                       </Box>
                     </Box>
 
-                    
+
                   }
                 </Box>
 

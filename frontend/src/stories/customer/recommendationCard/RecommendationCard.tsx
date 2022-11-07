@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
-import { Button, createTheme, IconButton, Modal, ThemeProvider, Typography } from "@mui/material";
+import { Button, createTheme, IconButton, Modal, Paper, ThemeProvider, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -90,11 +90,11 @@ export default function RecommendationCard({
   const selectDishNum = () => {
     setDishNum(dishTryNum);
     const obj = {
-      dishId: dishId,
+      dishId: Number(dishId),
       title: dishName,
-      calorie: calories,
-      cost: price,
-      dishNumber: dishTryNum,
+      calorie: Number(calories),
+      cost: Number(price),
+      dishNumber: Number(dishTryNum),
       picture: picture,
     };
     passObj(obj);
@@ -108,20 +108,20 @@ export default function RecommendationCard({
   
   
   return (
-    <Box sx={{width: 400, height: 130, borderRadius: 5, display: 'flex'}}>
+    <Card elevation={1} sx={{width: 400, height: 130, borderRadius: 3, display: 'flex'}}>
       
       <Box sx={{ display: 'flex', alignItems: 'center'}}>
-        <img src={picture} alt={dishName} style={{borderRadius: 8, width: 180, height: 110}}/>
+        <img src={picture} alt={dishName} style={{borderRadius: 8, width: 180, height:105, objectFit:'cover', marginLeft:10 }}/>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', ml: 2, mt: 1}}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography gutterBottom component="div" sx={{ fontWeight: 'bold' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height:'100%', width:'100%', maxWidth:210}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 1.5, }}>
+            <Typography gutterBottom component="div" noWrap sx={{ fontWeight: 'bold', }}>
               {dishName}
             </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex', ml:2,}}>
             <Box
               sx={{
                 minWidth: 50,         
@@ -158,14 +158,14 @@ export default function RecommendationCard({
             </Box>                
         </Box>
 
-        <Box position ='absolute' sx={{mt: 10, ml: 17}}>
+        <Box sx={{display:'flex', justifyContent:'right', alignItems:'end', height:'100%', width:'100%'}}>
             <ThemeProvider theme={theme}>
               <Button
                 size="small"
                 variant="contained"
                 color='neutral'
                 onClick={handleOpen}
-                sx={{ borderRadius: 2}}
+                sx={{ borderRadius: 2, mr:1.5,mb:1}}
               >
                 <Typography sx={{}}>
                  Select 
@@ -293,7 +293,7 @@ export default function RecommendationCard({
 
       
 
-    </Box>
+    </Card>
       
   );
 }

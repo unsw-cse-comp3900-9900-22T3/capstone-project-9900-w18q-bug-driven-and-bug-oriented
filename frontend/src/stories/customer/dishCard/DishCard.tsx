@@ -153,7 +153,7 @@ export default function DishCard({
         </Box>
       )}
 
-      <Card variant='outlined' sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
+      <Card  sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
 
         <CardMedia
           component="img"
