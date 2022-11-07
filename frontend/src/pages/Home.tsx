@@ -14,7 +14,7 @@ import { height } from "@mui/system";
 import ButtonIcon from "../stories/home/ButtonIcon";
 import BorderButton from "../stories/home/BorderButton";
 import OrderNowButton from "../stories/home/OrderNowButton";
-import { checkLogin } from "../api/login";
+import { checkLogin, getCustomerTable } from "../api/login";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
 const theme = createTheme({
@@ -26,56 +26,56 @@ const theme = createTheme({
   }
 });
 
-const tableList = [
-  {
-    number: '1',
-    status: true,
-  },
-  {
-    number: '2',
-    status: true,
-  },
-  {
-    number: '3',
-    status: true,
-  },
-  {
-    number: '4',
-    status: true,
-  },
-  {
-    number: '5',
-    status: true,
-  },
-  {
-    number: '6',
-    status: true,
-  },
-  {
-    number: '7',
-    status: true,
-  },
-  {
-    number: '8',
-    status: true,
-  },
-  {
-    number: '9',
-    status: false,
-  },
-  {
-    number: '10',
-    status: true,
-  },
-  {
-    number: '11',
-    status: true,
-  },
-  {
-    number: '12',
-    status: true,
-  },
-];
+// const tableList = [
+//   {
+//     number: '1',
+//     status: true,
+//   },
+//   {
+//     number: '2',
+//     status: true,
+//   },
+//   {
+//     number: '3',
+//     status: true,
+//   },
+//   {
+//     number: '4',
+//     status: true,
+//   },
+//   {
+//     number: '5',
+//     status: true,
+//   },
+//   {
+//     number: '6',
+//     status: true,
+//   },
+//   {
+//     number: '7',
+//     status: true,
+//   },
+//   {
+//     number: '8',
+//     status: true,
+//   },
+//   {
+//     number: '9',
+//     status: false,
+//   },
+//   {
+//     number: '10',
+//     status: true,
+//   },
+//   {
+//     number: '11',
+//     status: true,
+//   },
+//   {
+//     number: '12',
+//     status: true,
+//   },
+// ];
 
 const dinerList = [
   { number: '1' },
@@ -85,10 +85,19 @@ const dinerList = [
   { number: '5' },
   { number: '6' },
 ];
+
+interface tableInterface {
+  tableList:{
+    number:number,
+    status:number,
+  }[]
+}
+
 const Home: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [table, setTable] = useState('');
   const [diner, setDiner] = useState('');
+  const [tableList, setTableList] = useState<tableInterface>();
 
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -109,6 +118,11 @@ const Home: React.FC<{}> = () => {
     }
   };
 
+  const getTable = async () =>{
+    const message = await getCustomerTable();
+    console.log(message);
+    setTableList(message);
+  }
 
 
   const selectTable = (e: any) => {
@@ -149,6 +163,14 @@ const Home: React.FC<{}> = () => {
       document.removeEventListener('keydown', keyDownHandler);
     }
   }, [table, diner])
+
+  useEffect(()=>{
+    getTable();
+  },[])
+
+  useEffect(()=>{
+    console.log(tableList);
+  },[tableList])
 
   return (
     <ThemeProvider theme={theme}>
@@ -203,32 +225,33 @@ const Home: React.FC<{}> = () => {
                 </Typography>
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
-                {tableList.map((tableList, index) => {
-                  if (tableList.status)
+                {tableList?.tableList.map((item, index) => {
+                  if (item.status === 0)
                     return (
                       <Grid item xs={2} key={'table' + index}>
                         {
-                          tableList.number == table && (
-                            <BorderButton doSomething={() => selectTable(tableList.number)}
-                              number={tableList.number}
+                          item.number === Number(table) && (
+                            <BorderButton doSomething={() => selectTable(item.number.toString())}
+                              number={item.number.toString()}
                               selected={true}
                             />
-                          )}
+                          )
+                          }
                         {
-                          tableList.number !== table && (
-                            <BorderButton doSomething={() => selectTable(tableList.number)}
-                              number={tableList.number}
+                          item.number.toString() !== table && (
+                            <BorderButton doSomething={() => selectTable(item.number.toString())}
+                              number={item.number.toString()}
                               selected={false}
                             />
                           )}
                       </Grid>
                     )
-                  if (!tableList.status)
+                  if (item.status === 1)
                     return (
                       <Grid item xs={2} key={'table' + index}>
                         <Button disableRipple disabled sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
                           <Typography sx={{ fontWeight: 'bold' }}>
-                            {tableList.number}
+                            {item.number}
                           </Typography>
 
                         </Button>
