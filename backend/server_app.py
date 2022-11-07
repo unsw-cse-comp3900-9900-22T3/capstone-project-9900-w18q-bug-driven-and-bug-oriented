@@ -148,6 +148,8 @@ def get_table():
     table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
     return_josn={}
     with engine.connect() as conn:
+        conn.execute(update_sql)
+        conn.execute(delte_sql)
         result_proxy = conn.execute(table_sql)  # 返回值为ResultProxy类型
         table_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
         res = pd.DataFrame(list(table_result), columns=['number', 'status'])
