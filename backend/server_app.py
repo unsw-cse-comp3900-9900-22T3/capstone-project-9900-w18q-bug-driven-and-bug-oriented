@@ -1,6 +1,5 @@
 import os
 import shutil
-import pymysql
 import datetime
 
 import sqlalchemy.orm.exc
