@@ -226,7 +226,7 @@ const Home: React.FC<{}> = () => {
               </Box>
               <Grid container spacing={3} sx={{ marginLeft: 7, marginBottom: 10, marginTop: 1 }}>
                 {tableList?.tableList.map((item, index) => {
-                  if (item.status === 0)
+                  if (item.status === 1)
                     return (
                       <Grid item xs={2} key={'table' + index}>
                         {
@@ -246,7 +246,7 @@ const Home: React.FC<{}> = () => {
                           )}
                       </Grid>
                     )
-                  if (item.status === 1)
+                  if (item.status === 0)
                     return (
                       <Grid item xs={2} key={'table' + index}>
                         <Button disableRipple disabled sx={{ backgroundColor: '#F5F5F5', fontWeight: 'bold', color: '#000000', borderRadius: 2, width: 40, border: 4, borderColor: '#F5F5F5' }}>
