@@ -133,9 +133,24 @@ def model_to_dict(result):
         print(e.args)
         raise TypeError('Type error of parameter')
 
+engine = create_engine(
+    'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
 
 ########################################################################################################################
 ######################################### Login Module #################################################################
+@app.route('/', methods=["GET"])
+def get_table():
+    table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
+    return_josn={}
+    with engine.connect() as conn:
+        result_proxy = conn.execute(table_sql)  # 返回值为ResultProxy类型
+        table_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        res = pd.DataFrame(list(table_result), columns=['number', 'status'])
+        return_josn={"tableList":res.to_dict(orient='records')}
+    return Response(json.dumps(return_josn), mimetype="application/json")
+
+
+
 @app.route('/staff', methods=["POST"])  # login interface
 def login():
     return_json = {}
@@ -413,8 +428,7 @@ def confirm_pay_order(order_id):
 
 ########################################################################################################################
 ############################################   kitchen Staff Module  ###################################################
-engine = create_engine(
-    'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
+
 
 
 @app.route('/kitchen', methods=["GET", "POST"])
