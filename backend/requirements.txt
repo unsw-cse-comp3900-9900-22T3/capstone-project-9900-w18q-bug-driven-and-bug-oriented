@@ -28,3 +28,4 @@ yarg==0.1.9
 zipp==3.8.0
 numpy==1.21.2
 pandas==1.5.0
+mlxtend==0.21.0
