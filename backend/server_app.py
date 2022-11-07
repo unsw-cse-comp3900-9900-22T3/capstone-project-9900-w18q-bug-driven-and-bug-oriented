@@ -103,6 +103,7 @@ class Orders(Base):
     isPay = db.Column(db.Integer, nullable=False, default=0)
     payTime = db.Column(db.DateTime)
     orderitems = db.relationship("Orderitem", backref='orders')
+    startTime = db.Column(db.DateTime)
 
 
 class Orderitem(Base):
@@ -140,6 +141,10 @@ engine = create_engine(
 ######################################### Login Module #################################################################
 @app.route('/', methods=["GET"])
 def get_table():
+    #  删除超过下单时间6小时还未支付的订单
+    update_sql="""SET SQL_SAFE_UPDATES=0;update orders set status='Completed',isPay=1,payTime=now()where date_sub(now(),interval 6 hour)>orderTime and isPay=0"""
+    #  删除超过进入点单页面一小时还未下单的订单
+    delte_sql="""delete from orders where date_sub(now(),interval 1 hour)>startTime and orderTime is null"""
     table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
     return_josn={}
     with engine.connect() as conn:
@@ -172,7 +177,7 @@ def login():
     else:  # 身份为customer的行为
         table_post = int(transfer_data["table"])
         diner_post = int(transfer_data["diner"])
-        order_post = Orders(table=table_post, diner=diner_post)
+        order_post = Orders(table=table_post, diner=diner_post,startTime=datetime.now())
         order_post.save()  # 往order表里加数据
         last_order = Orders.query.order_by(Orders.orderId.desc()).first()  # 取出表里最后一条数据
         print(model_to_dict(last_order))
