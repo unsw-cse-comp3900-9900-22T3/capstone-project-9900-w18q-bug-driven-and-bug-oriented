@@ -514,6 +514,7 @@ def get_unpayed_order():
                 each_item["price"] = 0
         line["price"] = round(total_cost, 1)
         line["itemList"] = order_items
+        line.pop("startTime")
         line.pop("diner")
         line.pop("payTime")
         line.pop('status')
