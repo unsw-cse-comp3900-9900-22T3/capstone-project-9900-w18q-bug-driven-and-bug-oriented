@@ -29,7 +29,6 @@ const theme = createTheme({
 });
 
 
-
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [id, setId] = useState('');
@@ -161,7 +160,6 @@ const Customer: React.FC<{}> = () => {
     handleSucessSubmit();
     setTimeout(() => {
       // navigate(`/customer/${id}/hot`);
-
       navigate(0);
       // setLoading(false);
     }, 1000);
