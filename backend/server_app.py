@@ -13,6 +13,9 @@ from flask_cors import CORS
 from itertools import groupby
 from sqlalchemy import create_engine, func
 import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
 import sys
 
 app = Flask(__name__)
@@ -103,6 +106,7 @@ class Orders(Base):
     isPay = db.Column(db.Integer, nullable=False, default=0)
     payTime = db.Column(db.DateTime)
     orderitems = db.relationship("Orderitem", backref='orders')
+    startTime = db.Column(db.DateTime)
 
 
 class Orderitem(Base):
@@ -140,9 +144,17 @@ engine = create_engine(
 ######################################### Login Module #################################################################
 @app.route('/', methods=["GET"])
 def get_table():
+    #  删除超过下单时间6小时还未支付的订单
+    safe_sql='SET SQL_SAFE_UPDATES=0;'
+    update_sql="""update orders set status='Completed',isPay=1,payTime=now()where date_sub(now(),interval 6 hour)>orderTime and isPay=0"""
+    #  删除超过进入点单页面一小时还未下单的订单
+    delte_sql="""delete from orders where date_sub(now(),interval 1 hour)>startTime and orderTime is null"""
     table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
     return_josn={}
     with engine.connect() as conn:
+        conn.execute(safe_sql)
+        conn.execute(update_sql)
+        conn.execute(delte_sql)
         result_proxy = conn.execute(table_sql)  # 返回值为ResultProxy类型
         table_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
         res = pd.DataFrame(list(table_result), columns=['number', 'status'])
@@ -172,7 +184,7 @@ def login():
     else:  # 身份为customer的行为
         table_post = int(transfer_data["table"])
         diner_post = int(transfer_data["diner"])
-        order_post = Orders(table=table_post, diner=diner_post)
+        order_post = Orders(table=table_post, diner=diner_post,startTime=datetime.now())
         order_post.save()  # 往order表里加数据
         last_order = Orders.query.order_by(Orders.orderId.desc()).first()  # 取出表里最后一条数据
         print(model_to_dict(last_order))
@@ -315,6 +327,76 @@ def ask_help(order_id):
     service_info.save()
     return_json = {"message": "success"}
     return Response(json.dumps(return_json), mimetype="application/json")
+
+
+@app.route('/customer/<int:order_id>/recommend', methods=["GET"])
+def recommend_items(order_id):
+    # 对所有历史订单中的item进行关联性分析
+    res = db.session.query(Orderitem.dishId, Orderitem.orderId).join(Menuitem,Menuitem.dishId == Orderitem.dishId).order_by(
+        Orderitem.dishId).distinct().all()
+
+    orderItemsDict = {}
+    for dishId, orderId in res:
+        if orderId in orderItemsDict:
+            orderItemsDict[orderId].append(dishId)
+        else:
+            orderItemsDict[orderId] = [dishId]
+
+    orderItemsList = list(orderItemsDict.values())
+
+    itemDf = pd.DataFrame(orderItemsList)
+    
+    te = TransactionEncoder()
+    dfTf = te.fit_transform(orderItemsList)
+    df = pd.DataFrame(dfTf, columns=te.columns_)
+
+
+    # use_colnames=True表示使用元素名字，默认的False使用列名代表元素, 设置最小支持度min_support
+    frequentItemsets = apriori(df, min_support=0.05, use_colnames=True)
+    frequentItemsets.sort_values(by='support', ascending=False, inplace=True)
+
+
+    # metric可以有很多的度量选项，返回的表列名都可以作为参数
+    associationRule = association_rules(frequentItemsets, metric='confidence', min_threshold=0.9)
+    # 关联规则可以提升度排序
+    associationRule.sort_values(by='lift', ascending=False, inplace=True)
+    associationRule  # 规则是：antecedents->consequents
+
+    # 选择2频繁项集
+    frequentItem2sets=frequentItemsets[frequentItemsets.itemsets.apply(lambda x: len(x)) == 2]
+
+    currentItems=[]
+    get_data=json.loads(json.dumps(request.get_json()))
+    for i in get_data["order list"]:
+        currentItems.append(int(i["dishId"]))
+
+
+    recommendItems=[]
+
+    # 遍历 支持度从高到低排序后的2频繁项集
+    for i in frequentItem2sets.itemsets:
+        for j in reversed(currentItems):
+            if j in i:
+                temp=list(i)
+                if j==temp[0] and temp[1] not in currentItems and temp[1] not in recommendItems:
+                    recommendItems.append(temp[1])
+                    print(i)
+                elif j==temp[1] and temp[0] not in currentItems and temp[0] not in recommendItems:
+                    recommendItems.append(temp[0])
+                    print(i)
+                else:break
+        if len(recommendItems)==5:
+            break
+
+    return_json = {"item list": []}
+    for i in recommendItems:
+        rest=model_to_dict(Menuitem.query.filter_by(dishId=i).all())
+        rest[0].pop("id")
+        rest[0].pop("lastModified")
+        return_json["item list"].append(rest)
+
+    return Response(json.dumps(return_json), mimetype="application/json")
+
 
 
 ########################################################################################################################
