@@ -488,7 +488,7 @@ const Customer: React.FC<{}> = () => {
                       <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
                         {recommendList.itemList.map((item, index) => {
                           return (
-                            <Box key={'recom' + index} sx={{ height: 130, ml: 2, display: 'inline-block', minWidth: 400, width: 500, }}>
+                            <Box key={'recom' + index} sx={{ height: 130, ml: 3, display: 'inline-block', width: 500, }}>
                               <RecommendationCard
                                 dishId={item.dishId.toString()}
                                 dishName={item.title}
