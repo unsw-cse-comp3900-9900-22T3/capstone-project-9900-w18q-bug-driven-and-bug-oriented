@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRecommend, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -138,6 +138,9 @@ const testData = {
   ]
 }
 
+interface orderInterface {
+
+}
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -161,7 +164,7 @@ const Customer: React.FC<{}> = () => {
   });
 
   const [checked, setChecked] = useState(false);
-  const [recommendList, setRecommendList] = useState(testData);
+  const [recommendList, setRecommendList] = useState<any>();
 
   const [successOpen, setSuccessOpen] = React.useState(false);
   const handleSucessSubmit = () => {
@@ -226,7 +229,13 @@ const Customer: React.FC<{}> = () => {
   const getOrder = async (e: any) => {
     const message = await getCustomerOrder(e);
     console.log('get order', message);
-    const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
+    const orderList: {
+      dishId: any;
+      title: any;
+      calorie: any;
+      cost: any;
+      dishNumber: any;
+    }[] = [];
     message.itemList.map((e: any) => {
       const item = {
         dishId: e.dishId,
@@ -268,6 +277,30 @@ const Customer: React.FC<{}> = () => {
       navigate(0);
       // setLoading(false);
     }, 1000);
+  }
+
+  const postRecommend = async () => {
+    // setLoading(true);
+    const order = {
+      'orderList': new Array
+    }
+    totalOrder.map((item: any) => {
+      if (item.dishNumber !== 0) {
+        const e =
+        {
+          "dishId": item.dishId,
+          "title": item.title,
+          "dishNumber": item.dishNumber
+        }
+        order.orderList.push(e);
+      }
+    });
+
+    console.log('recommand', order);
+    const message = await postCustomerRecommend(order, id);
+    console.log('now is', message);
+    // handleSucessSubmit();
+
   }
 
 
@@ -362,6 +395,7 @@ const Customer: React.FC<{}> = () => {
     setTotalOrder(order);
     // console.log('totalOrder', totalOrder);
     console.log('new order', newOrder);
+    console.log('old order', oldOrder);
     let n = 0
     newOrder.map((e: any) => {
       n += e?.dishNumber
@@ -394,6 +428,7 @@ const Customer: React.FC<{}> = () => {
     });
     setPrice(tempcost);
     setCountOfCal(tempCal);
+    postRecommend();
   }, [totalOrder]);
 
   return (
@@ -486,7 +521,7 @@ const Customer: React.FC<{}> = () => {
                         You may also like:
                       </Typography>
                       <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-                        {recommendList.itemList.map((item, index) => {
+                        {recommendList?.itemList.map((item:any, index:any) => {
                           return (
                             <Box key={'recom' + index} sx={{ height: 130, ml: 3, display: 'inline-block', width: 500, }}>
                               <RecommendationCard
