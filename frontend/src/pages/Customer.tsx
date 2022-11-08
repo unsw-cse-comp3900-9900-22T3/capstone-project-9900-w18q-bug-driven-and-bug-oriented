@@ -28,119 +28,7 @@ const theme = createTheme({
   }
 });
 
-const testData = {
-  "itemList": [
-    {
-      "categoryName": "Broiled Food",
-      "dishId": 1,
-      "description": "Grilled chicken with lemongross",
-      "cost": 18.9,
-      "calorie": 200.0,
-      "categoryId": 3,
-      "title": "Chicken Grill",
-      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
-      "picture": "/dishImg/img1.png",
-      "orderTimes": 35,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 2,
-      "description": "Delicious chicken Shish",
-      "cost": 17.9,
-      "calorie": 250.0,
-      "categoryId": 2,
-      "title": "Char-Brolled Chicken Shish",
-      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
-      "picture": "/dishImg/img2.png",
-      "orderTimes": 72,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 10,
-      "description": "Traditional thailand noodle soup",
-      "cost": 13.9,
-      "calorie": 210.0,
-      "categoryId": 2,
-      "title": "Spicy Na Thai Town",
-      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
-      "picture": "/dishImg/img10.png",
-      "orderTimes": 75,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 11,
-      "description": "Traditional chinese spicy noodle",
-      "cost": 15.9,
-      "calorie": 288.0,
-      "categoryId": 2,
-      "title": "Szechuan Dan Dan Noodles",
-      "ingredient": "chilli sauce, peppers, pork, noodles",
-      "picture": "/dishImg/img11.png",
-      "orderTimes": 118,
-      "dishNumber": 4
-    },
-    {
-      "categoryName": "Broiled Food",
-      "dishId": 1,
-      "description": "Grilled chicken with lemongross",
-      "cost": 18.9,
-      "calorie": 200.0,
-      "categoryId": 3,
-      "title": "Chicken Grill",
-      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
-      "picture": "/dishImg/img1.png",
-      "orderTimes": 35,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 2,
-      "description": "Delicious chicken Shish",
-      "cost": 17.9,
-      "calorie": 250.0,
-      "categoryId": 2,
-      "title": "Char-Brolled Chicken Shish",
-      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
-      "picture": "/dishImg/img2.png",
-      "orderTimes": 72,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 10,
-      "description": "Traditional thailand noodle soup",
-      "cost": 13.9,
-      "calorie": 210.0,
-      "categoryId": 2,
-      "title": "Spicy Na Thai Town",
-      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
-      "picture": "/dishImg/img10.png",
-      "orderTimes": 75,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 11,
-      "description": "Traditional chinese spicy noodle",
-      "cost": 15.9,
-      "calorie": 288.0,
-      "categoryId": 2,
-      "title": "Szechuan Dan Dan Noodles",
-      "ingredient": "chilli sauce, peppers, pork, noodles",
-      "picture": "/dishImg/img11.png",
-      "orderTimes": 118,
-      "dishNumber": 4
-    }
 
-  ]
-}
-
-interface orderInterface {
-
-}
 
 const Customer: React.FC<{}> = () => {
   const navigate = useNavigate();
@@ -296,9 +184,13 @@ const Customer: React.FC<{}> = () => {
       }
     });
 
-    console.log('recommand', order);
-    const message = await postCustomerRecommend(order, id);
-    console.log('now is', message);
+    console.log('to recommand', order);
+    if (order.orderList.length) {
+      const message = await postCustomerRecommend(order, id);
+      console.log('now is', message);
+      setRecommendList(message)
+    }
+
     // handleSucessSubmit();
 
   }
@@ -521,7 +413,7 @@ const Customer: React.FC<{}> = () => {
                         You may also like:
                       </Typography>
                       <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-                        {recommendList?.itemList.map((item:any, index:any) => {
+                        {recommendList?.itemList.map((item: any, index: any) => {
                           return (
                             <Box key={'recom' + index} sx={{ height: 130, ml: 3, display: 'inline-block', width: 500, }}>
                               <RecommendationCard
