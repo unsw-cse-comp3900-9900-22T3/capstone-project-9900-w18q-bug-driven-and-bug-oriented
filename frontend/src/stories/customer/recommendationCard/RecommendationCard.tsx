@@ -108,13 +108,13 @@ export default function RecommendationCard({
   
   
   return (
-    <Card elevation={1} sx={{width: 400, height: 130, borderRadius: 3, display: 'flex'}}>
+    <Card elevation={1} sx={{width: 480, height: 130, borderRadius: 3, display: 'flex'}}>
       
       <Box sx={{ display: 'flex', alignItems: 'center'}}>
         <img src={picture} alt={dishName} style={{borderRadius: 8, width: 180, height:105, objectFit:'cover', marginLeft:10 }}/>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', height:'100%', width:'100%', maxWidth:210}}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height:'100%', width:'100%', }}>
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 1.5, }}>
             <Typography gutterBottom component="div" noWrap sx={{ fontWeight: 'bold', }}>
               {dishName}

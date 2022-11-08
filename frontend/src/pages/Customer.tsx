@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import OrderBar from "../stories/customer/orderBar/OrderBar";
-import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRequest } from "../api/customer";
+import { getCustomerCategory, getCustomerInit, getCustomerOrder, postCustomerOrder, postCustomerRecommend, postCustomerRequest } from "../api/customer";
 import { element } from "prop-types";
 import DishCard from "../stories/customer/dishCard/DishCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
@@ -27,116 +27,6 @@ const theme = createTheme({
     }
   }
 });
-
-const testData = {
-  "itemList": [
-    {
-      "categoryName": "Broiled Food",
-      "dishId": 1,
-      "description": "Grilled chicken with lemongross",
-      "cost": 18.9,
-      "calorie": 200.0,
-      "categoryId": 3,
-      "title": "Chicken Grill",
-      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
-      "picture": "/dishImg/img1.png",
-      "orderTimes": 35,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 2,
-      "description": "Delicious chicken Shish",
-      "cost": 17.9,
-      "calorie": 250.0,
-      "categoryId": 2,
-      "title": "Char-Brolled Chicken Shish",
-      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
-      "picture": "/dishImg/img2.png",
-      "orderTimes": 72,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 10,
-      "description": "Traditional thailand noodle soup",
-      "cost": 13.9,
-      "calorie": 210.0,
-      "categoryId": 2,
-      "title": "Spicy Na Thai Town",
-      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
-      "picture": "/dishImg/img10.png",
-      "orderTimes": 75,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 11,
-      "description": "Traditional chinese spicy noodle",
-      "cost": 15.9,
-      "calorie": 288.0,
-      "categoryId": 2,
-      "title": "Szechuan Dan Dan Noodles",
-      "ingredient": "chilli sauce, peppers, pork, noodles",
-      "picture": "/dishImg/img11.png",
-      "orderTimes": 118,
-      "dishNumber": 4
-    },
-    {
-      "categoryName": "Broiled Food",
-      "dishId": 1,
-      "description": "Grilled chicken with lemongross",
-      "cost": 18.9,
-      "calorie": 200.0,
-      "categoryId": 3,
-      "title": "Chicken Grill",
-      "ingredient": "whole chicken, lemongross, lemon, oil, salt",
-      "picture": "/dishImg/img1.png",
-      "orderTimes": 35,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 2,
-      "description": "Delicious chicken Shish",
-      "cost": 17.9,
-      "calorie": 250.0,
-      "categoryId": 2,
-      "title": "Char-Brolled Chicken Shish",
-      "ingredient": "chicken, vagetable, chilli sauce, oil, salt",
-      "picture": "/dishImg/img2.png",
-      "orderTimes": 72,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 10,
-      "description": "Traditional thailand noodle soup",
-      "cost": 13.9,
-      "calorie": 210.0,
-      "categoryId": 2,
-      "title": "Spicy Na Thai Town",
-      "ingredient": "chilli sauce, lemon grass, tomato, noodle soup",
-      "picture": "/dishImg/img10.png",
-      "orderTimes": 75,
-      "dishNumber": 1
-    },
-    {
-      "categoryName": "Asian Food",
-      "dishId": 11,
-      "description": "Traditional chinese spicy noodle",
-      "cost": 15.9,
-      "calorie": 288.0,
-      "categoryId": 2,
-      "title": "Szechuan Dan Dan Noodles",
-      "ingredient": "chilli sauce, peppers, pork, noodles",
-      "picture": "/dishImg/img11.png",
-      "orderTimes": 118,
-      "dishNumber": 4
-    }
-
-  ]
-}
 
 
 const Customer: React.FC<{}> = () => {
@@ -161,7 +51,7 @@ const Customer: React.FC<{}> = () => {
   });
 
   const [checked, setChecked] = useState(false);
-  const [recommendList, setRecommendList] = useState(testData);
+  const [recommendList, setRecommendList] = useState<any>();
 
   const [successOpen, setSuccessOpen] = React.useState(false);
   const handleSucessSubmit = () => {
@@ -226,7 +116,13 @@ const Customer: React.FC<{}> = () => {
   const getOrder = async (e: any) => {
     const message = await getCustomerOrder(e);
     console.log('get order', message);
-    const orderList: { dishId: any; title: any; calorie: any; cost: any; dishNumber: any; }[] = [];
+    const orderList: {
+      dishId: any;
+      title: any;
+      calorie: any;
+      cost: any;
+      dishNumber: any;
+    }[] = [];
     message.itemList.map((e: any) => {
       const item = {
         dishId: e.dishId,
@@ -264,10 +160,37 @@ const Customer: React.FC<{}> = () => {
     handleSucessSubmit();
     setTimeout(() => {
       // navigate(`/customer/${id}/hot`);
-
       navigate(0);
       // setLoading(false);
     }, 1000);
+  }
+
+  const postRecommend = async () => {
+    // setLoading(true);
+    const order = {
+      'orderList': new Array
+    }
+    totalOrder.map((item: any) => {
+      if (item.dishNumber !== 0) {
+        const e =
+        {
+          "dishId": item.dishId,
+          "title": item.title,
+          "dishNumber": item.dishNumber
+        }
+        order.orderList.push(e);
+      }
+    });
+
+    console.log('to recommand', order);
+    if (order.orderList.length) {
+      const message = await postCustomerRecommend(order, id);
+      console.log('now is', message);
+      setRecommendList(message)
+    }
+
+    // handleSucessSubmit();
+
   }
 
 
@@ -362,6 +285,7 @@ const Customer: React.FC<{}> = () => {
     setTotalOrder(order);
     // console.log('totalOrder', totalOrder);
     console.log('new order', newOrder);
+    console.log('old order', oldOrder);
     let n = 0
     newOrder.map((e: any) => {
       n += e?.dishNumber
@@ -394,6 +318,7 @@ const Customer: React.FC<{}> = () => {
     });
     setPrice(tempcost);
     setCountOfCal(tempCal);
+    postRecommend();
   }, [totalOrder]);
 
   return (
@@ -486,9 +411,9 @@ const Customer: React.FC<{}> = () => {
                         You may also like:
                       </Typography>
                       <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
-                        {recommendList.itemList.map((item, index) => {
+                        {recommendList?.itemList.map((item: any, index: any) => {
                           return (
-                            <Box key={'recom' + index} sx={{ height: 130, ml: 2, display: 'inline-block', minWidth: 400, width: 500, }}>
+                            <Box key={'recom' + index} sx={{ height: 130, ml: 3, display: 'inline-block', width: 500, }}>
                               <RecommendationCard
                                 dishId={item.dishId.toString()}
                                 dishName={item.title}
