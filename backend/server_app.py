@@ -1,5 +1,7 @@
 import os
 import datetime
+import random
+import pymysql
 import sqlalchemy.orm.exc
 from flask import Flask, request, Response
 from flask_sqlalchemy import SQLAlchemy
@@ -330,7 +332,7 @@ def ask_help(order_id):
     return Response(json.dumps(return_json), mimetype="application/json")
 
 
-@app.route('/customer/<int:order_id>/recommend', methods=["GET"])
+@app.route('/customer/<int:order_id>/recommend', methods=["POST"])
 def recommend_items(order_id):
     # 对所有历史订单中的item进行关联性分析
     res = db.session.query(Orderitem.dishId, Orderitem.orderId).join(Menuitem,
@@ -388,12 +390,30 @@ def recommend_items(order_id):
         if len(recommendItems) == 5:
             break
 
-    return_json = {"item list": []}
+    # <5时随机选择未在购物车内的item
+    if (len(recommendItems)) < 5:
+        menuRes = db.session.query(Menuitem.dishId).distinct().all()
+        unselectedItems = []
+        for i in menuRes:
+            if i[0] not in currentItems:
+                unselectedItems.append(i[0])
+        while len(recommendItems) < 5 and len(unselectedItems) > 0:
+            randomItem = random.choice(unselectedItems)
+            recommendItems.append(randomItem)
+            unselectedItems.remove(randomItem)
+
+    return_json = {"itemList": []}
     for i in recommendItems:
         rest = model_to_dict(Menuitem.query.filter_by(dishId=i).all())
         rest[0].pop("id")
         rest[0].pop("lastModified")
-        return_json["item list"].append(rest)
+        if i not in currentItems:
+            rest[0]["dishNumber"] = 0
+        else:
+            for j in get_data["order list"]:
+                if i == int(j["dishId"]):
+                    rest[0]["dishNumber"] = j["dishNumber"]
+        return_json["itemList"].append(rest[0])
 
     return Response(json.dumps(return_json), mimetype="application/json")
 
