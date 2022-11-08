@@ -395,7 +395,7 @@ def recommend_items(order_id):
         menuRes = db.session.query(Menuitem.dishId).distinct().all()
         unselectedItems = []
         for i in menuRes:
-            if i[0] not in currentItems:
+            if (i[0] not in currentItems) and (i[0] not in recommendItems):
                 unselectedItems.append(i[0])
         while len(recommendItems) < 5 and len(unselectedItems) > 0:
             randomItem = random.choice(unselectedItems)
