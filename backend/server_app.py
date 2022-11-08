@@ -369,7 +369,7 @@ def recommend_items(order_id):
 
     currentItems = []
     get_data = json.loads(json.dumps(request.get_json()))
-    for i in get_data["order list"]:
+    for i in get_data["orderList"]:
         currentItems.append(int(i["dishId"]))
 
     recommendItems = []
@@ -410,7 +410,7 @@ def recommend_items(order_id):
         if i not in currentItems:
             rest[0]["dishNumber"] = 0
         else:
-            for j in get_data["order list"]:
+            for j in get_data["orderList"]:
                 if i == int(j["dishId"]):
                     rest[0]["dishNumber"] = j["dishNumber"]
         return_json["itemList"].append(rest[0])
