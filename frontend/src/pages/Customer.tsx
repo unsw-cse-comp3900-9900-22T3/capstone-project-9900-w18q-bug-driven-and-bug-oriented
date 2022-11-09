@@ -1,3 +1,4 @@
+// customer page
 import React, { useState, useEffect } from "react";
 import {
   Alert,
@@ -37,6 +38,7 @@ const Customer: React.FC<{}> = () => {
   const [price, setPrice] = useState(0); // total price
   const [countOfCal, setCountOfCal] = useState(0); // total calorie
   const [ceilingOfCal, setCeilingOfCal] = useState(0); // recommend calorie
+  const [recommendList, setRecommendList] = useState<any>(); // recommend items list  
   const [newEdit, setNewEdit] = useState<any>({ // temp data of new added item
     dishId: -999,
     title: '',
@@ -46,9 +48,12 @@ const Customer: React.FC<{}> = () => {
     picture: '',
   });
   const [checked, setChecked] = useState(false); // if display cart
-  const [recommendList, setRecommendList] = useState<any>(); // recommend items list
   const [successOpen, setSuccessOpen] = React.useState(false); // if display toast
 
+  // loading page
+  const [loading, setLoading] = useState(false);
+  const [recommendLoading, setRecommendLoading] = useState(false);
+  
   // toast display
   const handleSucessSubmit = () => {
     setSuccessOpen(true);
@@ -60,13 +65,6 @@ const Customer: React.FC<{}> = () => {
     setSuccessOpen(false);
   };
 
-  // loading
-  const [loading, setLoading] = useState(false);
-  const [recommendLoading, setRecommendLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    setRecommendLoading(true);
-  }, []);
 
   // get data of init
   const getInit = async (e: any) => {
@@ -75,11 +73,13 @@ const Customer: React.FC<{}> = () => {
     setCeilingOfCal(message.diner * 2000);
   };
 
+
   // request service 
   const askHelp = async () => {
     const message = await postCustomerRequest(id);
     console.log('request service', message.message)
   };
+
 
   // get menu's category
   const getCategory = async () => {
@@ -94,6 +94,7 @@ const Customer: React.FC<{}> = () => {
     }
     setTimeout(() => setLoading(false), 200);
   };
+
 
   // get order has been submit
   const getOrder = async (e: any) => {
@@ -119,6 +120,7 @@ const Customer: React.FC<{}> = () => {
     setOldOrder(orderList);
   }
 
+
   // submit order
   const postOrder = async () => {
     const order = {
@@ -135,9 +137,8 @@ const Customer: React.FC<{}> = () => {
         order.orderList.push(e);
       }
     });
-    console.log('post', order);
     const message = await postCustomerOrder(order, id);
-    console.log('response', message);
+    console.log('submit order', message);
     handleSucessSubmit();
     setTimeout(() => {
       // reload page
@@ -145,8 +146,10 @@ const Customer: React.FC<{}> = () => {
     }, 1000);
   }
 
-  // get recommend items
+
+  // get recommend items list
   const postRecommend = async () => {
+    setRecommendLoading(true);
     const order = {
       'orderList': new Array<any>()
     }
@@ -163,12 +166,13 @@ const Customer: React.FC<{}> = () => {
     });
     if (order.orderList.length) {
       const message = await postCustomerRecommend(order, id);
-      setRecommendList(message)
+      setRecommendList(message);
+      setRecommendLoading(false);
     }
   }
 
 
-  // reload menu with the order
+  // reload menu by the order's items
   const resetMenu = (input1:
     {
       dishId: number;
@@ -210,7 +214,7 @@ const Customer: React.FC<{}> = () => {
   };
 
 
-  // edit item's number 
+  // update item's number if select a item multiple times
   const editItem = (input:
     {
       dishId: number;
@@ -238,6 +242,7 @@ const Customer: React.FC<{}> = () => {
     };
     // reset the number of dish card
     resetMenu(order);
+    // delete duplicate items
     order.forEach((element, index) => {
       if (element?.dishNumber === 0 && index !== 0) {
         order.splice(index, 1);
@@ -246,7 +251,15 @@ const Customer: React.FC<{}> = () => {
     setNewOrder(order);
   };
 
-  //init page
+
+  // set loading
+  useEffect(() => {
+    setLoading(true);
+    setRecommendLoading(true);
+  }, []);
+
+
+  //init page data
   useEffect(() => {
     const arr = location.pathname.split('/');
     setId(arr[2]);
@@ -256,7 +269,8 @@ const Customer: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // update total order
+
+  // update total order if order is change
   useEffect(() => {
     const order = [...oldOrder, ...newOrder];
     setTotalOrder(order);
@@ -267,11 +281,13 @@ const Customer: React.FC<{}> = () => {
     setNumberOfItem(n);
   }, [newOrder, oldOrder]);
 
+
   // update new item
   useEffect(() => {
     editItem(newEdit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newEdit]);
+
 
   // update price and cal and recommend
   useEffect(() => {
@@ -294,9 +310,11 @@ const Customer: React.FC<{}> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalOrder]);
 
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', minWidth: 800 }}>
+        {/* nav bar */}
         <Box>
           <NavBar canBack={oldOrder.length === 0 ? true : false} role='customer' id={id} obj={nav} doSomething={() => getCategory()} postRequest={() => askHelp()} />
         </Box>
@@ -322,6 +340,7 @@ const Customer: React.FC<{}> = () => {
             flexDirection: 'column'
           }} >
             <Box sx={{ backdropFilter: "blur(3px)", flexGrow: 1, height: 'calc(100%)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow: 'hidden' }}>
+              {/* loading page */}
               {loading ? (
                 <Box
                   sx={{
@@ -357,21 +376,22 @@ const Customer: React.FC<{}> = () => {
                               initDishNum={item.dishNumber}
                               passObj={setNewEdit}
                             />
-
                           </Grid>
                         )
                       })}
+
                       {menu.length === 0 && (
+                        // no dish now
                         <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                          <Typography variant="h3">
+                          <Typography variant="h3" sx={{color:'#ffffff'}}>
                             Upcoming......
                           </Typography>
                         </Grid>
-                      )
-                      }
+                      )}
                     </Grid>
                   </Box>
-                  {(numberOfItem >= 1 && !checked && recommendLoading) &&
+                  {/* recommend bar */}
+                  {(numberOfItem >= 1 && !checked && !recommendLoading) &&
                     <Box sx={{ height: 255, bgcolor: '#F3F2F7', mb: -5, borderRadius: 3, display: 'flex', flexDirection: 'column', ml: 1, mr: 1, flexGrow: 1 }}>
                       <Typography variant="h6" sx={{ m: 1, ml: 3, fontWeight: 'bold' }}>
                         You may also like:
@@ -398,33 +418,29 @@ const Customer: React.FC<{}> = () => {
                       </Box>
                     </Box>
                   }
-                  {(numberOfItem >= 1 && !checked && !recommendLoading) &&
+
+                  {(numberOfItem >= 1 && !checked && recommendLoading) &&
                     <Box sx={{ height: 255, bgcolor: '#F3F2F7', mb: -5, borderRadius: 3, display: 'flex', flexDirection: 'column', ml: 1, mr: 1, flexGrow: 1 }}>
-                      <Typography variant="h6" sx={{ m: 1, ml: 3, fontWeight: 'bold' }}>
-                        You may also like:
-                      </Typography>
-                      <Box sx={{ height: '100%', ml: 5, mr: 5, display: 'flex', flexDirection: 'row', overflowX: 'auto', whiteSpace: 'nowrap' }}>
                       <Box
-                  sx={{
-                    textAlign: "center",
-                    display: "flex",
-                    backgroundColor: '#ffffff',
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    flexGrow: 1,
-                    mb: -1.5
-                  }}
-                >
-                  <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
-                </Box>
+                        sx={{
+                          textAlign: "center",
+                          display: "flex",
+                          backgroundColor: '#F3F2F7',
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                          flexGrow: 1,
+                          mb: 8
+                        }}
+                      >
+                        <PacmanLoader size={50} color={"#503E9D"} loading={recommendLoading} />
                       </Box>
                     </Box>
                   }
                 </Box>
               )}
-
+              {/* cart bar */}
               <Box sx={{ display: 'flex', alignItems: 'end', width: '100%', position: 'relative', zIndex: 50, height: 115 }}>
                 <OrderBar
                   haveItem={(numberOfItem >= 1 || oldOrder.length !== 0) ? true : false}
