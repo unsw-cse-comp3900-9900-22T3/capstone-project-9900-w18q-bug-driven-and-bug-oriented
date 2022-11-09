@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   Button,
   createTheme,
@@ -8,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -82,6 +84,20 @@ const ManagerMenu: React.FC<{}> = () => {
   const [source, setSource] = useState<null | number>(null);
   const [target, setTarget] = useState<null | number>(null);
   const [hide, setHide] = useState(false);
+
+  //for alert information when making a successful operation
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [alertInformation, setAlertInformation] = React.useState('');
+  const handleSuccessSubmit = (message : string) => {
+    setAlertInformation(message);
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
 
   const sortFunc = () => {
     if (move) {
@@ -263,6 +279,7 @@ const ManagerMenu: React.FC<{}> = () => {
     const message = await postManagerItemOrder(input);
     console.log('new category', message);
     setItemList(message.itemList);
+    handleSuccessSubmit("New item list order has been stored!");
   }
 
 
@@ -281,6 +298,7 @@ const ManagerMenu: React.FC<{}> = () => {
     if (message) {
       console.log('add success ', message)
       setItemList(message?.itemList);
+      handleSuccessSubmit("New item has been added!");
     }
   }
 
@@ -291,6 +309,7 @@ const ManagerMenu: React.FC<{}> = () => {
     if (message) {
       console.log('delete success', message)
       setItemList(message?.itemList);
+      handleSuccessSubmit("Item has been deleted!");
     }
   }
 
@@ -569,6 +588,18 @@ const ManagerMenu: React.FC<{}> = () => {
 
             {/* </Box> */}
           </Box>
+
+          <Snackbar
+            open={successOpen}
+            autoHideDuration={3000}
+            onClose={handleSuccessClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+              {alertInformation}
+            </Alert>
+          </Snackbar>
+
         </Box>)}
 
 

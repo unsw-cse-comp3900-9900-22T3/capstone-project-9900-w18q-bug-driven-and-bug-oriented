@@ -11,3 +11,7 @@ export const checkLogin = async (input: input) => {
   const data = JSON.stringify(input);
   return await apiClient.post(`/staff`, data);
 };
+
+export const getCustomerTable = async () => {
+  return await (await apiClient.get(`/`)).data;
+};

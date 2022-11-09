@@ -47,9 +47,13 @@ const Staff: React.FC<{}> = () => {
   const [key, setKey] = useState('')
 
   const [open, setOpen] = React.useState(false);
+  const [successOpen, setSuccessOpen] = React.useState(false);
 
   const handleClick = () => {
     setOpen(true);
+  };
+  const handleSucessClick = () => {
+    setSuccessOpen(true);
   };
 
 
@@ -63,22 +67,26 @@ const Staff: React.FC<{}> = () => {
     console.log('message', message);
     if (message.data.message === 'Login success') {
       console.log('login success');
-      navigate(`/${message.data.staff}`);
+      handleSucessClick();
+      setTimeout(() => {navigate(`/${message.data.staff}`);}, 1000);
     } else {
       console.log('error key');
       handleClick();
     }
   };
 
-
-
-
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
+  };
+
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
   };
 
   useEffect(() => {
@@ -135,6 +143,16 @@ const Staff: React.FC<{}> = () => {
             Wrong key. Please try again.
           </Alert>
         </Snackbar>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={3000}
+          onClose={handleSuccessClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+            Welcome back!
+          </Alert>
+        </Snackbar>
         <Grid
           item
           xs={3}
@@ -147,8 +165,15 @@ const Staff: React.FC<{}> = () => {
             backgroundPosition: "center",
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
+            display:'flex',
+            justifyContent:'right',
+            alignItems:'end'
           }}
-        />
+          >
+          <Typography variant="h4" sx={{m:3,fontWeight:'bold',color:'#ABA89E'}}>
+            New Bee
+          </Typography>
+        </Grid>
 
         {!showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>

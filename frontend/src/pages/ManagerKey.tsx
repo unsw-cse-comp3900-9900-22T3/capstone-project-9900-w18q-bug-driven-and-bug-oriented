@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   createTheme,
   FormControl,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -58,6 +60,20 @@ const ManagerKey: React.FC<{}> = () => {
     setLoading(true)
   }, []);
 
+  //for alert information when making a successful operation
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [alertInformation, setAlertInformation] = React.useState('');
+  const handleSuccessSubmit = (message : string) => {
+    setAlertInformation(message);
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
   const handleRoleNameSelectChange = (event: SelectChangeEvent) => {
     setShowName(event.target.value);
   };
@@ -74,6 +90,7 @@ const ManagerKey: React.FC<{}> = () => {
       setKeyList({ keyList: message.keyList });
     }
     console.log(message);
+    handleSuccessSubmit("New key has been added!");
     return (message.message);
   }
 
@@ -81,6 +98,7 @@ const ManagerKey: React.FC<{}> = () => {
     const message = await deleteManagerKey({ role, key });
     // console.log({role,key});
     console.log('delete success', message);
+    handleSuccessSubmit("Key has been deleted!");
     setKeyList(message);
   }
 
@@ -155,6 +173,18 @@ const ManagerKey: React.FC<{}> = () => {
               })
             }
           </Box>
+          
+          <Snackbar
+            open={successOpen}
+            autoHideDuration={3000}
+            onClose={handleSuccessClose}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+              {alertInformation}
+            </Alert>
+          </Snackbar>
+
         </Box>)}
      
 

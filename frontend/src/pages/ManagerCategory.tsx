@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   Button,
   Card,
   createTheme,
   Divider,
   Grid,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -46,6 +48,19 @@ const ManagerCategory: React.FC<{}> = () => {
   const [target, setTarget] = useState<null | number>(null);
   const [hide, setHide] = useState(false);
 
+  //for alert information when making a successful operation
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [alertInformation, setAlertInformation] = React.useState('');
+  const handleSuccessSubmit = (message : string) => {
+    setAlertInformation(message);
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
 
   const sortFunc = () => {
     if (move) {
@@ -153,6 +168,7 @@ const ManagerCategory: React.FC<{}> = () => {
     const message = await postManagerCategoryOrder(input);
     console.log('new category', message);
     setCategoryList(modifyList(message));
+    handleSuccessSubmit("New category list order has been stored!");
   }
 
 
@@ -203,6 +219,7 @@ const ManagerCategory: React.FC<{}> = () => {
     } else {
       console.log('success submit', message);
       setCategoryList(modifyList(message));
+      handleSuccessSubmit("New category has been added!");
     }
 
   }
@@ -364,6 +381,17 @@ const ManagerCategory: React.FC<{}> = () => {
               }
 
             </Box>
+            <Snackbar
+              open={successOpen}
+              autoHideDuration={3000}
+              onClose={handleSuccessClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+                {alertInformation}
+              </Alert>
+            </Snackbar>
+
           </Box>
         )}
 

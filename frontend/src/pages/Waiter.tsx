@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Alert,
   Box,
   Button,
   createTheme,
   Grid,
+  Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
@@ -75,6 +77,20 @@ const Waiter: React.FC<{}> = () => {
     setLoading(true)
   }, []);
 
+  //for alert information when making a successful operation
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [alertInformation, setAlertInformation] = React.useState('');
+  const handleSuccessSubmit = (message : string) => {
+    setAlertInformation(message);
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
   const getRequest = async () => {
     const message = await getWaitRequest();
     setNumOfRequest(message.requestsList.length);
@@ -116,6 +132,7 @@ const Waiter: React.FC<{}> = () => {
     })
     setOrder(newOrder);
     console.log(message.orderList);
+    handleSuccessSubmit("Order has been payed!");
   };
 
   const postItem = async (id: number) => {
@@ -132,6 +149,7 @@ const Waiter: React.FC<{}> = () => {
 
     console.log('confirm item', message);
     // console.log(message.orderList);
+    handleSuccessSubmit("Item has been served!");
   };
 
   const postRequest = async (id: number) => {
@@ -146,6 +164,7 @@ const Waiter: React.FC<{}> = () => {
     })
     setRequest(newRequest);
     // console.log(message.orderList);
+    handleSuccessSubmit("Quest has been finished!");
   };
 
 
@@ -318,7 +337,18 @@ const Waiter: React.FC<{}> = () => {
           )}
         </Box>
 
-      </Box>
+        <Snackbar
+          open={successOpen}
+          autoHideDuration={3000}
+          onClose={handleSuccessClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSuccessClose} sx={{ width: 600 }}>
+            {alertInformation}
+          </Alert>
+        </Snackbar>
+
+        </Box>
       )}
 
       
