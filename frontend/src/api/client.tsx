@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// encapsulate axios
 const apiClient = axios.create({
   baseURL: "http://localhost:8080",
   headers: {
