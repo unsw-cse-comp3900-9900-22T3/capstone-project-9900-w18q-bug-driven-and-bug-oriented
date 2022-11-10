@@ -44,13 +44,13 @@ const Kitchen: React.FC<{}> = () => {
   const [pageOrder, setPageOrder] = useState<orderInterface | any>(); // order of this page
   const [numPage, setNumPage] = useState(1); // total page number
   const [page, setPage] = useState(1); // current display page number
-  
+
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
   }, []);
-  
+
   // switch status display
   useEffect(() => {
     getOrder(status);
@@ -86,7 +86,7 @@ const Kitchen: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%', minHeight: 1000 }}>
         {/* nav bar */}
         <Box>
           <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
@@ -99,24 +99,26 @@ const Kitchen: React.FC<{}> = () => {
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
-              height: "100vh",
+              height: "100%",
             }}
           >
             <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', flexDirection: 'column' }}>
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'start', mt: 20, mb: 10, height: 300 }}>
-              <Typography variant="h4" sx={{ display: 'flex', fontWeight: 'bold', ml: 20 }}>
-                Customer Order
-              </Typography>
-              {/* status button */}
-              <Box sx={{ mr: 20 }}>
-                <StatusMenu doSomething={setStatus} />
+          <Box sx={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'start', height: 300 }}>
+              <Box sx={{ mt: 20, display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'start', }}>
+                <Typography variant="h4" sx={{ display: 'flex', fontWeight: 'bold', ml: 20 }}>
+                  Customer Order
+                </Typography>
+                {/* status button */}
+                <Box sx={{ mr: 20 }}>
+                  <StatusMenu doSomething={setStatus} />
+                </Box>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', height: 'calc(100vh - 400px)', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', m: 20, height: 800, width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, width: '100%', justifyContent: 'center', alignItems: 'start', }}>
+              <Box sx={{ display: 'flex', mx: 20, my: 10, height: 800, width: '100%', flexDirection: 'column', }}>
                 <Grid container spacing={1} >
                   <Grid item xs={3}>
                     <Typography variant="h6">Table</Typography>

@@ -53,7 +53,7 @@ const KitchenOrder: React.FC<{}> = () => {
   const [numPage, setNumPage] = useState(1); // total number of pages
   const [page, setPage] = useState(1); // current display page number
   const [newStatus, setNewStatus] = useState<newStatusInterface>(); // item's status
-  
+
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -110,7 +110,7 @@ const KitchenOrder: React.FC<{}> = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%' }}>
+      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row', width: '100%', minHeight: 1000 }}>
         {/* nav bar */}
         <Box>
           <NavBar role='kitchen' doSomething={() => { }} postRequest={() => { }} />
@@ -123,29 +123,30 @@ const KitchenOrder: React.FC<{}> = () => {
               justifyContent: "center",
               alignItems: "center",
               width: "100%",
-              height: "100vh",
+              height: "100%",
             }}
           >
             <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', height: '100%', width: '100%', justifyContent: 'center', flexDirection: 'column' }}>
-            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', alignItems: 'start', mt: 20, mb: 5, height: 200 }}>
-              <IconButton aria-label="delete" color='inherit' size="large" sx={{ ml: 20, mt: -0.5 }} onClick={() => navigate(-1)}>
-                <ArrowBackIosIcon />
-              </IconButton>
-              <Typography variant="h4" sx={{ display: 'flex', fontWeight: 'bold', height: 60 }}>
-                Order Items
-              </Typography>
+          <Box sx={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', alignItems: 'start', height: 300, flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', width: '100%', justifyContent: 'left', alignItems: 'start', mt: 20, mb: 2, }}>
+                <IconButton aria-label="delete" color='inherit' size="large" sx={{ ml: 20, mt: -0.5 }} onClick={() => navigate(-1)}>
+                  <ArrowBackIosIcon />
+                </IconButton>
+                <Typography variant="h4" sx={{ display: 'flex', fontWeight: 'bold', height: 60 }}>
+                  Order Items
+                </Typography>
+              </Box>
+              <Box sx={{ width: '100%', justifyContent: 'left', alignItems: 'start' }}>
+                <Typography variant="h5" sx={{ ml: 26, display: 'flex', color: '#626264' }} >
+                  Table:&nbsp;{table} &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  Order time: {nowTime}
+                </Typography>
+              </Box>
             </Box>
-            {/* order details  */}
-            <Box sx={{ width: '100%', justifyContent: 'left', alignItems: 'start', height: 100 }}>
-              <Typography variant="h5" sx={{ ml: 26, display: 'flex', color: '#626264' }} >
-                Table:&nbsp;{table} &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  Order time: {nowTime}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', height: 'calc(100vh - 400px)', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', m: 20, height: 800, width: '100%', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', height: '100%', flexGrow: 1, width: '100%', justifyContent: 'center', alignItems: 'start' }}>
+              <Box sx={{ display: 'flex', mx: 20, my: 7, height: 800, width: '100%', flexDirection: 'column' }}>
                 <Grid container spacing={1} >
                   <Grid item xs={5}>
                     <Typography variant="h6" sx={{ ml: 2 }} >Item name</Typography>
