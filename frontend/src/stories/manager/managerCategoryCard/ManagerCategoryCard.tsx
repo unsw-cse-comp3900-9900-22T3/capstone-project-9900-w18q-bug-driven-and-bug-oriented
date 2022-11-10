@@ -36,7 +36,6 @@ export default function ManagerCategoryCard({
 
   useEffect(()=>{
     setMove(canMove);
-    // console.log(categoryId,canMove);
   },[canMove])
 
   return (

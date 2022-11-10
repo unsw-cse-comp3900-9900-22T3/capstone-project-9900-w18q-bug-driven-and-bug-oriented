@@ -17,6 +17,7 @@ import { getKitchenEachOrder, postKitchenEachOrder } from "../api/kitchen";
 import ItemRecord from "../stories/kitchen/ItemRecord";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -43,6 +44,7 @@ interface newStatusInterface {
 }
 
 const KitchenOrder: React.FC<{}> = () => {
+  document.title = 'Kitchen staff';
   const navigate = useNavigate();
   const [itemList, setItemList] = useState<itemListInterface | any>(); //  total item list of each order
   const [pageOrder, setPageOrder] = useState<itemListInterface | any>(); // item list of each order
@@ -51,7 +53,7 @@ const KitchenOrder: React.FC<{}> = () => {
   const [numPage, setNumPage] = useState(1); // total number of pages
   const [page, setPage] = useState(1); // current display page number
   const [newStatus, setNewStatus] = useState<newStatusInterface>(); // item's status
-
+  
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {

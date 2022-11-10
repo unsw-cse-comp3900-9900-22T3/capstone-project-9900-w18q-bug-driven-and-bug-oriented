@@ -107,7 +107,6 @@ export default function DishCard({
       description: newDescription,
       ingredient: newIngredients,
     };
-    console.log('obj is', obj);
     if (!isNaN(Number(newCalories)) && !isNaN(Number(newPrice))) {
       editCard(obj);
        setEditOpen(false);
@@ -169,7 +168,6 @@ export default function DishCard({
 
   useEffect(() => {
     setMove(canMove);
-    // console.log(categoryId,canMove);
   }, [canMove])
 
   return (

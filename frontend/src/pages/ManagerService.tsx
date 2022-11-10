@@ -12,6 +12,7 @@ import { getWaitRequest } from "../api/wait";
 import ShowService from "../stories/manager/ShowService";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -30,13 +31,14 @@ interface requestInterface {
 };
 
 const ManagerService: React.FC<{}> = () => {
+  document.title = 'Manager';
   const [request, setRequest] = useState<requestInterface>() // request list
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true)
   }, []);
-
+  
   // get and set request
   const getRequest = async () => {
     const message = await getWaitRequest();

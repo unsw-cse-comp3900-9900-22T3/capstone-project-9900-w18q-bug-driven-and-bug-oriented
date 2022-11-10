@@ -35,22 +35,23 @@ interface orderInterface {
         price?: number;
         status?: string;
       }]
-  }[]
-};
-
-const ManagerOrder: React.FC<{}> = () => {
-  const [order, setOrder] = useState<orderInterface | any>() // total order list
-  // loading
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true)
-  }, []);
-
-  // get and set total order
-  const getOrder = async () => {
-    const message = await getWaitOrder();
-    setOrder(message);
-    setLoading(false);
+    }[]
+  };
+  
+  const ManagerOrder: React.FC<{}> = () => {
+    document.title = 'Manager';
+    const [order, setOrder] = useState<orderInterface | any>() // total order list
+    // loading
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+      setLoading(true)
+    }, []);
+    
+    // get and set total order
+    const getOrder = async () => {
+      const message = await getWaitOrder();
+      setOrder(message);
+      setLoading(false);
   };
 
   // init

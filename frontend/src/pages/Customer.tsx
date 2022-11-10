@@ -27,6 +27,7 @@ const theme = createTheme({
 });
 
 const Customer: React.FC<{}> = () => {
+  document.title = 'Customer';
   const navigate = useNavigate();
   const [id, setId] = useState(''); // customer order id
   const [nav, setNav] = useState<any>([]); // category list to nav bar

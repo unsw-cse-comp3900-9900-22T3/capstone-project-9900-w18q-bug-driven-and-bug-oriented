@@ -20,6 +20,7 @@ import ManagerDishCard from "../stories/manager/managerDishCard/ManagerDishCard"
 import PacmanLoader from "react-spinners/PacmanLoader";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -67,6 +68,7 @@ interface totalInterface {
 
 
 const ManagerMenu: React.FC<{}> = () => {
+  document.title = 'Manager';
   const [categoryList, setCategoryList] = useState<categoryListInterface>(); // total category list
   const [move, setMove] = useState(false); // if sort model
   const [itemList, setItemList] = useState<totalInterface>(); // total item list
@@ -180,10 +182,8 @@ const ManagerMenu: React.FC<{}> = () => {
     if ((nowItemList) && (target !== null) && (source !== null)) {
       if (nowItemList.itemList[target].dishId !== 0) {
         nowItemList.itemList[target - 1] = nowItemList.itemList[source]
-        console.log('now is 1!!!!!!!!!!');
       } else {
         nowItemList.itemList[target] = nowItemList.itemList[source]
-        console.log('now is 2!!!!!!!!!!');
       }
       // update data of source region
       nowItemList.itemList[source] = {

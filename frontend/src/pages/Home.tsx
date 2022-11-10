@@ -15,6 +15,7 @@ import OrderNowButton from "../stories/home/OrderNowButton";
 import { checkLogin, getCustomerTable } from "../api/login";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -42,17 +43,18 @@ interface tableInterface {
 }
 
 const Home: React.FC<{}> = () => {
+  document.title = 'Home';
   const navigate = useNavigate();
   const [table, setTable] = useState(''); // table number
   const [diner, setDiner] = useState(''); // diner number
   const [tableList, setTableList] = useState<tableInterface>(); // table available list
-
+  
   // loading
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-
+  
   // switch to customer page
   const goToOrder = async () => {
     const message = await checkLogin({
@@ -65,13 +67,13 @@ const Home: React.FC<{}> = () => {
       navigate(`/customer/${message.data.orderId}/hot`)
     }
   };
-
+  
   // get current available list
   const getTable = async () => {
     const message = await getCustomerTable();
     setTableList(message);
   }
-
+  
   // select table number
   const selectTable = (e: any) => {
     if (table === e) {

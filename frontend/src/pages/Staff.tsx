@@ -19,6 +19,7 @@ import BigButton from "../stories/home/BigButton";
 import ButtonIcon from "../stories/home/ButtonIcon";
 import { checkLogin } from "../api/login";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -32,22 +33,23 @@ const theme = createTheme({
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} {...props} />;
-});
-
-const Staff: React.FC<{}> = () => {
-  const navigate = useNavigate();
-  const [staff, setStaff] = useState(''); // staff role select
-  const [showKey, setShowKey] = useState(false); // if input key page
-  const [key, setKey] = useState(''); // key input
-
-  // toast display
-  const [open, setOpen] = React.useState(false);
-  const [successOpen, setSuccessOpen] = React.useState(false);
-  const handleClick = () => {
-    setOpen(true);
-  };
+  ) {
+    return <MuiAlert elevation={6} ref={ref} {...props} />;
+  });
+  
+  const Staff: React.FC<{}> = () => {
+    document.title = 'Home';
+    const navigate = useNavigate();
+    const [staff, setStaff] = useState(''); // staff role select
+    const [showKey, setShowKey] = useState(false); // if input key page
+    const [key, setKey] = useState(''); // key input
+    
+    // toast display
+    const [open, setOpen] = React.useState(false);
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const handleClick = () => {
+      setOpen(true);
+    };
   const handleSucessClick = () => {
     setSuccessOpen(true);
   };

@@ -100,12 +100,10 @@ export default function OrderBar({
     if (!haveItem){
       setChecked(false);
     }
-    // console.log('now is', haveItem)
   },[haveItem])
 
   useEffect(()=>{
     ifCheck(checked);
-    // console.log('now is', haveItem)
   },[checked])
 
   return (

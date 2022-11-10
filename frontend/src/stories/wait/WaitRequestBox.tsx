@@ -94,12 +94,6 @@ export default function WaitRequestBox({
 
   const countProgress = () => {
     let diff = (new Date()).getTime() - strToDate(startTime).getTime();
-    console.log(startTime);
-    console.log(dateToStr(new Date()));
-    console.log(new Date().toDateString());
-    console.log(new Date().toTimeString());
-    console.log(strToDate(startTime));
-    console.log(diff);
     return Math.min(diff / (1000 * 60 * waitTimeLimit) * 100, 100);
   };
 

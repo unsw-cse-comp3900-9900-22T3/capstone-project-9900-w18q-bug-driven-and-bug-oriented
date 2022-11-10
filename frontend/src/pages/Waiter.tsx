@@ -40,29 +40,30 @@ interface orderInterface {
         price?: number;
         status?: string;
       }]
-  }[]
-};
-
-interface itemInterface {
-  itemsList: {
-    itemIndex?: number;
-    table?: number;
-    itemTime?: string;
-    dishName?: string;
-  }[]
-};
-
-interface requestInterface {
-  requestsList: {
-    id?: number;
-    table?: number;
-    startTime?: string;
-  }[]
-};
-
-const Waiter: React.FC<{}> = () => {
-  const [show, setShow] = useState('request'); // which page to display
-  const [numOfRequest, setNumOfRequest] = useState(0); // total number of request
+    }[]
+  };
+  
+  interface itemInterface {
+    itemsList: {
+      itemIndex?: number;
+      table?: number;
+      itemTime?: string;
+      dishName?: string;
+    }[]
+  };
+  
+  interface requestInterface {
+    requestsList: {
+      id?: number;
+      table?: number;
+      startTime?: string;
+    }[]
+  };
+  
+  const Waiter: React.FC<{}> = () => {
+    document.title = 'Wait staff';
+    const [show, setShow] = useState('request'); // which page to display
+    const [numOfRequest, setNumOfRequest] = useState(0); // total number of request
   const [numOfItem, setNumOfItem] = useState(0); // total number of item
   const [numOfOrder, setNumOfOrder] = useState(0); // total number of order
   const [items, setItem] = useState<(itemInterface | any)>(); // item list
@@ -120,7 +121,7 @@ const Waiter: React.FC<{}> = () => {
   // confirm order
   const postOrder = async (id: number) => {
     const message = await postWaitOrder(id.toString());
-    console.log('confirm order', message);
+    console.log('confirm order', message.message);
     setNumOfOrder(numOfOrder - 1);
     const newOrder = { ...order };
     newOrder?.orderList?.forEach((item: { orderId: number; }, index: any) => {
@@ -143,14 +144,14 @@ const Waiter: React.FC<{}> = () => {
       }
     })
     setItem(newItems);
-    console.log('confirm item', message);
+    console.log('confirm item', message.message);
     handleSuccessSubmit("Item has been served!");
   };
 
   // confirm request
   const postRequest = async (id: number) => {
     const message = await postWaitRequest(id.toString());
-    console.log('confirm request', message);
+    console.log('confirm request', message.message);
     setNumOfRequest(numOfRequest - 1);
     const newRequest = { ...request };
     newRequest?.requestsList?.forEach((item: { id: number; }, index: any) => {
@@ -306,7 +307,6 @@ const Waiter: React.FC<{}> = () => {
               </Box>
             )}
           </Box>
-          
           <Snackbar
             open={successOpen}
             autoHideDuration={3000}

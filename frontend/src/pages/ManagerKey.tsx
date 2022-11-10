@@ -18,6 +18,7 @@ import { deleteManagerKey, getManagerKey, postManagerKey } from "../api/manager"
 import ManagerKeyCard from "../stories/manager/managerKeyCard/ManagerKeyCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -51,6 +52,7 @@ map1.set('kitchen', 'Kitchen staff')
 map1.set('wait', 'Wait staff')
 
 const ManagerKey: React.FC<{}> = () => {
+  document.title = 'Manager';
   const [keyList, setKeyList] = useState<keyListInterface>() // list of keys
   const [showName, setShowName] = useState<string>('All'); // switch display of role
   // loading
@@ -58,7 +60,7 @@ const ManagerKey: React.FC<{}> = () => {
   useEffect(() => {
     setLoading(true)
   }, []);
-
+  
   //for alert information when making a successful operation
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [alertInformation, setAlertInformation] = React.useState('');

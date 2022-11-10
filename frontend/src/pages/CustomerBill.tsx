@@ -13,6 +13,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import OrderDetailBox from "../stories/customer/orderDetailBox/OrderDetailBox";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -23,6 +24,7 @@ const theme = createTheme({
 });
 
 const CustomerBill: React.FC<{}> = () => {
+  document.title = 'Your bill';
   const [bill, setBill] = useState<any>(); // bill list
   const [price, setPrice] = useState(0); // total price
 

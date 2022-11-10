@@ -17,6 +17,7 @@ import ManagerCategoryCard from "../stories/manager/managerCategoryCard/ManagerC
 import PacmanLoader from "react-spinners/PacmanLoader";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -35,6 +36,7 @@ interface categoryInterface {
 }
 
 const ManagerCategory: React.FC<{}> = () => {
+  document.title = 'Manager';
   const [categoryList, setCategoryList] = useState<categoryInterface>(); // total category list
   const [move, setMove] = useState(false); // if sort model
   const [source, setSource] = useState<null | number>(null); // drag source item
@@ -45,7 +47,7 @@ const ManagerCategory: React.FC<{}> = () => {
   useEffect(() => {
     setLoading(true)
   }, []);
-
+  
   //for alert information when making a successful operation
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [alertInformation, setAlertInformation] = React.useState('');

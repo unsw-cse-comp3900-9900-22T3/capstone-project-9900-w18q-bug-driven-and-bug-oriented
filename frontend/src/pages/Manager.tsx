@@ -9,6 +9,7 @@ import NavBar from "../stories/NavBar";
 import html from './dashboard'
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -19,12 +20,13 @@ const theme = createTheme({
 });
 
 const Manager: React.FC<{}> = () => {
+  document.title = 'Manager';
   // loading 
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true)
   }, []);
-
+  
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>

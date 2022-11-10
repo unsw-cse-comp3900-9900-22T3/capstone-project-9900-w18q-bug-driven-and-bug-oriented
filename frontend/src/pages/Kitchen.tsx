@@ -16,6 +16,7 @@ import NavBar from "../stories/NavBar";
 import { getKitchenOrder, postKitchenOrder } from "../api/kitchen";
 import PacmanLoader from "react-spinners/PacmanLoader";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: "Quicksand",
@@ -36,19 +37,20 @@ interface orderInterface {
 }
 
 const Kitchen: React.FC<{}> = () => {
+  document.title = 'Kitchen staff';
   const navigate = useNavigate();
   const [status, setStatus] = useState('All Status'); //order method
   const [orderList, setOrderList] = useState<orderInterface | any>(); // total order list
   const [pageOrder, setPageOrder] = useState<orderInterface | any>(); // order of this page
   const [numPage, setNumPage] = useState(1); // total page number
   const [page, setPage] = useState(1); // current display page number
-
+  
   // loading
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
   }, []);
-
+  
   // switch status display
   useEffect(() => {
     getOrder(status);

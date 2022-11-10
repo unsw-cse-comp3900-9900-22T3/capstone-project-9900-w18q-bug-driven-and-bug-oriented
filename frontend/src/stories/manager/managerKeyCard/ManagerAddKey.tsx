@@ -96,7 +96,6 @@ export default function ManagerAddKey({
     };
     addFunc(obj)
       .then((res: any) => {
-        console.log('message is', res);
         if (res === 'success') {
           handleClose();
         } else {
@@ -114,9 +113,7 @@ export default function ManagerAddKey({
     setOpenNoticeWin(false);
   };
 
-  useEffect(() => {
-    console.log('input', roleName, staffName, key);
-  }, [roleName, staffName, key])
+
 
 
 

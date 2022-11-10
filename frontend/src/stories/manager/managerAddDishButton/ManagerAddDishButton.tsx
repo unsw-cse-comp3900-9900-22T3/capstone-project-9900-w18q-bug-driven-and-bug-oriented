@@ -86,7 +86,7 @@ export default function ManagerAddDishButton({
       ingredient: newIngredients,
     };
 
-    console.log('now obj is', obj);
+
     if (obj.title && obj.calorie && obj.cost && obj.picture
       && obj.categoryName && obj.description && obj.ingredient) {
 
@@ -173,12 +173,11 @@ export default function ManagerAddDishButton({
 
 
   useEffect(() => {
-    console.log('input', newCategoryName);
+
   }, [newCategoryName])
 
   useEffect(() => {
     const keyDownHandler = (e: any) => {
-      console.log('now pressed:', e.key);
       if (e.key === 'Enter') {
         e.preventDefault();
         if (editOpen){

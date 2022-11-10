@@ -61,10 +61,8 @@ export default function AddManagerCategory({
 
   const subF = () => {
     if (newCategoryName) {
-      console.log(newCategoryName)
       submitFunc(newCategoryName)
         .then((res: any) => {
-          console.log('message is', res);
           if (res) {
             setOpenNoticeWin(true);
             setErrorFlag(true);
@@ -79,13 +77,10 @@ export default function AddManagerCategory({
     }
   }
 
-  useEffect(() => {
-    console.log('input', newCategoryName);
-  }, [newCategoryName])
+
 
   useEffect(() => {
     const keyDownHandler = (e: any) => {
-      console.log('now pressed:', e.key);
       if (e.key === 'Enter') {
         e.preventDefault();
         if (open){
