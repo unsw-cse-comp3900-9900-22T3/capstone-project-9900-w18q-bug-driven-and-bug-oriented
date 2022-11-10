@@ -1,3 +1,4 @@
+// kitchen order page
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -102,6 +103,7 @@ const KitchenOrder: React.FC<{}> = () => {
     getList();
     const timer = setInterval(() => getList(), 5000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

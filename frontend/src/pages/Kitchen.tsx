@@ -35,7 +35,6 @@ interface orderInterface {
   }[]
 }
 
-
 const Kitchen: React.FC<{}> = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState('All Status'); //order method

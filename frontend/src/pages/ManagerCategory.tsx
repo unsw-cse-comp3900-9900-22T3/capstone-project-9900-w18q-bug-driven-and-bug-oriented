@@ -1,25 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
+// category edit page
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Box,
   Button,
-  Card,
   createTheme,
   Divider,
-  Grid,
   Snackbar,
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import NavBar from "../stories/NavBar";
 import AddManagerCategory from "../stories/manager/managerCategoryCard/AddManagerCategory";
 import { getManagerCategory, postManagerCategory, postManagerCategoryOrder } from "../api/manager";
-import ManagerCategoryCardStories from "../stories/manager/managerCategoryCard/ManagerCategoryCard.stories";
 import ManagerCategoryCard from "../stories/manager/managerCategoryCard/ManagerCategoryCard";
 import PacmanLoader from "react-spinners/PacmanLoader";
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-
 
 const theme = createTheme({
   typography: {
@@ -39,19 +35,21 @@ interface categoryInterface {
 }
 
 const ManagerCategory: React.FC<{}> = () => {
-  const navigate = useNavigate();
-  const [newCategory, setNewCategory] = useState('');
-  const [categoryList, setCategoryList] = useState<categoryInterface>();
-  const [move, setMove] = useState(false);
-
-  const [source, setSource] = useState<null | number>(null);
-  const [target, setTarget] = useState<null | number>(null);
-  const [hide, setHide] = useState(false);
+  const [categoryList, setCategoryList] = useState<categoryInterface>(); // total category list
+  const [move, setMove] = useState(false); // if sort model
+  const [source, setSource] = useState<null | number>(null); // drag source item
+  const [target, setTarget] = useState<null | number>(null); // drag target item
+  const [hide, setHide] = useState(false); // if drag trigger region hidden 
+  // loading
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
 
   //for alert information when making a successful operation
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [alertInformation, setAlertInformation] = React.useState('');
-  const handleSuccessSubmit = (message : string) => {
+  const handleSuccessSubmit = (message: string) => {
     setAlertInformation(message);
     setSuccessOpen(true);
   };
@@ -62,15 +60,17 @@ const ManagerCategory: React.FC<{}> = () => {
     setSuccessOpen(false);
   };
 
+  // switch sort model
   const sortFunc = () => {
     if (move) {
       setMove(false);
       if (categoryList) {
-        let newList = new Array();
+        let newList = new Array<any>();
         for (let i = 0; i < categoryList.categoryList.length; i++) {
           if (categoryList.categoryList[i].categoryId !== 0)
             newList.push(categoryList.categoryList[i]);
         }
+        // post new order if sort finished
         postList({ categoryList: newList });
       }
     } else {
@@ -78,86 +78,56 @@ const ManagerCategory: React.FC<{}> = () => {
     }
   }
 
+  // drag start trigger function
   const onDragStart = (id: number) => (e: any) => {
-    // console.log(`#${id} - `, e);
     setSource(id);
     setTimeout(() => setHide(true), 50);
-    console.log('show')
   }
 
+  // drag cover trigger function
   const onDragOver = (id: number) => (e: any) => {
-    // console.log(`#${id} - `, e);
     e.preventDefault();
     setTarget(id);
-    console.log('over')
     setHide(true)
-
   }
 
+  // drag leave region trigger function
   const onDragLeave = (id: number) => (e: any) => {
-    // console.log(`#${id} - `, e)
     e.preventDefault();
     setTarget(null)
-    console.log('leave')
     setTimeout(() => setHide(false), 0);
   }
 
-
-
-
+  // drag action function
   const onDrop = () => {
-    console.log('onDrop');
+    // init and reset coordinates
     setSource(null);
     setTarget(null);
     setHide(false);
+    // update data of target region
     if ((categoryList) && (target !== null) && (source !== null)) {
       if (categoryList.categoryList[target].categoryId !== 0) {
         categoryList.categoryList[target - 1] = categoryList.categoryList[source]
       } else {
         categoryList.categoryList[target] = categoryList.categoryList[source]
       }
-
+      // update data of source region
       categoryList.categoryList[source] = {
         categoryId: 0,
         categoryName: '',
         lastModified: ''
       }
-      let newList = new Array();
+      // update total category list
+      let newList = new Array<any>();
       for (let i = 0; i < categoryList.categoryList.length; i++) {
         if (categoryList.categoryList[i].categoryId !== 0)
           newList.push(categoryList.categoryList[i]);
       }
       setCategoryList(modifyList({ categoryList: newList }));
-
     }
   }
 
-
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true)
-  }, []);
-
-
-  // const exList = (arr: {
-  //   categoryName: string;
-  //   categoryId: number,
-  //   lastModified: string,
-  // }[], index1: number, index2: number) => {
-  //   if (index1 >= 0 && index2 >= 0 && index1 < arr.length && index2 < arr.length) {
-  //     arr.splice(index1, 1, ...arr.splice(index2, 1, arr[index1]));
-  //   }
-  //   return arr;
-  // }
-
-  // const changeList = (index1: number, index2: number) => {
-  //   if (categoryList)
-  //     setCategoryList({
-  //       categoryList: exList(categoryList.categoryList, index1, index2)
-  //     }
-  //     )
-  // }
-
+  // post new order of list
   const postList = async (input: {
     categoryList: {
       categoryName: string;
@@ -166,26 +136,13 @@ const ManagerCategory: React.FC<{}> = () => {
     }[]
   }) => {
     const message = await postManagerCategoryOrder(input);
-    console.log('new category', message);
     setCategoryList(modifyList(message));
     handleSuccessSubmit("New category list order has been stored!");
   }
 
-
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event) {
-      setNewCategory(event.target.value);
-    }
-
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log(event.target);
-  }
-
-
+  // reset list order by edit
   const modifyList = (input: categoryInterface): categoryInterface => {
-    let newList = new Array();
+    let newList = new Array<any>();
     for (let i = 0; i < input.categoryList.length; i++) {
       newList.push(
         {
@@ -202,52 +159,37 @@ const ManagerCategory: React.FC<{}> = () => {
         lastModified: ''
       });
     }
-
     return { categoryList: newList };
   }
 
+  // get total category list
   const getCategory = async () => {
     const message = await getManagerCategory();
     setCategoryList(modifyList(message));
     setLoading(false);
   }
 
+  // add new category
   const postCategory = async (input: string) => {
     const message = await postManagerCategory({ categoryName: input });
     if (message.message) {
       return (message.message);
     } else {
-      console.log('success submit', message);
       setCategoryList(modifyList(message));
       handleSuccessSubmit("New category has been added!");
     }
-
   }
 
-  useEffect(() => {
-    console.log(newCategory);
-  }, [newCategory])
-
-  useEffect(() => {
-    console.log(categoryList);
-  }, [categoryList])
-
+  // init
   useEffect(() => {
     getCategory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (categoryList && move === false)
-      // postList(categoryList);
-      console.log('now is', move);
-  }, [move])
-
-
 
   return (
     <ThemeProvider theme={theme}>
-
       <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'row' }}>
+        {/* nav bar  */}
         <Box>
           <NavBar role='manager' doSomething={() => { }} postRequest={() => { }} />
         </Box>
@@ -266,8 +208,8 @@ const ManagerCategory: React.FC<{}> = () => {
           </Box>
         ) : (
           <Box sx={{ height: '100vh', width: '100%', display: 'flex', flexDirection: 'column' }}>
-
             <Box sx={{ alignItems: 'end', justifyContent: 'right', height: 200, width: '100%', display: 'flex', flexDirection: 'row' }}>
+              {/* sort and add button */}
               <Box sx={{ mr: 5 }}>
                 <Button variant="contained" onClick={sortFunc} sx={{
                   height: 45, width: 120, backgroundColor: '#503E9D', borderRadius: 3, '&:hover': {
@@ -282,20 +224,16 @@ const ManagerCategory: React.FC<{}> = () => {
                   </Box>
                 </Button>
               </Box>
-
               <Box sx={{ mr: 15 }}>
                 <AddManagerCategory
                   submitFunc={(e) => postCategory(e)}
                 />
               </Box>
-
-
-
             </Box>
             <Box justifyContent={'center'} alignItems={'flex-start'} sx={{ height: '100%', width: '100%', overflow: "auto", mt: 5, mb: 5 }}>
               {
+                // drag trigger region extension
                 categoryList?.categoryList.map((item, index) => {
-
                   let zValue;
                   if (item.categoryId !== 0) {
                     zValue = 10;
@@ -306,80 +244,61 @@ const ManagerCategory: React.FC<{}> = () => {
                   if (item.categoryId === 0 && hide) {
                     zValue = 15;
                   }
-
                   return (
                     <Box key={'cate' + index} sx={{ mt: -8, mb: -12, mx: 10, display: 'flex', alignItems: 'center' }}>
+                      {/* drag card container */}
                       <Box sx={{
                         width: '100%',
-                        // bgcolor: c, 
                         display: 'flex', alignItems: 'center'
                       }}
-
-                        // onDragOver={item.categoryId === 0 ? onDragOver(index) : undefined}
                         onDragOver={onDragOver(index)}
                         onDragLeave={onDragLeave(index)}
                       >
+                        {/* drag item element */}
                         <Box sx={{
-                          // bgcolor: b,
                           width: '100%',
                           position: 'relative',
                           display: 'flex', alignItems: 'center',
-
                         }}
                           height={item.categoryId === 0 ? 210 : 185}
-
                           zIndex={zValue}
-                          // draggable={move === item.categoryId ? true : false}
                           draggable={(item.categoryId !== 0 && move) ? true : false}
                           onDragStart={onDragStart(index)}
-
                           onDrop={onDrop}
                         >
-                          {/* <Card>{JSON.stringify(item)}</Card> */}
-                          {item.categoryId !== 0 && <ManagerCategoryCard
-                            categoryId={item.categoryId}
-                            categoryName={item.categoryName}
-                            lastModified={item.lastModified}
-                            canMove={move}
-                            selected={source === index}
-                            fatherListener={setMove}
-                          // preFunc={() => changeList(index, index - 1)}
-                          // nextFunc={() => changeList(index, index + 1)}
-
-                          />}
+                          {item.categoryId !== 0 &&
+                            <ManagerCategoryCard
+                              categoryId={item.categoryId}
+                              categoryName={item.categoryName}
+                              lastModified={item.lastModified}
+                              canMove={move}
+                              selected={source === index}
+                              fatherListener={setMove}
+                            />}
                           {
                             (item.categoryId === 0) &&
-                            // <Box sx={{width:'100%', height:2, bgcolor:'#503E9D', mx:3}}>
-                            //   </Box>
                             <Divider sx={{
                               width: '100%',
                               "&::before, &::after": {
                                 borderColor: target === index ? '#503E9D' : '#ffffff',
-
                               },
                               color: target === index ? '#503E9D' : '#ffffff',
-
                             }}> Move to here
                             </Divider>
                           }
-
                         </Box>
                       </Box>
-
-
                     </Box>
                   )
                 })
               }
-              {(categoryList?.categoryList.length === 0) || (!categoryList) && (
+              {((categoryList?.categoryList.length === 0) || (!categoryList)) && (
                 <Box sx={{ display: 'flex', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                   <Typography variant="h3">
                     No category now......
                   </Typography>
                 </Box>
-              )
-              }
-
+              )}
             </Box>
             <Snackbar
               open={successOpen}
@@ -391,14 +310,8 @@ const ManagerCategory: React.FC<{}> = () => {
                 {alertInformation}
               </Alert>
             </Snackbar>
-
           </Box>
         )}
-
-
-
-
-
       </Box>
 
     </ThemeProvider>

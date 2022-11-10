@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import homeImg from "../static/homeImg.jpg"
 import ButtonIcon from "../stories/home/ButtonIcon";
 import BorderButton from "../stories/home/BorderButton";
 import OrderNowButton from "../stories/home/OrderNowButton";
@@ -138,7 +137,7 @@ const Home: React.FC<{}> = () => {
             sx={{
               height: '100%',
               backgroundImage:
-                `url(${homeImg})`,
+                `url(../../homeImg.jpg)`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "center",
