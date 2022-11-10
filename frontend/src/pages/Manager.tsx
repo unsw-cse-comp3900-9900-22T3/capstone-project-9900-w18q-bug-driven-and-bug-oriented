@@ -20,19 +20,6 @@ const theme = createTheme({
   }
 });
 
-// class Rsvp extends React.Component {
-//   constructor(props: {} | Readonly<{}>) {
-//     super(props);
-//     this.state = {
-//       loading: true
-//     };
-//   }
-// hideSpinner = () => {
-//     this.setState({
-//       loading: false
-//     });
-//   };
-
 
 const Manager: React.FC<{}> = () => {
   const navigate = useNavigate();

@@ -1,3 +1,4 @@
+// home page
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -62,8 +63,6 @@ const Home: React.FC<{}> = () => {
       diner: diner
     });
     if (message.data.message === 'success') {
-      console.log('select success', 'table=', table, 'diner=', diner);
-      console.log(message.data);
       navigate(`/customer/${message.data.orderId}/hot`)
     }
   };
@@ -71,7 +70,6 @@ const Home: React.FC<{}> = () => {
   // get current available list
   const getTable = async () => {
     const message = await getCustomerTable();
-    console.log(message);
     setTableList(message);
   }
 

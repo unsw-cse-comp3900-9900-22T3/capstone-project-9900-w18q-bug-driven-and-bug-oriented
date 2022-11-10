@@ -37,7 +37,6 @@ export default function PageButton({
       temp.push(i);
     }
     setPageList(temp);
-    console.log(temp, 'numberpage', numberOfPage);
   }, [numberOfPage]);
 
   const nextPage = () => {
@@ -63,7 +62,6 @@ export default function PageButton({
   }
 
   useEffect(() => {
-    console.log('now page', page);
   }, [page]);
 
   useEffect(() => {

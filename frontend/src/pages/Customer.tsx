@@ -53,7 +53,7 @@ const Customer: React.FC<{}> = () => {
   // loading page
   const [loading, setLoading] = useState(false);
   const [recommendLoading, setRecommendLoading] = useState(false);
-  
+
   // toast display
   const handleSucessSubmit = () => {
     setSuccessOpen(true);
@@ -383,7 +383,7 @@ const Customer: React.FC<{}> = () => {
                       {menu.length === 0 && (
                         // no dish now
                         <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                          <Typography variant="h3" sx={{color:'#ffffff'}}>
+                          <Typography variant="h3" sx={{ color: '#ffffff' }}>
                             Upcoming......
                           </Typography>
                         </Grid>
