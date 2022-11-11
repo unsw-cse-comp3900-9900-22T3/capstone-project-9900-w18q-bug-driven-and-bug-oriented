@@ -1,15 +1,12 @@
+// check bill button
 import { Box } from "@mui/system";
 import React from "react";
-import { Backdrop, Button, Card, Fade, IconButton, Modal, Typography } from "@mui/material";
+import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import WalletIcon from '@mui/icons-material/Wallet';
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
-
-  //预留空函数
   doSomething: (params: any) => any;
-
 }
 
 const style = {
@@ -26,10 +23,7 @@ const style = {
   pt: 2,
 };
 
-// 别忘了修改函数名
 export default function CheckBillButton({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-
   doSomething,
   ...props
 }: ListProps) {
@@ -47,9 +41,9 @@ export default function CheckBillButton({
       <Button variant="contained" color="warning" onClick={handleOpen} sx={{
         height: 35, width: 95, borderRadius: 3,
       }}>
-        <Box  sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <WalletIcon />
-          <Typography variant="subtitle2" sx={{ display: 'flex', flexDirection: 'row', ml:0.5,mt:0.2 }}>
+          <Typography variant="subtitle2" sx={{ display: 'flex', flexDirection: 'row', ml: 0.5, mt: 0.2 }}>
             Check
           </Typography>
         </Box>
@@ -95,12 +89,7 @@ export default function CheckBillButton({
             </Button>
           </Box>
         </Card>
-
       </Modal>
-
-
-
-
     </>
   );
 }

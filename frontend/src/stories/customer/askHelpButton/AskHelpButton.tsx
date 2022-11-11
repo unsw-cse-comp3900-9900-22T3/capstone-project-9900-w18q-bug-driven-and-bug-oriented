@@ -1,11 +1,11 @@
+// customer ask for help button
 import * as React from 'react';
 import { Button, Snackbar, Alert, Typography } from "@mui/material";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //预留空函数
   doSomething: (params: any) => any;
 }
 
@@ -37,24 +37,20 @@ declare module '@mui/material/Button' {
 }
 
 export default function Template({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  doSomething = () => {},
+  doSomething = () => { },
   ...props
 }: ListProps) {
 
   const [openInitWin, setOpenInitWin] = React.useState(false);
   const [openNoticeWin, setOpenNoticeWin] = React.useState(false);
-
   const [lastClickTime, setTime] = React.useState(0);
-
   const [askTimer, setAskTimer] = React.useState(0);
 
+  // toast display switch
   const handleClick = (e: any) => {
     setOpenInitWin(false);
     setOpenNoticeWin(false);
-
     var nowTime = new Date();
-
     if (lastClickTime === 0) {
       setTime(nowTime.getTime());
       setOpenInitWin(true);
@@ -63,6 +59,7 @@ export default function Template({
       return;
     }
 
+    // set timeout over 30s
     if (nowTime.getTime() - lastClickTime > 30 * 1000) {
       setTime(nowTime.getTime());
       setOpenInitWin(true);
@@ -76,11 +73,12 @@ export default function Template({
     }
   };
 
+  // init timeout
   React.useEffect(() => {
     const timer = setInterval(() => {
       var diffTime = new Date().getTime() - lastClickTime;
-      if (diffTime < 30 * 1000){setAskTimer(30 - Math.trunc(diffTime / 1000))}
-      else {setAskTimer(0)}
+      if (diffTime < 30 * 1000) { setAskTimer(30 - Math.trunc(diffTime / 1000)) }
+      else { setAskTimer(0) }
     }, 1000);
 
     return () => {
@@ -88,12 +86,14 @@ export default function Template({
     };
   }, [lastClickTime]);
 
+  // toast
   const handleCloseInitWin = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
     setOpenInitWin(false);
   };
+
 
   const handleCloseNoticeWin = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -116,22 +116,22 @@ export default function Template({
         <Typography sx={{}}>
           Ask for help
         </Typography>
-        
       </Button>}
-
-      {askTimer !== 0 && <ThemeProvider theme={theme}><Button
-        sx={{ borderRadius: 3, width: 250 }}
-        variant="contained"
-        color="neutral"
-        startIcon={<HelpOutlineIcon />}
-        size="large"
-        onClick={handleClick}
-      >
-        <Typography sx={{}}>
-          Ask for help ({askTimer})
-        </Typography>
-        
-      </Button></ThemeProvider>}
+      {askTimer !== 0 &&
+        <ThemeProvider theme={theme}>
+          <Button
+            sx={{ borderRadius: 3, width: 250 }}
+            variant="contained"
+            color="neutral"
+            startIcon={<HelpOutlineIcon />}
+            size="large"
+            onClick={handleClick}
+          >
+            <Typography sx={{}}>
+              Ask for help ({askTimer})
+            </Typography>
+          </Button>
+        </ThemeProvider>}
 
       <Snackbar open={openInitWin}
         autoHideDuration={5000}
@@ -147,7 +147,6 @@ export default function Template({
           Thanks for waiting! Waiter will come soon.
         </Alert>
       </Snackbar>
-
       <Snackbar open={openNoticeWin}
         autoHideDuration={5000}
         onClose={handleCloseNoticeWin}
@@ -157,7 +156,6 @@ export default function Template({
           Waiter is coming, please wait.
         </Alert>
       </Snackbar>
-
     </>
   );
 }

@@ -1,9 +1,8 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import ManagerOrderCard from "./ManagerOrderCard";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的ManagerOrderCard(不要修改Template)
+
 export default {
   title: "ManagerOrderCard",
   component: ManagerOrderCard,
@@ -18,7 +17,7 @@ const Template: ComponentStory<typeof ManagerOrderCard> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
   orderId: '123',
   table: '1',
@@ -65,6 +64,5 @@ Test.args = {
       price: '20',
       status: 'no',
     },
-
   ]
 };

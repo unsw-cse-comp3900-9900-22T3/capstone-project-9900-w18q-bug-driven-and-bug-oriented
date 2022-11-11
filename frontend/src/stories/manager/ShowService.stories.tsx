@@ -1,9 +1,7 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import ShowService from "./ShowService";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的ShowService(不要修改Template)
 export default {
   title: "ShowService",
   component: ShowService,
@@ -18,7 +16,7 @@ const Template: ComponentStory<typeof ShowService> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
   table: 1,
   startTime: '2022-10-10-18:07:58',

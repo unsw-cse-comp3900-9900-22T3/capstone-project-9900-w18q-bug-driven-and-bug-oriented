@@ -1,10 +1,8 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import ManagerAddDishButton from "./ManagerAddDishButton";
 
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的ManagerAddDishButton(不要修改Template)
 export default {
   title: "ManagerAddDishButton",
   component: ManagerAddDishButton,
@@ -19,7 +17,7 @@ const Template: ComponentStory<typeof ManagerAddDishButton> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
 
 };

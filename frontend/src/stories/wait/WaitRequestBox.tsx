@@ -1,3 +1,4 @@
+// wait staff check request card
 import { Box } from "@mui/system";
 import React from "react";
 import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
@@ -6,15 +7,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ClearIcon from '@mui/icons-material/Clear';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-// 声明变量的数据格式
-interface ListProps {
-  //预留空函数
-  doSomething: (params: any) => any;
 
+interface ListProps {
   table?: string
   requestId?: string
   startTime?: string
   nowTime?: string
+  doSomething: (params: any) => any;
 }
 
 const theme = createTheme({
@@ -40,58 +39,59 @@ const style = {
   pt: 2,
 };
 
-//进度条满时对应时间（分钟）
+// what time the loading bar fill
 const waitTimeLimit = 2;
 
-//进度条更新时间间隔（秒）
+// update interval
 const updateInt = 3;
 
-//仅做测试用
+// format time
 const dateToStr = (d: Date) => {
   let year = d.getFullYear().toString();
-  let mon = (d.getMonth()+1).toString();
-  if (mon.length ===1) {mon = '0' + mon;}
+  let mon = (d.getMonth() + 1).toString();
+  if (mon.length === 1) { mon = '0' + mon; }
   let day = d.getDate().toString();
-  if (day.length ===1) {day = '0' + day;}
+  if (day.length === 1) { day = '0' + day; }
   let hr = d.getHours().toString();
-  if (hr.length ===1) {hr = '0' + hr;}
+  if (hr.length === 1) { hr = '0' + hr; }
   let min = d.getMinutes().toString();
-  if (min.length ===1) {min = '0' + min;}
+  if (min.length === 1) { min = '0' + min; }
   let sec = d.getSeconds().toString();
-  if (sec.length ===1) {sec = '0' + sec;}
-  return year + '-' 
-       + mon + '-' 
-       + day + '-' 
-       + hr + ':' 
-       + min + ':' 
-       + sec;
+  if (sec.length === 1) { sec = '0' + sec; }
+  return year + '-'
+    + mon + '-'
+    + day + '-'
+    + hr + ':'
+    + min + ':'
+    + sec;
 }
 
+// address date
 const strToDate = (s: string) => {
-  return new Date(parseInt(s.substring(0, 4)), parseInt(s.substring(5, 7))-1, parseInt(s.substring(8, 10)), parseInt(s.substring(11, 13)),
-                  parseInt(s.substring(14, 16)), parseInt(s.substring(17, 19)));
+  return new Date(parseInt(s.substring(0, 4)), parseInt(s.substring(5, 7)) - 1, parseInt(s.substring(8, 10)), parseInt(s.substring(11, 13)),
+    parseInt(s.substring(14, 16)), parseInt(s.substring(17, 19)));
 }
 
-// 别忘了修改函数名
-export default function WaitRequestBox({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  doSomething,
 
+export default function WaitRequestBox({
   table = '10',
   requestId = '654321',
   startTime = dateToStr(new Date()),
-  nowTime =dateToStr(new Date()),
+  nowTime = dateToStr(new Date()),
+  doSomething,
   ...props
 }: ListProps) {
-  
+
+  // pop up window display
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleComfirm =(e: any) => {
+  const handleComfirm = (e: any) => {
     setOpen(false);
     doSomething(e);
   };
 
+  // count time part
   const countProgress = () => {
     let diff = (new Date()).getTime() - strToDate(startTime).getTime();
     return Math.min(diff / (1000 * 60 * waitTimeLimit) * 100, 100);
@@ -104,43 +104,40 @@ export default function WaitRequestBox({
 
   const [progress, setProgress] = React.useState(countProgress());
   const [waitTime, setWaitTime] = React.useState(countTime());
-  
+
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress(countProgress());
       setWaitTime(countTime());
     }, updateInt);
-
     return () => {
       clearInterval(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Box sx={{backgroundColor: '#F7F7F7', width: 450, height: 170, borderRadius: 5}}>
-      <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', m:1, p:2 }}>
-        <Box display='flex'  fontWeight={'bold'} >
-        <Typography fontSize={20} sx={{ fontWeight: 'bold' }}> 
-        Table {table}
-        </Typography>
-          
-          </Box>
-        <Box display='flex' sx={{color: '#626264'}}>
-        <Typography sx={{  }}> 
-        #{requestId}
-        </Typography>
-          
-          </Box>
+    <Box sx={{ backgroundColor: '#F7F7F7', width: 450, height: 170, borderRadius: 5 }}>
+      <Box display='flex' justifyContent='space-between' sx={{ alignContent: 'center', m: 1, p: 2 }}>
+        <Box display='flex' fontWeight={'bold'} >
+          <Typography fontSize={20} sx={{ fontWeight: 'bold' }}>
+            Table {table}
+          </Typography>
+        </Box>
+        <Box display='flex' sx={{ color: '#626264' }}>
+          <Typography sx={{}}>
+            #{requestId}
+          </Typography>
+        </Box>
       </Box>
 
-      <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', mt: -1 }}>
-        
-        <Box display='flex'> 
-          <Box display='flex' sx={{alignContent: 'center', m:1, p:1 }}> 
-            <AccessTimeIcon color="disabled" fontSize="large"/> 
+      <Box display='flex' justifyContent='space-between' sx={{ alignContent: 'center', mt: -1 }}>
+        <Box display='flex'>
+          <Box display='flex' sx={{ alignContent: 'center', m: 1, p: 1 }}>
+            <AccessTimeIcon color="disabled" fontSize="large" />
           </Box>
-          <Box > 
-            <Typography variant="h6" > 
+          <Box >
+            <Typography variant="h6" >
               Waiting time
             </Typography>
             <Typography variant="h5" fontWeight='bold'>
@@ -149,8 +146,8 @@ export default function WaitRequestBox({
           </Box>
         </Box>
 
-        <Box display='flex' sx={{alignContent: 'center', m:1, p:1 }}>
-        <Button variant="contained" onClick={handleOpen} sx={{
+        <Box display='flex' sx={{ alignContent: 'center', m: 1, p: 1 }}>
+          <Button variant="contained" onClick={handleOpen} sx={{
             height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3,
             '&:hover': {
               backgroundColor: '#8475B0',
@@ -175,7 +172,7 @@ export default function WaitRequestBox({
               </Box>
 
               <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 3, flexDirection: 'column' }}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2}}  >
+                <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2 }}  >
                   Request confirm
                 </Typography>
                 <Typography sx={{ textAlign: 'center' }} >
@@ -186,11 +183,11 @@ export default function WaitRequestBox({
                 </Typography>
               </Box>
 
-              <Box sx={{display:'flex', justifyContent:'center', mt:4}}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
                     backgroundColor: '#8475B0',
-                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
+                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5
                 }}>
                   <Typography variant="h6" sx={{ color: '#ffffff' }} >
                     Confirm
@@ -207,24 +204,20 @@ export default function WaitRequestBox({
                 </Button>
               </Box>
             </Card>
-
-          </Modal>    
+          </Modal>
         </Box>
       </Box>
-    
+
       <ThemeProvider theme={theme}>
         {progress !== 100 && (
-        <Box sx={{ width: '90%', px:3, py:2}}>
-          <LinearProgress variant="determinate" value={progress} />
-        </Box>)}
+          <Box sx={{ width: '90%', px: 3, py: 2 }}>
+            <LinearProgress variant="determinate" value={progress} />
+          </Box>)}
         {progress === 100 && (
-        <Box sx={{ width: '90%', px:3, py:2}}>
-          <LinearProgress variant="determinate" color='error' value={progress} />
-        </Box>)}
+          <Box sx={{ width: '90%', px: 3, py: 2 }}>
+            <LinearProgress variant="determinate" color='error' value={progress} />
+          </Box>)}
       </ThemeProvider>
-  
     </Box>
-
-    
   );
 }

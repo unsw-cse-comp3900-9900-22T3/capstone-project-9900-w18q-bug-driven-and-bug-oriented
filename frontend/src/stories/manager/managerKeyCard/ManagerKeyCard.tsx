@@ -1,19 +1,15 @@
+// key list 
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Card, Paper, Typography, IconButton, Modal } from "@mui/material";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ClearIcon from '@mui/icons-material/Clear';
-import { KeyObject } from "crypto";
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   role?: string;
   name?: string;
   keyValue?: string;
   lastModified?: string;
-  //预留空函数
   deleteFunc?: (params: any) => any;
 }
 
@@ -31,21 +27,17 @@ const style = {
   pt: 2,
 };
 
-// 别忘了修改函数名
+
 export default function ManagerKeyCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   role = 'Manager',
   name = 'Tony',
   keyValue = '',
   lastModified = '2022-09-24 19:07:33',
   deleteFunc = () => { },
-
   ...props
 }: ListProps) {
 
   const [open, setOpen] = useState(false);
-
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -59,9 +51,7 @@ export default function ManagerKeyCard({
       <Paper elevation={0}
         sx={{
           width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column',
-
         }}>
-
         <Box display='flex' justifyContent='space-between'>
           <Box>
             <Box display='flex' flexDirection='row'>
@@ -83,8 +73,8 @@ export default function ManagerKeyCard({
                       {name}
                     </Typography>
                   </Box>
-
                 </Box>
+
                 <Box sx={{ m: 5, mt: 1, flexDirection: 'row', display: 'flex' }}>
                   <Box sx={{ display: 'flex' }}>
                     <Typography sx={{ fontWeight: 'bold' }} variant="h5">
@@ -94,11 +84,9 @@ export default function ManagerKeyCard({
                       {keyValue}
                     </Typography>
                   </Box>
-        
                 </Box>
               </Box>
               <Box>
-
               </Box>
             </Box>
           </Box>
@@ -110,19 +98,17 @@ export default function ManagerKeyCard({
               }
             }}>
               <Box sx={{ display: 'flex' }}>
-                <Typography variant="inherit" sx={{ color: '#ffffff', fontSize: 16,  }}>
+                <Typography variant="inherit" sx={{ color: '#ffffff', fontSize: 16, }}>
                   Delete
                 </Typography>
               </Box>
             </Button>
-
             <Modal
               open={open}
               onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-
               <Card sx={style}>
                 <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
                   <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -169,11 +155,9 @@ export default function ManagerKeyCard({
                   </Button>
                 </Box>
               </Card>
-
             </Modal>
           </Box>
         </Box>
-
       </Paper>
     </>
   );

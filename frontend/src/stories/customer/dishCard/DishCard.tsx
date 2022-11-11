@@ -1,3 +1,4 @@
+// dish card
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,19 +11,12 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
 import AddNumberBox from "./AddNumberBox";
 import { useEffect } from 'react';
 
-// 声明变量的数据格式
-interface ListProps {
-  //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
-  //预留空函数
-  doSomething?: (params: any) => any;
 
+interface ListProps {
+  doSomething?: (params: any) => any;
   dishId?: string;
   dishName?: string;
   description?: string;
@@ -41,12 +35,12 @@ const theme = createTheme({
       contrastText: '#fff',
     },
   },
-  typography:{
+  typography: {
     fontFamily: "Quicksand",
     button: {
-     textTransform: 'none'
-   }
- }
+      textTransform: 'none'
+    }
+  }
 });
 
 declare module '@mui/material/styles' {
@@ -67,10 +61,8 @@ declare module '@mui/material/Button' {
   }
 }
 
-// 别忘了修改函数名
-export default function DishCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
+export default function DishCard({
   dishId = '123',
   dishName = 'Chicken Grill',
   description = 'It is one of the mot iconic and well-recognized fast food out there.',
@@ -80,22 +72,21 @@ export default function DishCard({
   picture = '/dishImg/chickenGrill.jpg',
   initDishNum = 0,
   passObj = () => { },
-
   ...props
 }: ListProps) {
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-    // setDishTryNum(dishNum);
-  };
-  const handleClose = () => setOpen(false);
-
-
   const [dishNum, setDishNum] = React.useState(0);
-
   const [dishTryNum, setDishTryNum] = React.useState(0);
 
+  // pop window
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => setOpen(false);
+
+  // select number
   const selectDishNum = () => {
     setDishNum(dishTryNum);
     const obj = {
@@ -106,11 +97,12 @@ export default function DishCard({
       dishNumber: dishTryNum,
       picture: picture,
     };
+    // let father commponent read
     passObj(obj);
     setOpen(false);
-    // setEditFlag(true);
   };
 
+  // init
   useEffect(() => {
     setDishNum(0);
   }, [initDishNum]);
@@ -139,7 +131,6 @@ export default function DishCard({
         <Box sx={{
           height: 50,
           width: 50,
-          // backgroundColor: '#fff',
           color: '#fff',
           borderRadius: 10,
           fontWeight: 'bold',
@@ -149,12 +140,10 @@ export default function DishCard({
           zIndex: 5,
           ml: 55,
         }}>
-
         </Box>
       )}
 
-      <Card  sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
-
+      <Card sx={{ width: 465, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
         <CardMedia
           component="img"
           height="180"
@@ -164,13 +153,11 @@ export default function DishCard({
         />
 
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-
           <Box sx={{ display: 'flex', height: 50 }}>
             <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
               {dishName}
             </Typography>
           </Box>
-
           <Box sx={{ display: 'flex' }}>
             <Box
               sx={{
@@ -182,13 +169,11 @@ export default function DishCard({
                 textAlign: 'center',
                 p: 0.5,
                 m: 0.5,
-                
               }}
             >
-              <Typography sx={{fontWeight: 'bold'}}>
+              <Typography sx={{ fontWeight: 'bold' }}>
                 {calories}Cal
               </Typography>
-              
             </Box>
 
             <Box
@@ -204,13 +189,11 @@ export default function DishCard({
                 fontWeight: 'bold',
               }}
             >
-              <Typography sx={{fontWeight: 'bold'}}>
+              <Typography sx={{ fontWeight: 'bold' }}>
                 $ {price}
               </Typography>
-              
             </Box>
           </Box>
-
         </CardContent>
 
         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -224,11 +207,9 @@ export default function DishCard({
                 sx={{ borderRadius: 2 }}
               >
                 <Typography sx={{}}>
-                 Select 
+                  Select
                 </Typography>
-                
               </Button>
-
               <Modal
                 open={open}
                 onClose={handleClose}
@@ -246,7 +227,6 @@ export default function DishCard({
                     <CloseIcon fontSize="large" />
                   </IconButton>
                   <Card sx={{ maxWidth: 720, borderRadius: 5 }}>
-
                     <CardMedia
                       component="img"
                       height="420"
@@ -254,7 +234,6 @@ export default function DishCard({
                       alt="chicken grill"
                       sx={{ width: '100%', borderRadius: 5 }}
                     />
-
                     <CardContent>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
 
@@ -275,15 +254,12 @@ export default function DishCard({
                             textAlign: 'center',
                             p: 0.5,
                             m: 0.5,
-
                             fontWeight: 'bold',
                           }}>
-                            <Typography sx={{fontWeight: 'bold'}}>
-                              {calories}Cal
-                            </Typography>
-                          
+                          <Typography sx={{ fontWeight: 'bold' }}>
+                            {calories}Cal
+                          </Typography>
                         </Box>
-
                       </Box>
 
                       <Box sx={{ my: 0.2, flexDirection: 'row', display: 'flex' }}>
@@ -307,15 +283,11 @@ export default function DishCard({
                           {description}
                         </Typography>
                       </Box>
-
                     </CardContent>
 
                     <CardActions sx={{ display: 'flex', justifyContent: 'space-between', ml: 1 }}>
-
                       <ThemeProvider theme={theme}>
-
                         <AddNumberBox passNum={setDishTryNum} initialNum={((initDishNum !== 0) && (dishNum === 0)) ? initDishNum : 1} />
-
                         <Box sx={{ display: 'flex', mx: 1 }}>
                           <Button
                             size="small"
@@ -323,19 +295,14 @@ export default function DishCard({
                             color='neutral'
                             onClick={selectDishNum}
                             sx={{ borderRadius: 2, px: 3, }}
-                            
                           >
                             <Typography sx={{}}>
                               Select
                             </Typography>
-                            
                           </Button>
                         </Box>
-
                       </ThemeProvider>
                     </CardActions>
-
-
                   </Card>
                 </Box>
               </Modal>

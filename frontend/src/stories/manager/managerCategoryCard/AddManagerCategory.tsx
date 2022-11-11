@@ -1,17 +1,14 @@
+// add dish button
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
 import { Alert, Button, Card, IconButton, Input, Modal, Snackbar, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 
-// 声明变量的数据格式
-interface ListProps {
-  //问号是说可有可无
 
-  //预留空函数
+interface ListProps {
   changeFunc?: (params: any) => any;
   submitFunc?: (params: any) => any;
-
 }
 
 const ariaLabel = { 'aria-label': 'description' };
@@ -31,23 +28,19 @@ const style = {
 };
 
 
-
-// 别忘了修改函数名
 export default function AddManagerCategory({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-
   changeFunc = () => { },
   submitFunc = () => { },
-
   ...props
 }: ListProps) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => { setOpen(false); setErrorFlag(false);setNewCategoryName('') };
+  const handleClose = () => { setOpen(false); setErrorFlag(false); setNewCategoryName('') };
   const [errorFlag, setErrorFlag] = React.useState(false);
   const [openNoticeWin, setOpenNoticeWin] = React.useState(false);
-
   const [newCategoryName, setNewCategoryName] = React.useState('');
+
+  // pop up window
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategoryName(event.target.value);
   };
@@ -59,6 +52,7 @@ export default function AddManagerCategory({
     setOpenNoticeWin(false);
   };
 
+  // submit confirm function
   const subF = () => {
     if (newCategoryName) {
       submitFunc(newCategoryName)
@@ -66,7 +60,6 @@ export default function AddManagerCategory({
           if (res) {
             setOpenNoticeWin(true);
             setErrorFlag(true);
-
           } else {
             setNewCategoryName('');
             handleClose();
@@ -77,23 +70,22 @@ export default function AddManagerCategory({
     }
   }
 
-
-
+  // init
   useEffect(() => {
     const keyDownHandler = (e: any) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (open){
-         subF(); 
+        if (open) {
+          subF();
         }
-      
       }
     }
     document.addEventListener('keydown', keyDownHandler);
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     }
-  }, [newCategoryName,open])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newCategoryName, open])
 
   return (
     <>
@@ -124,7 +116,6 @@ export default function AddManagerCategory({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-
         <Card sx={style}>
           <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
             <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -160,7 +151,6 @@ export default function AddManagerCategory({
             </Button>
           </Box>
         </Card>
-
       </Modal>
     </>
   );

@@ -1,25 +1,21 @@
+// kitchen item list
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-// 声明变量的数据格式
 interface ListProps {
-  //问号是说可有可无
   itemCategory?: string;
   itemName?: string;
   status?: string;
   itemIndex?: number;
-  //预留空函数
   doSomething: (params: any) => any;
-
 }
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -59,17 +55,15 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 
-// 别忘了修改函数名
 export default function ItemRecord({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   itemCategory = ' ',
   itemName = ' ',
   status = ' ',
   itemIndex = 0,
   doSomething,
-
   ...props
 }: ListProps) {
+
   const [color, setColor] = useState("#FF6D4D");
   const [backgroundColor, setBackgroundColor] = useState("#FFF1EE");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -80,12 +74,11 @@ export default function ItemRecord({
     setAnchorEl(event.currentTarget);
   };
 
-
+  // switch status function
   const handleClose = (e: string) => {
     setAnchorEl(null);
     setMethed(e);
-    // doSomething(e);
-    if (e == "Wait") {
+    if (e === "Wait") {
       setColor("#FF6D4D")
       setBackgroundColor("#FFF1EE")
       doSomething({
@@ -94,7 +87,7 @@ export default function ItemRecord({
       })
     }
 
-    if (e == "Processing") {
+    if (e === "Processing") {
       setColor("#2F4CDD")
       setBackgroundColor("#F7F8FE")
       doSomething({
@@ -102,7 +95,8 @@ export default function ItemRecord({
         status: e,
       })
     }
-    if (e == "Prepared") {
+
+    if (e === "Prepared") {
       setColor("#2BC155")
       setBackgroundColor("#F4FCF6")
       doSomething({
@@ -112,30 +106,29 @@ export default function ItemRecord({
     }
   };
 
-
+  // status button's color
   const statusColor = (s: string) => {
-    if (s == "Wait") {
+    if (s === "Wait") {
       setColor("#FF6D4D")
       setBackgroundColor("#FFF1EE")
     }
-
-    if (s == "Processing") {
+    if (s === "Processing") {
       setColor("#2F4CDD")
       setBackgroundColor("#F7F8FE")
     }
-    if (s == "Prepared") {
+    if (s === "Prepared") {
       setColor("#2BC155")
       setBackgroundColor("#F4FCF6")
     }
   };
 
+  // init
   useEffect(() => {
     statusColor(status);
   }, [status]);
 
   return (
     <>
-
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={1}>
           <Grid item xs={5}>
@@ -143,16 +136,14 @@ export default function ItemRecord({
               <Typography sx={{}}>
                 {itemName}
               </Typography>
-
             </Box>
           </Grid>
           <Grid item xs={5}>
             <Box sx={{ marginTop: 1, }}>
-            <Typography sx={{  }}> 
-             {itemCategory}
-            </Typography>
-             
-              </Box>
+              <Typography sx={{}}>
+                {itemCategory}
+              </Typography>
+            </Box>
           </Grid>
           <Grid item xs={2}>
             <div>
@@ -182,7 +173,6 @@ export default function ItemRecord({
                 <Typography variant="subtitle1" marginLeft={1.5} sx={{ color: { color }, }}>
                   {method}
                 </Typography>
-                
               </Button>
               <StyledMenu
                 id="demo-customized-menu"
@@ -192,9 +182,7 @@ export default function ItemRecord({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={() => handleClose(method)}
-
               >
-
                 <MenuItem onClick={() => handleClose('Wait')} disableRipple sx={{
                   color: "#FF6D4D", display: 'flex',
                   justifyContent: 'center',
@@ -205,7 +193,6 @@ export default function ItemRecord({
                     Wait
                   </Typography>
                 </MenuItem>
-
                 <MenuItem onClick={() => handleClose('Processing')} disableRipple sx={{
                   color: "#2F4CDD", display: 'flex',
                   justifyContent: 'center',
@@ -216,7 +203,6 @@ export default function ItemRecord({
                     Processing
                   </Typography>
                 </MenuItem>
-
                 <MenuItem onClick={() => handleClose('Prepared')} disableRipple sx={{
                   color: "#2BC155", display: 'flex',
                   justifyContent: 'center',
@@ -229,12 +215,9 @@ export default function ItemRecord({
                 </MenuItem>
               </StyledMenu>
             </div>
-
           </Grid>
         </Grid>
       </Box>
-
-
     </>
   );
 }

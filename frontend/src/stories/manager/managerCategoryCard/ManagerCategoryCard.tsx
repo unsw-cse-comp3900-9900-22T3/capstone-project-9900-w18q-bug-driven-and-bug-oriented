@@ -1,48 +1,46 @@
+// category list card
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import { Button, Card, Paper, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Paper, Typography } from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   categoryId?: number;
   categoryName?: string;
   lastModified?: string;
   canMove?: boolean;
   selected?: boolean;
-  //预留空函数
   preFunc?: (params: any) => any;
   nextFunc?: (params: any) => any;
   fatherListener?: (params: any) => any;
 }
 
-// 别忘了修改函数名
+
 export default function ManagerCategoryCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   categoryId = 0,
   categoryName = '',
   lastModified = '',
   canMove = false,
   selected = false,
-  preFunc= () => { },
-  nextFunc= () => { },
+  preFunc = () => { },
+  nextFunc = () => { },
   fatherListener = () => { },
-
   ...props
 }: ListProps) {
+
   const [move, setMove] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     setMove(canMove);
-  },[canMove])
+  }, [canMove])
 
   return (
     <>
       {!move && (
-        <Paper elevation={0}  sx={{
-          width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', 
+        <Paper elevation={0} sx={{
+          width: '100%', height: 182, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column',
         }}>
           <Typography sx={{ ml: 5, mt: 5, fontWeight: 'bold' }} variant="h5">
             {categoryName}
@@ -61,11 +59,11 @@ export default function ManagerCategoryCard({
       )}
       {move && (
         <Box sx={{ width: '100%', height: 182, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-           <ExpandLessIcon sx={{ color: '#503E9D' }} />
-          <Paper elevation={0}  sx={{
+          <ExpandLessIcon sx={{ color: '#503E9D' }} />
+          <Paper elevation={0} sx={{
             width: '100%', height: 140, display: 'flex', bgcolor: '#F7F7F7', borderRadius: 5, flexDirection: 'column', '&:hover': {
               cursor: 'pointer'
-            }, alignContent:'space-between', border: selected? '2px solid #503E9D': '2px solid #ffffff'
+            }, alignContent: 'space-between', border: selected ? '2px solid #503E9D' : '2px solid #ffffff'
           }}>
             <Typography sx={{ ml: 5, mt: 2, fontWeight: 'bold' }} variant="h5">
               {categoryName}
@@ -81,11 +79,9 @@ export default function ManagerCategoryCard({
               </Typography>
             </Box>
           </Paper>
-           <ExpandMoreIcon sx={{ color: '#503E9D' }} />
+          <ExpandMoreIcon sx={{ color: '#503E9D' }} />
         </Box>
-
       )}
-
     </>
   );
 }

@@ -1,26 +1,15 @@
+// logout button
 import { Box } from "@mui/system";
 import React from "react";
 import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import ChatIcon from '@mui/icons-material/Chat';
-import KeyIcon from '@mui/icons-material/Key';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useNavigate } from "react-router-dom";
 
-// 声明变量的数据格式
-interface ListProps {
-  //问号是说可有可无
-  //预留空函数
-  doSomething?: (params: any) => any;
-  status?: string;
 
+interface ListProps {
+  status?: string;
+  doSomething?: (params: any) => any;
 }
 
 const style = {
@@ -37,21 +26,20 @@ const style = {
   pt: 2,
 };
 
-// 别忘了修改函数名
-export default function Logout({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
 
-  doSomething,
+export default function Logout({
   status,
+  doSomething,
   ...props
 }: ListProps) {
 
+  // pop up window display
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
-
+  // confirm logout
   const handleComfirm = (e: any) => {
     setOpen(false);
     navigate('/');
@@ -65,7 +53,7 @@ export default function Logout({
               backgroundColor: '#8475B0',
             }
           }}>
-            <Box sx={{ display: 'flex', ml:-2 }}>
+            <Box sx={{ display: 'flex', ml: -2 }}>
               <KeyboardBackspaceIcon sx={{ color: '#ffffff' }} />
               <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 1, fontSize: 16 }}>
                 Log out
@@ -78,20 +66,17 @@ export default function Logout({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-
             <Card sx={style}>
               <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
                 <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
                   <ClearIcon />
                 </IconButton>
               </Box>
-
               <Box sx={{ justifyContent: 'center', display: 'flex', mt: 6 }}>
                 <Typography variant="h4" sx={{ fontWeight: 'bold' }} >
                   Confirm to exit?
                 </Typography>
               </Box>
-
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 7 }}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
@@ -113,18 +98,17 @@ export default function Logout({
                 </Button>
               </Box>
             </Card>
-
           </Modal>
         </>
       )}
-       {status === 'back' && (
+      {status === 'back' && (
         <>
           <Button onClick={handleOpen} variant="contained" sx={{
             height: 45, width: 250, backgroundColor: '#503E9D', borderRadius: 3, '&:hover': {
               backgroundColor: '#8475B0',
             }
           }}>
-            <Box sx={{ display: 'flex', ml:-2 }}>
+            <Box sx={{ display: 'flex', ml: -2 }}>
               <KeyboardBackspaceIcon sx={{ color: '#ffffff' }} />
               <Typography variant="inherit" sx={{ color: '#ffffff', marginLeft: 1, fontSize: 16 }}>
                 Back
@@ -137,7 +121,6 @@ export default function Logout({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-
             <Card sx={style}>
               <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
                 <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -172,11 +155,9 @@ export default function Logout({
                 </Button>
               </Box>
             </Card>
-
           </Modal>
         </>
       )}
-
     </>
   );
 }
