@@ -1,9 +1,7 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import NavButton from "./NavButton";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的NavButton(不要修改Template)
 export default {
   title: "NavButton",
   component: NavButton,
@@ -18,7 +16,7 @@ const Template: ComponentStory<typeof NavButton> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
   name: "111",
   id: "1",

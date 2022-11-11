@@ -1,6 +1,7 @@
+// customer order bar
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
-import { Alert, Button, Collapse, Divider, Paper, Snackbar, Typography } from "@mui/material";
+import { Alert, Collapse, Divider, Paper, Snackbar, Typography } from "@mui/material";
 import OrderIcon from "./OrderIcon";
 import PriceTag from "./PriceTag";
 import CalorieTag from "./CalorieTag";
@@ -9,20 +10,18 @@ import OrderDetailBox from "../orderDetailBox/OrderDetailBox";
 import CheckBillButton from "./CheckBillButton";
 import { useNavigate } from "react-router-dom";
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   number?: number;
   price?: number;
   haveItem?: boolean;
   canSubmit?: boolean;
   ceilingOfCal?: number;
   countOfCal?: number;
-  //预留空函数
   orderFunc?: (params: any) => any;
   submitFunc: (params: any) => any;
   editFunc?: (params: any) => any;
-  ifCheck?:(params: any) => any;
+  ifCheck?: (params: any) => any;
   oldOrder?:
   {
     dishId: number,
@@ -42,9 +41,8 @@ interface ListProps {
   }[];
 }
 
-// 别忘了修改函数名
+
 export default function OrderBar({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   number = 0,
   price = 0,
   haveItem = true,
@@ -54,40 +52,37 @@ export default function OrderBar({
   orderFunc,
   submitFunc,
   editFunc,
-  ifCheck = ()=>{},
+  ifCheck = () => { },
   oldOrder,
   newOrder,
-
   ...props
 }: ListProps) {
 
-
+  const navigate = useNavigate();
   const [checked, setChecked] = React.useState(false);
-
   const handleChange = () => {
     if (checked) {
       setChecked(false);
     } else {
       setChecked(true);
     };
-
   };
 
-    //for alert information when making a successful operation
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [alertInformation, setAlertInformation] = React.useState('');
-    const handleSuccessSubmit = (message : string) => {
-      setAlertInformation(message);
-      setSuccessOpen(true);
-    };
-    const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setSuccessOpen(false);
-    };
+  //for alert information when making a successful operation
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [alertInformation, setAlertInformation] = React.useState('');
+  const handleSuccessSubmit = (message: string) => {
+    setAlertInformation(message);
+    setSuccessOpen(true);
+  };
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccessOpen(false);
+  };
 
-  const navigate = useNavigate();
+  // submit order
   const toBill = () => {
     const arr = location.pathname.split('/');
     handleSuccessSubmit("Your order has been checked!");
@@ -96,21 +91,20 @@ export default function OrderBar({
     }, 1000);
   };
 
-  useEffect(()=>{
-    if (!haveItem){
+  useEffect(() => {
+    if (!haveItem) {
       setChecked(false);
     }
-    // console.log('now is', haveItem)
-  },[haveItem])
+  }, [haveItem])
 
-  useEffect(()=>{
+  useEffect(() => {
     ifCheck(checked);
-    // console.log('now is', haveItem)
-  },[checked])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checked])
 
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Collapse in={haveItem? checked : false}>
+      <Collapse in={haveItem ? checked : false}>
         <Paper elevation={3} sx={{ width: '100%', height: 'calc(100vh - 135px)', display: 'flex', flexDirection: 'column', overflow: "auto", borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
           <Box sx={{ m: 5, mt: 0 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 7, mt: 5 }} >
@@ -135,7 +129,6 @@ export default function OrderBar({
                         />
                       </Box>
 
-                      {/* <div>{JSON.stringify(item)}</div> */}
                       {(index !== oldOrder.length - 1) && (
                         <Divider sx={{ my: 2, mx: 4 }} />
                       )}
@@ -150,7 +143,7 @@ export default function OrderBar({
                 }}>
                   <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold' }} >
                     Add dishes
-                    </Typography>
+                  </Typography>
                 </Divider>
                 {newOrder?.map((item, index) => {
                   return (
@@ -168,21 +161,18 @@ export default function OrderBar({
                               initDishNum={item.dishNumber}
                               passObj={orderFunc}
                             />
-                            {/* <div>{JSON.stringify(item)}</div> */}
                             {(index !== newOrder.length - 1) && (
                               <Divider sx={{ my: 2, mx: 4 }} />
                             )}
                           </Box>
-
-
                         </>
                       )}
-
                     </React.Fragment>
                   )
                 })}
               </>
             )}
+
             {(oldOrder?.length !== 0 && newOrder?.length === 1) && (
               <>
                 {oldOrder?.map((item, index) => {
@@ -198,7 +188,6 @@ export default function OrderBar({
                           status='submit'
                           initDishNum={item.dishNumber}
                         />
-                        {/* <div>{JSON.stringify(item)}</div> */}
                         {(index !== oldOrder.length - 1) && (
                           <Divider sx={{ my: 2, mx: 4 }} />
                         )}
@@ -227,9 +216,8 @@ export default function OrderBar({
                       </Box>
                     </Box>
                   </Box>
-
                 </Box>
-                
+
                 <Snackbar
                   open={successOpen}
                   autoHideDuration={3000}
@@ -260,24 +248,20 @@ export default function OrderBar({
                               initDishNum={item.dishNumber}
                               passObj={orderFunc}
                             />
-                            {/* <div>{JSON.stringify(item)}</div> */}
                             {(index !== newOrder.length - 1) && (
                               <Divider sx={{ my: 2, mx: 4 }} />
                             )}
                           </Box>
-
                         </React.Fragment>
                       )}
-
                     </React.Fragment>
                   )
                 })}
               </>
             )}
-
           </Box>
-
         </Paper>
+
       </Collapse>
       <Paper elevation={5} sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'end', height: 95, borderRadius: 3 }}>
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
@@ -290,7 +274,5 @@ export default function OrderBar({
         <SubmitButton shown={canSubmit} doSomething={submitFunc} />
       </Paper>
     </Box>
-
-
   );
 }

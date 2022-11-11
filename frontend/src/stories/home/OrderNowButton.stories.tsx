@@ -6,7 +6,7 @@ import OrderNowButton from "./OrderNowButton";
 export default {
   title: "OrderNowButton",
   component: OrderNowButton,
-  
+
   argTypes: {
     backgroundColor: { control: "color" },
   },
@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof OrderNowButton> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
   confirm: false,
   isStaff: false,

@@ -1,18 +1,15 @@
+// add key button
 import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, Button, Card, FormControl, IconButton, Input, Modal, Snackbar, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
-
-  //预留空函数
   addFunc?: (params: any) => any;
-
 }
 
 const ariaLabel = { 'aria-label': 'description' };
@@ -33,18 +30,16 @@ const style = {
 
 const roleList = [{ name: 'Manager', role: 'manager' }, { name: 'Wait staff', role: 'wait' }, { name: 'Kitchen staff', role: 'kitchen' }]
 
-// 别忘了修改函数名
+
 export default function ManagerAddKey({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-
   addFunc = () => { },
-
   ...props
 }: ListProps) {
-  const [open, setOpen] = React.useState(false);
 
+  const [open, setOpen] = React.useState(false);
   const [openNoticeWin, setOpenNoticeWin] = React.useState(false);
 
+  // display pop up window
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -75,8 +70,8 @@ export default function ManagerAddKey({
   const [haveStaffName, setHaveStaffName] = useState(true);
   const [haveKey, setHaveKey] = useState(true);
 
+  // check data and submit
   const subF = (e: any) => {
-
     if (roleName === '') setHaveRoleName(false)
     else setHaveRoleName(true);
 
@@ -88,7 +83,6 @@ export default function ManagerAddKey({
 
     if (roleName === '' || staffName === '' || key === '') return;
 
-
     const obj = {
       role: roleName,
       name: staffName,
@@ -96,15 +90,12 @@ export default function ManagerAddKey({
     };
     addFunc(obj)
       .then((res: any) => {
-        console.log('message is', res);
         if (res === 'success') {
           handleClose();
         } else {
           setOpenNoticeWin(true);
         }
       });
-
-
   }
 
   const handleCloseNoticeWin = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -113,12 +104,6 @@ export default function ManagerAddKey({
     }
     setOpenNoticeWin(false);
   };
-
-  useEffect(() => {
-    console.log('input', roleName, staffName, key);
-  }, [roleName, staffName, key])
-
-
 
   return (
     <>
@@ -149,7 +134,6 @@ export default function ManagerAddKey({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-
         <Card sx={style}>
           <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
             <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -167,7 +151,11 @@ export default function ManagerAddKey({
                 onChange={handleRoleNameSelectChange}
                 sx={{ height: 35, mb: 2 }}
               >
-                {roleList.map((role) => { return (<MenuItem key={'name' + role.name} value={role.role}>{role.name}</MenuItem>) })}
+                {roleList.map((role) => {
+                  return (
+                    <MenuItem key={'name' + role.name} value={role.role}>{role.name}</MenuItem>
+                  )
+                })}
               </Select>
             </FormControl>
           </Box>
@@ -207,7 +195,6 @@ export default function ManagerAddKey({
             </Button>
           </Box>
         </Card>
-
       </Modal>
     </>
   );

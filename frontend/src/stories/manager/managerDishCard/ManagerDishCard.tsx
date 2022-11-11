@@ -1,3 +1,4 @@
+// manager dish card
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -11,24 +12,16 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
 import ManagerDishModal from "../managerDishModal/ManagerDishModal";
 import { useEffect, useState } from 'react';
 
 
-
-// 声明变量的数据格式
 interface ListProps {
-  //问号是说可有可无
-  props1?: string;
-  props2?: string;
-  props3?: boolean;
-  //预留空函数
   removeCard?: (params: any) => any;
   editCard?: (params: any) => any;
   moveLeft?: (params: any) => any;
   moveRight?: (params: any) => any;
-
+  fatherListener?: (params: any) => any;
   dishId?: number;
   dishName?: string;
   categoryName?: string;
@@ -37,7 +30,6 @@ interface ListProps {
   calories?: number;
   price?: number;
   picture?: string;
-  fatherListener?: (params: any) => any;
   categoryList?: string[];
   canMove?: boolean;
   selected?: boolean;
@@ -57,12 +49,8 @@ const style = {
   pt: 2,
 };
 
-const ariaLabel = { 'aria-label': 'description' };
 
-// 别忘了修改函数名
 export default function DishCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-
   dishId = 123,
   dishName = 'Chicken Grill',
   categoryName = 'Meat',
@@ -81,23 +69,25 @@ export default function DishCard({
   moveRight = () => { },
   ...props
 }: ListProps) {
-
+  // base direction
+  const imgDirectoryPath = '/dishImg/';
+  const [move, setMove] = useState(false);
   const [removeOpen, setRemoveOpen] = React.useState(false);
   const handleRemoveOpen = () => setRemoveOpen(true);
   const handleRemoveClose = () => setRemoveOpen(false);
+
+  // remove card function
   const handleRemoveComfirm = (e: any) => {
     setRemoveOpen(false);
     removeCard(dishId);
   };
 
-  const imgDirectoryPath = '/dishImg/';
-
+  // display pop up window 
   const [editOpen, setEditOpen] = React.useState(false);
   const handleEditOpen = () => setEditOpen(true);
   const handleEditClose = () => setEditOpen(false);
-  // const [nowPicture]
+  // let father commponent read the data
   const handleEditComfirm = (e: any) => {
-
     const obj = {
       title: newDishName,
       calorie: Number(newCalories),
@@ -107,16 +97,13 @@ export default function DishCard({
       description: newDescription,
       ingredient: newIngredients,
     };
-    console.log('obj is', obj);
     if (!isNaN(Number(newCalories)) && !isNaN(Number(newPrice))) {
       editCard(obj);
-       setEditOpen(false);
+      setEditOpen(false);
     }
-
-   
   };
 
-
+  // listener of child commponent
   const [newCategoryName, setNewCategoryName] = React.useState(categoryName);
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategoryName(event.target.value);
@@ -153,30 +140,18 @@ export default function DishCard({
     if (!e.target.files) {
       return;
     }
-
     const file = e.target.files[0];
     setNewPictureName('/dishImg/' + file.name);
   };
 
-  const [move, setMove] = useState(false);
-
-  const handleImageClick = () => {
-    // if (canMove === false) {return;}
-    // isSelected === false ? ()=>{setIsSelected(true); fatherListener(dishId)} : () => {setIsSelected(false); fatherListener(-1)};
-  };
-
-
 
   useEffect(() => {
     setMove(canMove);
-    // console.log(categoryId,canMove);
   }, [canMove])
 
   return (
     <>
-
       <Card variant='outlined' sx={{ width: 410, borderRadius: 5, border: 0, zIndex: 10, position: 'relative', mt: -2.5 }}>
-
         {
           !move && <CardMedia
             component="img"
@@ -185,16 +160,12 @@ export default function DishCard({
             image={picture}
             alt={dishName}
             draggable={false}
-          // onClick={()=>{ fatherListener(dishId)}}
           />
         }
-
         {
           move &&
           <Box display='flex' sx={{ justifyContent: 'center', alignItems: 'center' }}>
-
             <ArrowBackIosIcon />
-
             <CardMedia
               component="img"
               height="180"
@@ -206,11 +177,8 @@ export default function DishCard({
               image={picture}
               alt={dishName}
               draggable={false}
-            // onClick={() => { fatherListener(-1)}}
             />
-
             <ArrowForwardIosIcon />
-
           </Box>
         }
 
@@ -219,13 +187,11 @@ export default function DishCard({
             cursor: 'pointer'
           } : undefined
         }}>
-
           <Box sx={{ display: 'flex', height: 50 }}>
             <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
               {dishName}
             </Typography>
           </Box>
-
           <Box sx={{ display: 'flex' }}>
             <Box
               sx={{
@@ -239,14 +205,11 @@ export default function DishCard({
                 m: 0.5,
                 fontWeight: 'bold',
               }}
-
             >
               <Typography sx={{ fontWeight: 'bold' }}>
                 {calories}Cal
               </Typography>
-
             </Box>
-
             <Box
               sx={{
                 minWidth: 50,
@@ -263,14 +226,11 @@ export default function DishCard({
               <Typography sx={{ fontWeight: 'bold' }}>
                 ${price}
               </Typography>
-
             </Box>
           </Box>
-
         </CardContent>
 
         <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-
           <Box sx={{ display: 'flex', mx: 1, mt: -2, mb: 2 }}>
             <Button variant="contained" onClick={handleEditOpen} sx={{
               height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3,
@@ -291,8 +251,7 @@ export default function DishCard({
               ingredients={ingredients}
               calories={calories.toString()}
               price={price.toString()}
-
-
+              // listener 
               handleEditClose={handleEditClose}
               handleEditComfirm={handleEditComfirm}
               handleCategoryChange={handleCategoryChange}
@@ -303,7 +262,7 @@ export default function DishCard({
               handlePriceChange={handlePriceChange}
               handleFileUpload={handleFileUpload}
               newPictureName={newPictureName}
-
+              // input format check
               haveCalories={!isNaN(Number(newCalories))}
               havePrice={!isNaN(Number(newPrice))}
             />
@@ -326,7 +285,6 @@ export default function DishCard({
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-
               <Card sx={style}>
                 <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
                   <IconButton onClick={handleRemoveClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -361,13 +319,9 @@ export default function DishCard({
                   </Button>
                 </Box>
               </Card>
-
             </Modal>
           </Box>
-
-
         </CardActions>
-
       </Card>
     </>
   );

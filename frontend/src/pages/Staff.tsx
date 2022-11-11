@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+// staff login page
+import React, { useState, useEffect } from "react";
 import MuiAlert from '@mui/material/Alert';
 import {
   AlertProps,
   Box,
-  Button,
   createTheme,
   Grid,
   IconButton,
@@ -14,13 +14,11 @@ import {
 } from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from "react-router-dom";
-import homeImg from "../static/homeImg.jpg"
 import StaffSelectButton from "../stories/home/StaffSelectButton";
-import Kitchen from "./Kitchen";
 import BigButton from "../stories/home/BigButton";
 import ButtonIcon from "../stories/home/ButtonIcon";
 import { checkLogin } from "../api/login";
-import DishCard from "../stories/customer/dishCard/DishCard";
+
 
 const theme = createTheme({
   typography: {
@@ -31,48 +29,29 @@ const theme = createTheme({
   }
 });
 
-
-
+// alert modify
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} {...props} />;
-});
-
-const Staff: React.FC<{}> = () => {
-  const navigate = useNavigate();
-  const [staff, setStaff] = useState('');
-  const [showKey, setShowKey] = useState(false)
-  const [key, setKey] = useState('')
-
-  const [open, setOpen] = React.useState(false);
-  const [successOpen, setSuccessOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
+  ) {
+    return <MuiAlert elevation={6} ref={ref} {...props} />;
+  });
+  
+  const Staff: React.FC<{}> = () => {
+    document.title = 'Home';
+    const navigate = useNavigate();
+    const [staff, setStaff] = useState(''); // staff role select
+    const [showKey, setShowKey] = useState(false); // if input key page
+    const [key, setKey] = useState(''); // key input
+    
+    // toast display
+    const [open, setOpen] = React.useState(false);
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const handleClick = () => {
+      setOpen(true);
+    };
   const handleSucessClick = () => {
     setSuccessOpen(true);
-  };
-
-
-  const gotToStaff = async () => {
-    const message = await checkLogin({
-      staff: staff,
-      key: key,
-      table: '',
-      diner: ''
-    });
-    console.log('message', message);
-    if (message.data.message === 'Login success') {
-      console.log('login success');
-      handleSucessClick();
-      setTimeout(() => {navigate(`/${message.data.staff}`);}, 1000);
-    } else {
-      console.log('error key');
-      handleClick();
-    }
   };
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -89,46 +68,52 @@ const Staff: React.FC<{}> = () => {
     setSuccessOpen(false);
   };
 
-  useEffect(() => {
-    console.log('staff = ', staff, 'key = ', key)
-  }, [staff, key])
+  // check key and role 
+  const gotToStaff = async () => {
+    const message = await checkLogin({
+      staff: staff,
+      key: key,
+      table: '',
+      diner: ''
+    });
+    if (message.data.message === 'Login success') {
+      console.log('login success');
+      handleSucessClick();
+      setTimeout(() => { navigate(`/${message.data.staff}`); }, 1000);
+    } else {
+      console.log('error key');
+      handleClick();
+    }
+  };
 
+  // select staff role
   const selectStaff = (e: any) => {
-    if (staff == e) {
+    if (staff === e) {
       setStaff('')
     } else {
       setStaff(e)
     }
   };
 
-  // const checkKey = (e: any, correctKey:any) => {
-  //   if (e === correctKey) {
-  //     console.log('go to', staff);
-  //     navigate(`/${staff}`);
-  //   } else {
-  //     console.log('error key');
-  //     handleClick()
-  //   }
-  // };
 
+  // keydown listener
   useEffect(() => {
     const keyDownHandler = (e: any) => {
-      console.log('now pressed:', e.key);
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (!showKey && staff){
+        if (!showKey && staff) {
           setShowKey(true);
         } else if (showKey && key) {
           gotToStaff();
         }
-
       }
     }
     document.addEventListener('keydown', keyDownHandler);
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     }
-  }, [key, staff,showKey,])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, staff, showKey])
 
   return (
     <ThemeProvider theme={theme}>
@@ -159,22 +144,21 @@ const Staff: React.FC<{}> = () => {
           sx={{
             height: '100%',
             backgroundImage:
-              `url(${homeImg})`,
+              `url(../../homeImg.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
-            display:'flex',
-            justifyContent:'right',
-            alignItems:'end'
+            display: 'flex',
+            justifyContent: 'right',
+            alignItems: 'end'
           }}
-          >
-          <Typography variant="h4" sx={{m:3,fontWeight:'bold',color:'#ABA89E'}}>
+        >
+          <Typography variant="h4" sx={{ m: 3, fontWeight: 'bold', color: '#ABA89E' }}>
             New Bee
           </Typography>
         </Grid>
-
         {!showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ justifyContent: 'left', margin: 10 }}>
@@ -190,8 +174,9 @@ const Staff: React.FC<{}> = () => {
                 <Typography variant="subtitle1" sx={{ color: '#626264' }}>
                   Please select your role to continue
                 </Typography>
+                {/* staff button  */}
                 <Box sx={{ marginTop: 7 }}>
-                  {(staff == 'kitchen') && (
+                  {(staff === 'kitchen') && (
                     <StaffSelectButton doSomething={() => selectStaff('kitchen')} role='Kitchen staff' selected />
                   )}
                   {(staff !== 'kitchen') && (
@@ -199,7 +184,7 @@ const Staff: React.FC<{}> = () => {
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
-                  {(staff == 'wait') && (
+                  {(staff === 'wait') && (
                     <StaffSelectButton doSomething={() => selectStaff('wait')} role='Wait staff' selected />
                   )}
                   {(staff !== 'wait') && (
@@ -207,7 +192,7 @@ const Staff: React.FC<{}> = () => {
                   )}
                 </Box>
                 <Box sx={{ marginTop: 7 }}>
-                  {(staff == 'manager') && (
+                  {(staff === 'manager') && (
                     <StaffSelectButton doSomething={() => selectStaff('manager')} role='Manager' selected />
                   )}
                   {(staff !== 'manager') && (
@@ -226,6 +211,7 @@ const Staff: React.FC<{}> = () => {
             </Box>
           </Grid>
         )}
+        {/* input key page */}
         {showKey && (
           <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ justifyContent: 'left', margin: 10 }}>

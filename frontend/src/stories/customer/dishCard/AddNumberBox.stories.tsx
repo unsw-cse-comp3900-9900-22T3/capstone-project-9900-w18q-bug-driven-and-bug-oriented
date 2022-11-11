@@ -1,9 +1,8 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import AddNumberBox from "./AddNumberBox";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的AddNumberBox(不要修改Template)
+
 export default {
   title: "AddNumberBox",
   component: AddNumberBox,
@@ -18,7 +17,6 @@ const Template: ComponentStory<typeof AddNumberBox> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
 Test.args = {
-  initialNum : 0
+  initialNum: 0
 };

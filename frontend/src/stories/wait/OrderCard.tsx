@@ -1,14 +1,13 @@
+// wait staff check card
 import { Box } from "@mui/system";
 import React from "react";
 import { Button, Card, Collapse, IconButton, Modal, Paper, Typography } from "@mui/material";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useEffect } from "@storybook/addons";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   orderId?: number;
   table?: number;
   time?: string;
@@ -19,12 +18,7 @@ interface ListProps {
     price: number,
     status: string,
   }[];
-
-
-
-  //预留空函数
   confirmFunc: (params: any) => any;
-
 }
 
 const style = {
@@ -42,9 +36,7 @@ const style = {
 };
 
 
-// 别忘了修改函数名
 export default function OrderCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   orderId = 123,
   table = 5,
   time = '',
@@ -52,14 +44,13 @@ export default function OrderCard({
   price = 0,
   itemList = [],
   confirmFunc,
-
   ...props
 }: ListProps) {
 
+  const [checked, setChecked] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  // const [day, setDay] = React.useState('');
-  // const [t, setT] = React.useState('');
 
+  // display pop up window
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleComfirm = (e: any) => {
@@ -67,17 +58,11 @@ export default function OrderCard({
     confirmFunc(e);
   };
 
-  // useEffect(() => {
-
-  // }, [])
-
+  // format the date
   const arr = time.split('-');
   const day = arr[2] + '/' + arr[1] + '/' + arr[0];
   const t = arr[3];
-  // setDay(arr[2] + '/' + arr[1] + '/' + arr[0]);
-  // setT(arr[3])
 
-  const [checked, setChecked] = React.useState(false);
 
   const handleChange = () => {
     if (checked) {
@@ -85,7 +70,6 @@ export default function OrderCard({
     } else {
       setChecked(true);
     };
-
   };
 
   return (
@@ -95,7 +79,7 @@ export default function OrderCard({
           <Typography sx={{ m: 2, ml: 4, fontWeight: 'bold' }} variant='h6'>
             Table {table}
           </Typography>
-          <Typography sx={{ color: '#626264', m:2, mr:4 }} variant='subtitle1'>
+          <Typography sx={{ color: '#626264', m: 2, mr: 4 }} variant='subtitle1'>
             #{orderId}
           </Typography>
         </Box>
@@ -129,36 +113,32 @@ export default function OrderCard({
                           <Typography sx={{ fontWeight: 'bold' }}>
                             Completed
                           </Typography>
-                          
                         </Box>
                       )}
-
                       <Box sx={{ display: 'flex', width: 40, justifyContent: 'end' }} >
                         <Typography sx={{ ml: 2, color: '#626264' }} variant='h6'>
                           ${item.price}
                         </Typography>
                       </Box>
-
                     </Box>
                   </Box>
-
                 )
               })}
             </Box>
           </Paper>
         </Collapse>
-        <Typography sx={{ p: 4,  }} variant='h4'>
+        <Typography sx={{ p: 4, }} variant='h4'>
           Total: ${price}
         </Typography>
         <Box sx={{ width: '100%', justifyContent: 'center', display: 'flex', mt: 5, mb: 5 }}>
           {isRequest === 1 && (
             <>
               <Button onClick={handleOpen} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2, mr: 3 }}>
-              <Typography sx={{  }}> 
-              Pay
-              </Typography>
-                
-                </Button>
+                <Typography sx={{}}>
+                  Pay
+                </Typography>
+
+              </Button>
               <Modal
                 open={open}
                 onClose={handleClose}
@@ -211,27 +191,21 @@ export default function OrderCard({
                     </Button>
                   </Box>
                 </Card>
-
               </Modal>
             </>
-
-
           )}
           {isRequest === 0 && (
             <Button variant="contained" color='warning' disabled sx={{ width: 190, borderRadius: 2, mr: 3 }}>
-              <Typography sx={{  }}>
+              <Typography sx={{}}>
                 Pay
               </Typography>
-              
-              </Button>
-          )}
-
-          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2 }}>
-          <Typography sx={{ }}>
-            Details
-             </Typography>
-            
             </Button>
+          )}
+          <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2 }}>
+            <Typography sx={{}}>
+              Details
+            </Typography>
+          </Button>
         </Box>
       </Card>
     </>

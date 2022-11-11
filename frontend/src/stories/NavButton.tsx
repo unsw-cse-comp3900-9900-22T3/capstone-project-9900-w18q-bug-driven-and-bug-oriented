@@ -1,6 +1,6 @@
+// nav bar button 
 import { Box } from "@mui/system";
-import React from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -11,29 +11,24 @@ import ChatIcon from '@mui/icons-material/Chat';
 import KeyIcon from '@mui/icons-material/Key';
 import FastfoodIcon from '@mui/icons-material/Fastfood';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   name?: string;
   id?: string;
   selected?: boolean;
   number?: number;
   item?: string;
-  //预留空函数
   doSomething?: (params: any) => any;
-
 }
 
-// 别忘了修改函数名
+
 export default function NavButton({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   name = '',
   number = 0,
   selected = true,
   id = '',
   item = "",
   doSomething,
-
   ...props
 }: ListProps) {
   return (
@@ -52,6 +47,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'hot' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -81,6 +77,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'category' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -110,6 +107,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'dashboard' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -139,6 +137,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'menu' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -174,9 +173,9 @@ export default function NavButton({
               {number}
             </Box>
           )}
-
         </Box>
       )}
+
       {(item === 'order' && selected) && (
         <Box onClick={doSomething} sx={{
           width: 270, height: 60, display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 3, backgroundColor: '#503E9D'
@@ -190,7 +189,6 @@ export default function NavButton({
               Orders
             </Typography>
           </Box>
-
           {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#ffffff', display: 'flex', color: '#503E9D', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
@@ -213,6 +211,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'service' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -242,6 +241,7 @@ export default function NavButton({
           </Typography>
         </Box>
       )}
+
       {(item === 'key' && selected) && (
         <Box sx={{
           width: 270, height: 60, display: 'flex', flexDirection: 'row', backgroundColor: '#503E9D', borderRadius: 3, alignItems: 'center',
@@ -271,15 +271,14 @@ export default function NavButton({
               Requests
             </Typography>
           </Box>
-
           {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#503E9D', display: 'flex', color: '#ffffff', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
             </Box>
           )}
-
         </Box>
       )}
+
       {(item === 'request' && selected) && (
         <Box onClick={doSomething} sx={{
           width: 270, height: 60, display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', borderRadius: 3, backgroundColor: '#503E9D'
@@ -293,7 +292,6 @@ export default function NavButton({
               Requests
             </Typography>
           </Box>
-
           {number > 0 && (
             <Box sx={{ height: 30, width: 30, backgroundColor: '#ffffff', display: 'flex', color: '#503E9D', borderRadius: 10, justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', marginRight: 3 }}>
               {number}
@@ -342,7 +340,6 @@ export default function NavButton({
               {number}
             </Box>
           )}
-
         </Box>
       )}
     </>
