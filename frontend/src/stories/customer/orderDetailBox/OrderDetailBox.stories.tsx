@@ -1,9 +1,7 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import OrderDetailBox from "./OrderDetailBox";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-//修改所有的OrderDetailBox(不要修改Template)
 export default {
   title: "OrderDetailBox",
   component: OrderDetailBox,
@@ -18,7 +16,7 @@ const Template: ComponentStory<typeof OrderDetailBox> = (args) => (
 );
 
 export const Test = Template.bind({});
-// 参数,storybook里的默认参数
+
 Test.args = {
   dishName: 'Chicken Grill',
   description: 'It is one of the mot iconic and well-recognized fast food out there.',

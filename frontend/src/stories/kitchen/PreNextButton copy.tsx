@@ -1,21 +1,15 @@
+// kitchen switch page button's commponent
 import { Button, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import React from "react";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
-// 声明变量的数据格式
-interface ListProps {
-  //问号是说可有可无
-  type?: string;
 
-  //预留空函数
+interface ListProps {
+  type?: string;
   doSomething?: (params: any) => any;
 }
 
-// 别忘了修改函数名
 export default function PreNextButton({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   type = '1',
   doSomething,
   ...props
@@ -69,7 +63,6 @@ export default function PreNextButton({
           </Typography>
         </Button>
       )}
-
     </>
   );
 }

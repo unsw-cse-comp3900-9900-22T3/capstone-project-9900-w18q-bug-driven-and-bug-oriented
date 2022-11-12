@@ -13,7 +13,6 @@ import ManagerKey from './pages/ManagerKey';
 import ManagerMenu from './pages/ManagerMenu';
 import ManagerOrder from './pages/ManagerOrder';
 import ManagerService from './pages/ManagerService';
-
 import KitchenOrder from './pages/KitchenOrder';
 import { Box, Button } from '@mui/material';
 
@@ -45,7 +44,6 @@ function App() {
         <Route path="/manager/service" element={<ManagerService />} />
         <Route path="/wait" element={<Waiter />} />
       </Routes>
-
     </div>
   );
 }

@@ -1,33 +1,26 @@
-import { Box } from "@mui/system";
+// add dish button
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Typography from '@mui/material/Typography';
 import ManagerDishModal from "../managerDishModal/ManagerDishModal";
 import AddIcon from '@mui/icons-material/Add';
 
-// 声明变量的数据格式
-interface ListProps {
-  //问号是说可有可无
 
-  //预留空函数
+interface ListProps {
   doSomething?: (params: any) => any;
   categoryName?: string;
   addCard?: (params: any) => any;
 }
 
-// 别忘了修改函数名
+
 export default function ManagerAddDishButton({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-
   doSomething,
-
   categoryName,
   addCard = () => { },
   ...props
 }: ListProps) {
 
   const [editOpen, setEditOpen] = React.useState(false);
-
   const [haveDishName, setHaveDishName] = useState(true);
   const [haveCalories, setHaveCalories] = useState(true);
   const [havePrice, setHavePrice] = useState(true);
@@ -37,20 +30,18 @@ export default function ManagerAddDishButton({
   const [haveIngredients, setHaveIngredients] = useState(true);
   const [canError, setCanError] = useState(false);
 
-
+  // switch pop up window
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => { 
-    setEditOpen(false); 
+  const handleEditClose = () => {
+    setEditOpen(false);
     setNewDishName('');
     setNewCalories('');
     setNewPrice('');
     setNewPictureName('');
-    // setNewCategoryName('');
     setNewDescription('');
     setNewIngredients('');
-
+    // check input
     setCanError(false);
-
     setHaveDishName(true);
     setHaveCalories(true);
     setHavePrice(true);
@@ -60,6 +51,7 @@ export default function ManagerAddDishButton({
     setHaveIngredients(true);
   }
 
+  // check input function & submit
   const handleEditComfirm = (e: any) => {
     if (!newDishName) setHaveDishName(false)
     else setHaveDishName(true);
@@ -75,7 +67,6 @@ export default function ManagerAddDishButton({
     else setHaveDescription(true);
     if (!newIngredients) setHaveIngredients(false)
     else setHaveIngredients(true);
-
     const obj = {
       title: newDishName,
       calorie: Number(newCalories),
@@ -85,30 +76,24 @@ export default function ManagerAddDishButton({
       description: newDescription,
       ingredient: newIngredients,
     };
-
-    console.log('now obj is', obj);
+    // check input format
     if (obj.title && obj.calorie && obj.cost && obj.picture
       && obj.categoryName && obj.description && obj.ingredient) {
-
       addCard(obj);
       setNewDishName('');
       setNewCalories('');
       setNewPrice('');
       setNewPictureName('');
-      // setNewCategoryName('');
       setNewDescription('');
       setNewIngredients('');
-      
       setCanError(false);
       setEditOpen(false);
     } else {
       setCanError(true);
     }
-
   };
 
-
-
+  // data listener from child commponent
   const [newCategoryName, setNewCategoryName] = React.useState('');
   const handleCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewCategoryName(event.target.value);
@@ -150,49 +135,46 @@ export default function ManagerAddDishButton({
     setNewPictureName('/dishImg/' + file.name);
   };
 
+  // init input
   useEffect(() => {
-    
-  if (canError) {
-    if (!newDishName) setHaveDishName(false)
-    else setHaveDishName(true);
-    if (!newCalories) setHaveCalories(false)
-    else setHaveCalories(true);
-    if (!newPrice) setHavePrice(false)
-    else setHavePrice(true);
-    if (!newPictureName) setHavePicture(false)
-    else setHavePicture(true);
-    if (!newCategoryName) setHaveCategory(false)
-    else setHaveCategory(true);
-    if (!newDescription) setHaveDescription(false)
-    else setHaveDescription(true);
-    if (!newIngredients) setHaveIngredients(false)
-    else setHaveIngredients(true);
-  }
-    
+    if (canError) {
+      if (!newDishName) setHaveDishName(false)
+      else setHaveDishName(true);
+      if (!newCalories) setHaveCalories(false)
+      else setHaveCalories(true);
+      if (!newPrice) setHavePrice(false)
+      else setHavePrice(true);
+      if (!newPictureName) setHavePicture(false)
+      else setHavePicture(true);
+      if (!newCategoryName) setHaveCategory(false)
+      else setHaveCategory(true);
+      if (!newDescription) setHaveDescription(false)
+      else setHaveDescription(true);
+      if (!newIngredients) setHaveIngredients(false)
+      else setHaveIngredients(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients])
 
-
   useEffect(() => {
-    console.log('input', newCategoryName);
   }, [newCategoryName])
 
+  // key down listener
   useEffect(() => {
     const keyDownHandler = (e: any) => {
-      console.log('now pressed:', e.key);
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (editOpen){
-          handleEditComfirm(''); 
+        if (editOpen) {
+          handleEditComfirm('');
         }
-      
       }
     }
     document.addEventListener('keydown', keyDownHandler);
     return () => {
       document.removeEventListener('keydown', keyDownHandler);
     }
-  }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients,editOpen])
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newDishName, newCalories, newPrice, newPictureName, newCategoryName, newDescription, newIngredients, editOpen])
 
 
   return (
@@ -210,9 +192,6 @@ export default function ManagerAddDishButton({
       </Button>
       <ManagerDishModal
         editOpen={editOpen}
-        // categoryName={newCategoryName}
-
-
         handleEditClose={handleEditClose}
         handleEditComfirm={handleEditComfirm}
         handleCategoryChange={handleCategoryChange}
@@ -222,9 +201,8 @@ export default function ManagerAddDishButton({
         handleCaloriesChange={handleCaloriesChange}
         handlePriceChange={handlePriceChange}
         handleFileUpload={handleFileUpload}
-
+        // input available flag
         newPictureName={newPictureName}
-
         haveCalories={haveCalories}
         haveCategoryName={haveCategory}
         haveDescription={haveDescription}
@@ -232,7 +210,6 @@ export default function ManagerAddDishButton({
         haveIngredients={haveIngredients}
         haveNewPictureName={havePicture}
         havePrice={havePrice}
-
       />
     </>
   );

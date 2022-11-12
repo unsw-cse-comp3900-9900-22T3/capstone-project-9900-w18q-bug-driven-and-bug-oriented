@@ -144,10 +144,10 @@ engine = create_engine(
 ######################################### Login Module #################################################################
 @app.route('/', methods=["GET"])
 def get_table():
-    #  删除超过下单时间6小时还未支付的订单
+    #  Delete orders that have not been paid for more than 6 hours after they were placed
     safe_sql = 'SET SQL_SAFE_UPDATES=0;'
     update_sql = """update orders set status='Completed',isPay=1,payTime=now()where date_sub(now(),interval 6 hour)>orderTime and isPay=0"""
-    #  删除超过进入点单页面一小时还未下单的订单
+    #  Delete orders that have not been placed within one hour of entering the order page
     delte_sql = """delete from orders where date_sub(now(),interval 1 hour)>startTime and orderTime is null"""
     table_sql = """select orders.`table`,orders.isPay from(select`table`,max(orderId)as orderId from orders group by`table`)temp join orders on temp.orderId=orders.orderId order by`table`"""
     return_josn = {}
@@ -155,8 +155,8 @@ def get_table():
         conn.execute(safe_sql)
         conn.execute(update_sql)
         conn.execute(delte_sql)
-        result_proxy = conn.execute(table_sql)  # 返回值为ResultProxy类型
-        table_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        result_proxy = conn.execute(table_sql)  # The return value is of the ResultProxy type
+        table_result = result_proxy.fetchall()  # The return value is the tuple list, with each tuple being one record
         res = pd.DataFrame(list(table_result), columns=['number', 'status'])
         return_josn = {"tableList": res.to_dict(orient='records')}
     return Response(json.dumps(return_josn), mimetype="application/json")
@@ -334,7 +334,7 @@ def ask_help(order_id):
 
 @app.route('/customer/<int:order_id>/recommend', methods=["POST"])
 def recommend_items(order_id):
-    # 对所有历史订单中的item进行关联性分析
+    # Conduct correlation analysis for all items in historical orders
     res = db.session.query(Orderitem.dishId, Orderitem.orderId).join(Menuitem,
                                                                      Menuitem.dishId == Orderitem.dishId).order_by(
         Orderitem.dishId).distinct().all()
@@ -354,17 +354,17 @@ def recommend_items(order_id):
     dfTf = te.fit_transform(orderItemsList)
     df = pd.DataFrame(dfTf, columns=te.columns_)
 
-    # use_colnames=True表示使用元素名字，默认的False使用列名代表元素, 设置最小支持度min_support
+    # use_colnames=True means use the element name. The default False uses the column name for the element and sets the minimum support level min_support
     frequentItemsets = apriori(df, min_support=0.05, use_colnames=True)
     frequentItemsets.sort_values(by='support', ascending=False, inplace=True)
 
-    # metric可以有很多的度量选项，返回的表列名都可以作为参数
+    # There are many metric options available, and the returned table column name can be used as an argument
     associationRule = association_rules(frequentItemsets, metric='confidence', min_threshold=0.9)
-    # 关联规则可以提升度排序
+    # Association rules can enhance degree sorting
     associationRule.sort_values(by='lift', ascending=False, inplace=True)
     associationRule  # 规则是：antecedents->consequents
 
-    # 选择2频繁项集
+    # Select 2-frequent-item set
     frequentItem2sets = frequentItemsets[frequentItemsets.itemsets.apply(lambda x: len(x)) == 2]
 
     currentItems = []
@@ -374,7 +374,7 @@ def recommend_items(order_id):
 
     recommendItems = []
 
-    # 遍历 支持度从高到低排序后的2频繁项集
+    # Traversal. 2 frequent item sets ranked from highest to lowest support
     for i in frequentItem2sets.itemsets:
         for j in reversed(currentItems):
             if j in i:
@@ -390,7 +390,7 @@ def recommend_items(order_id):
         if len(recommendItems) == 5:
             break
 
-    # <5时随机选择未在购物车内的item
+    # When the count is less than 5, the items not in the shopping car are randomly selected
     if (len(recommendItems)) < 5:
         menuRes = db.session.query(Menuitem.dishId).distinct().all()
         unselectedItems = []
@@ -542,17 +542,18 @@ def confirm_pay_order(order_id):
 
 @app.route('/kitchen', methods=["GET", "POST"])
 def get_orders():
+    # Get today's order. The upper part of the order list are Wait or Processing orders in order of order time. The lowwer part is the orders whose status is Completed, in order of order time.
     order_sql = """select allItem.orderId,allItem.`table`,allItem.orderTime,ifnull(waitItem.waitCount,0)as waitCount,allItem.`status`from(select wait_management.orders.orderId,wait_management.orders.`table`,wait_management.orders.orderTime,count(wait_management.orderItems.dishId)as allCount,wait_management.orders.`status`,(case when wait_management.orders.`status`='Wait'or wait_management.orders.`status`='Processing'then 0 when wait_management.orders.`status`='Completed'then 1 end)as srank from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId where DATE_FORMAT(wait_management.orders.orderTime,'%%Y-%%m-%%d')=DATE_FORMAT(now(),'%%Y-%%m-%%d')group by wait_management.orders.orderId)as allItem left join(select wait_management.orders.orderId,count(wait_management.orderItems.dishId)as waitCount from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId where DATE_FORMAT(wait_management.orders.orderTime,'%%Y-%%m-%%d')=DATE_FORMAT(now(),'%%Y-%%m-%%d')and wait_management.orderItems.`status`='Wait'group by wait_management.orders.orderId)as waitItem on allItem.orderId=waitItem.orderId order by allItem.srank,allItem.orderTime"""
     with engine.connect() as conn:
-        result_proxy = conn.execute(order_sql)  # 返回值为ResultProxy类型
-        result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
-        res = pd.DataFrame(list(result), columns=['orderId', 'table', 'orderTime', 'waitCount', 'status'])  # 将结果转存为DF
+        result_proxy = conn.execute(order_sql)  # The return value is of the ResultProxy type
+        result = result_proxy.fetchall()  # The return value is the tuple list, with each tuple being one record
+        res = pd.DataFrame(list(result), columns=['orderId', 'table', 'orderTime', 'waitCount', 'status'])  # Save the result as DF
 
-    if request.method == "GET":  # 默认返回排序后的order列表
+    if request.method == "GET":  # By default, the sorted order list is returned
         return {"orderList": res.to_dict(orient='records')}
 
     else:
-        post_data = json.loads(json.dumps(request.get_json()))  # 获取到status
+        post_data = json.loads(json.dumps(request.get_json()))  # Get the status
         status_post = str(post_data["orderStatus"])
         filter_res = res[res['status'] == status_post]
         return {"orderList": filter_res.to_dict(orient='records')}
@@ -560,12 +561,13 @@ def get_orders():
 
 @app.route('/kitchen/<int:order_id>', methods=["GET"])
 def get_items(order_id):
+    # Get the items in this order. The upper part of the item list are Wait or Processing orders in order of order time. The lowwer part is the orders whose status is Prepared, in order of order time.
     table_time_sql = """select`table`,orderTime from wait_management.orders where orderId=""" + str(order_id)
     item_sql = """select itemIndex,title,categoryName,`status`from(select wait_management.orderItems.itemIndex,wait_management.orderItems.`status`,wait_management.menuItems.title,wait_management.menuItems.categoryName,(case when wait_management.orderItems.`status`='Wait'then 0 when wait_management.orderItems.`status`='Processing'then 1 when wait_management.orderItems.`status`='Prepared'then 2 end)as srank,rank()over(order by wait_management.orderItems.itemTime)as trank from wait_management.orders join wait_management.orderItems on wait_management.orders.orderId=wait_management.orderItems.orderId join wait_management.menuItems on wait_management.orderItems.dishId=wait_management.menuItems.dishId where wait_management.orders.orderId=""" + str(
         order_id) + """)as items order by srank,trank"""
     with engine.connect() as conn:
-        result_proxy = conn.execute(table_time_sql)  # 返回值为ResultProxy类型
-        table_time_result = result_proxy.fetchall()  # 返回值为元组list，每个元组为一条记录
+        result_proxy = conn.execute(table_time_sql)  # The return value is of the ResultProxy type
+        table_time_result = result_proxy.fetchall()  # The return value is the tuple list, with each tuple being one record
         result_proxy = conn.execute(item_sql)
         item_result = result_proxy.fetchall()
         item_res = pd.DataFrame(list(item_result), columns=['itemIndex', 'itemName', 'itemCategory', 'status'])
@@ -575,13 +577,13 @@ def get_items(order_id):
 
 @app.route('/kitchen/<int:order_id>', methods=["POST"])
 def update_items(order_id):
-    post_data = json.loads(json.dumps(request.get_json()))  # 获取到status
+    post_data = json.loads(json.dumps(request.get_json()))  # Get the status
     index_post = int(post_data["itemIndex"])
     status_post = str(post_data["itemStatus"])
     db.session.query(Orderitem).filter(Orderitem.itemIndex == index_post).update({"status": status_post})
-    db.session.commit()  # 更新item的status
+    db.session.commit()  # Update the status of the item
 
-    # 更新order的status
+    # Update the status of the order
     res_all = \
         db.session.query(func.count(Orderitem.itemIndex)).join(Orders).filter(Orders.orderId == order_id).all()[0][0]
     res_prepared = \

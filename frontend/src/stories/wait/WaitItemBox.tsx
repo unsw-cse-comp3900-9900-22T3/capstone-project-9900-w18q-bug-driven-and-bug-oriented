@@ -1,13 +1,12 @@
+// wait staff receive item card
 import { Box } from "@mui/system";
 import React from "react";
 import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
-// 声明变量的数据格式
-interface ListProps {
-  //预留空函数
-  doSomething: (params: any) => any;
 
+interface ListProps {
+  doSomething: (params: any) => any;
   itemIndex?: string
   table?: string
   dishName?: string
@@ -27,50 +26,46 @@ const style = {
   pt: 2,
 };
 
-// 别忘了修改函数名
-export default function WaitItemBox({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
-  doSomething,
 
+export default function WaitItemBox({
   itemIndex = '123456',
   table = '10',
   dishName = 'Pizza',
+  doSomething,
   ...props
 }: ListProps) {
-  
+
+  // pop up window display
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleComfirm =(e: any) => {
+  const handleComfirm = (e: any) => {
     setOpen(false);
     doSomething(e);
   };
-  
+
   return (
-    <Box sx={{backgroundColor: '#F7F7F7', width: 450, height: 170, borderRadius: 5}}>
-      <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', m:1, p:2 }}>
-        <Box display='flex'  fontWeight={'bold'} >
-        <Typography fontSize={20} sx={{ fontWeight: 'bold' }}> 
-        Table {table}
-        </ Typography>
-          
-          </Box>
-        <Box display='flex' sx={{color: '#626264'}}>
-        <Typography sx={{  }}> 
-        #{itemIndex}
-        </Typography>
-          
-          </Box>
+    <Box sx={{ backgroundColor: '#F7F7F7', width: 450, height: 170, borderRadius: 5 }}>
+      <Box display='flex' justifyContent='space-between' sx={{ alignContent: 'center', m: 1, p: 2 }}>
+        <Box display='flex' fontWeight={'bold'} >
+          <Typography fontSize={20} sx={{ fontWeight: 'bold' }}>
+            Table {table}
+          </ Typography>
+        </Box>
+        <Box display='flex' sx={{ color: '#626264' }}>
+          <Typography sx={{}}>
+            #{itemIndex}
+          </Typography>
+        </Box>
       </Box>
-      <Box display='flex' justifyContent='space-between' sx={{alignContent: 'center', m:1, p:2 }}>
-        <Box display='flex'  fontWeight={'bold'} >
-        <Typography variant="h5" sx={{ fontWeight:'bold' }}> 
-         {dishName}
-        </Typography>
-         
-          </Box>
+      <Box display='flex' justifyContent='space-between' sx={{ alignContent: 'center', m: 1, p: 2 }}>
+        <Box display='flex' fontWeight={'bold'} >
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+            {dishName}
+          </Typography>
+        </Box>
         <Box display='flex'>
-        <Button variant="contained" onClick={handleOpen} sx={{
+          <Button variant="contained" onClick={handleOpen} sx={{
             height: 40, width: 130, backgroundColor: '#503E9D', borderRadius: 3,
             '&:hover': {
               backgroundColor: '#8475B0',
@@ -86,7 +81,6 @@ export default function WaitItemBox({
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-
             <Card sx={style}>
               <Box sx={{ display: 'flex', justifyContent: 'right', marginRight: -2 }}>
                 <IconButton onClick={handleClose} color="primary" sx={{ color: '#A3A3A4' }} aria-label="upload picture" component="label">
@@ -95,7 +89,7 @@ export default function WaitItemBox({
               </Box>
 
               <Box sx={{ justifyContent: 'center', alignContent: 'middle', display: 'flex', mt: 3, flexDirection: 'column' }}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2}}  >
+                <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', mb: 2 }}  >
                   Item confirm
                 </Typography>
                 <Typography sx={{ textAlign: 'center' }} >
@@ -106,11 +100,11 @@ export default function WaitItemBox({
                 </Typography>
               </Box>
 
-              <Box sx={{display:'flex', justifyContent:'center', mt:4}}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
                     backgroundColor: '#8475B0',
-                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
+                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5
                 }}>
                   <Typography variant="h6" sx={{ color: '#ffffff' }} >
                     Confirm
@@ -127,17 +121,9 @@ export default function WaitItemBox({
                 </Button>
               </Box>
             </Card>
-
-          </Modal>    
+          </Modal>
         </Box>
       </Box>
-    
-      
-    
-    
-    
     </Box>
-
-    
   );
 }

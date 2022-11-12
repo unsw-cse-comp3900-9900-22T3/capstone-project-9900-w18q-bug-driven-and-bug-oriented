@@ -1,15 +1,12 @@
+// customer order bar submit button
 import { Box } from "@mui/system";
 import React from "react";
-import { Backdrop, Button, Card, Fade, IconButton, Modal, Typography } from "@mui/material";
+import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
-
   shown?: boolean;
-  //预留空函数
   doSomething: (params: any) => any;
-
 }
 
 const style = {
@@ -26,9 +23,8 @@ const style = {
   pt: 2,
 };
 
-// 别忘了修改函数名
+
 export default function SubmitButton({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   shown = true,
   doSomething,
   ...props
@@ -37,7 +33,7 @@ export default function SubmitButton({
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleComfirm =(e: any) => {
+  const handleComfirm = (e: any) => {
     setOpen(false);
     doSomething(e);
   };
@@ -76,11 +72,11 @@ export default function SubmitButton({
                 </Typography>
               </Box>
 
-              <Box sx={{display:'flex', justifyContent:'center', mt:7}}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 7 }}>
                 <Button onClick={handleComfirm} sx={{
                   width: 150, '&:hover': {
                     backgroundColor: '#8475B0',
-                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr:5
+                  }, backgroundColor: '#503E9D', fontWeight: 'bold', height: 55, borderRadius: 3, mr: 5
                 }}>
                   <Typography variant="h6" sx={{ color: '#ffffff' }} >
                     Confirm
@@ -97,7 +93,6 @@ export default function SubmitButton({
                 </Button>
               </Box>
             </Card>
-
           </Modal>
         </>
 
@@ -110,12 +105,11 @@ export default function SubmitButton({
               backgroundColor: '#8475B0',
             }
           }}>
-            <Typography variant="h4" sx={{color:'#ffffff'}}>
+            <Typography variant="h4" sx={{ color: '#ffffff' }}>
               Submit
             </Typography>
           </Button>
         </>
-
       )}
     </>
   );

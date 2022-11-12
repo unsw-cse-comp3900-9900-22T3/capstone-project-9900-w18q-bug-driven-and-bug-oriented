@@ -1,11 +1,10 @@
+// customer bill list
 import { Box } from "@mui/system";
 import * as React from 'react';
-import { Button, Typography } from "@mui/material";
-
-
+import { Typography } from "@mui/material";
 import AddNumberBox from "../dishCard/AddNumberBox";
 
-// 声明变量的数据格式
+
 interface ListProps {
   dishId?: number;
   dishName?: string;
@@ -19,9 +18,8 @@ interface ListProps {
   passObj?: (params: any) => any;
 }
 
-// 别忘了修改函数名
+
 export default function OrderDetailBox({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   dishId = 123,
   dishName = 'Chicken Grill',
   description = 'It is one of the mot iconic and well-recognized fast food out there.',
@@ -59,55 +57,50 @@ export default function OrderDetailBox({
           </Box>
           <Box>
             <Box sx={{ fontSize: 20, fontWeight: 'bold', m: 2 }}>
-            <Typography sx={{fontWeight: 'bold'}}> 
-            {dishName}
-            </Typography>
-              
+              <Typography sx={{ fontWeight: 'bold' }}>
+                {dishName}
+              </Typography>
             </Box>
             <Box display='flex' sx={{ m: 2 }}>
               <Box sx={{ px: 0.5, py: 0.5 }}>
                 <Typography gutterBottom variant="h6" component="div" sx={{ color: '#626264' }}>
                   ${price}
                 </Typography>
-
               </Box>
-              {status !== 'bill' &&
-                (<Box sx={{ display: 'flex', backgroundColor: '#FFF1EC', color: '#fb7140', mx: 2, px: 1, py: 0.5, height: 23, borderRadius: 2, fontWeight: 'bold',mt:0.5 }}>
+
+              {status !== 'bill' && (
+                <Box sx={{ display: 'flex', backgroundColor: '#FFF1EC', color: '#fb7140', mx: 2, px: 1, py: 0.5, height: 23, borderRadius: 2, fontWeight: 'bold', mt: 0.5 }}>
                   <Typography variant="body2" sx={{ fontWeight: 'bold', }} >
                     {calories}Cal
                   </Typography>
-                  
-                </Box>)
-              }
+                </Box>
+              )}
             </Box>
           </Box>
         </Box>
 
-        {status === 'check' &&
-          (<Box sx={{ mt: 4 }}>
+        {status === 'check' && (
+          <Box sx={{ mt: 4 }}>
             <AddNumberBox passNum={changeDishNum} initialNum={dishNum} />
-          </Box>)
-        }
+          </Box>
+        )}
 
-        {status === 'submit' &&
-          (<Box display='flex' sx={{ mt: 4, mx: 4, fontSize: 16, fontWeight: 'bold' }}>
+        {status === 'submit' && (
+          <Box display='flex' sx={{ mt: 4, mx: 4, fontSize: 16, fontWeight: 'bold' }}>
             <Typography gutterBottom variant="h5" component="div" sx={{ color: '#626264' }}>
               &times; {initDishNum}
             </Typography>
+          </Box>
+        )}
 
-          </Box>)
-        }
-
-        {status === 'bill' &&
-          (<Box display='flex' sx={{ mt: 4, mx: 4, }}>
+        {status === 'bill' && (
+          <Box display='flex' sx={{ mt: 4, mx: 4, }}>
             <Typography gutterBottom variant="h5" component="div" sx={{ color: '#626264' }}>
               ${price} &times; {initDishNum}
             </Typography>
-
-          </Box>)
-        }
+          </Box>
+        )}
       </Box>
-
     </>
   );
 }

@@ -1,14 +1,12 @@
+// manager order check card 
 import { Box } from "@mui/system";
 import React from "react";
-import { Button, Card, Collapse, IconButton, Modal, Paper, Typography } from "@mui/material";
+import { Button, Card, Collapse, Paper, Typography } from "@mui/material";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ClearIcon from '@mui/icons-material/Clear';
-import { useEffect } from "@storybook/addons";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-// 声明变量的数据格式
+
 interface ListProps {
-  //问号是说可有可无
   orderId?: string;
   table?: string;
   time?: string;
@@ -18,39 +16,24 @@ interface ListProps {
     price: string,
     status: string,
   }[];
-
-
-  //预留空函数
   confirmFunc?: (params: any) => any;
-
 }
 
 
-// 别忘了修改函数名
 export default function ManagerOrderCard({
-  // 参数，内容影响不大可以没有（如果return要用的话，必须声明）
   orderId = '',
   table = '',
   time = '',
   price = '',
   itemList = [],
   confirmFunc = () => { },
-
   ...props
 }: ListProps) {
 
-  // const [day, setDay] = React.useState('');
-  // const [t, setT] = React.useState('');
-
-  // useEffect(() => {
-
-  // }, [])
-
+  // format date
   const arr = time.split('-');
   const day = arr[2] + '/' + arr[1] + '/' + arr[0];
   const t = arr[3];
-  // setDay(arr[2] + '/' + arr[1] + '/' + arr[0]);
-  // setT(arr[3])
 
   const [checked, setChecked] = React.useState(false);
 
@@ -60,7 +43,6 @@ export default function ManagerOrderCard({
     } else {
       setChecked(true);
     };
-
   };
 
   return (
@@ -105,16 +87,13 @@ export default function ManagerOrderCard({
                           </Typography>
                         </Box>
                       )}
-
                       <Box sx={{ display: 'flex', width: 40, justifyContent: 'end' }} >
                         <Typography sx={{ ml: 2, color: '#626264' }} variant='h6'>
                           ${item.price}
                         </Typography>
                       </Box>
-
                     </Box>
                   </Box>
-
                 )
               })}
             </Box>
@@ -125,10 +104,9 @@ export default function ManagerOrderCard({
         </Typography>
         <Box sx={{ width: '100%', justifyContent: 'center', display: 'flex', mt: 5, mb: 5 }}>
           <Button onClick={handleChange} variant="contained" color='warning' sx={{ width: 400, borderRadius: 2 }}>
-            <Typography sx={{  }} >
+            <Typography >
               Details
             </Typography>
-
           </Button>
         </Box>
       </Card>
