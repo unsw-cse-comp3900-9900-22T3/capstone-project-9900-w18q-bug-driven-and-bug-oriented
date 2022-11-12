@@ -51,9 +51,7 @@ const Home: React.FC<{}> = () => {
   
   // loading
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
+
   
   // switch to customer page
   const goToOrder = async () => {
