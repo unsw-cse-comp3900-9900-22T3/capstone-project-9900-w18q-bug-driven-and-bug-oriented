@@ -70,8 +70,10 @@ const Home: React.FC<{}> = () => {
   
   // get current available list
   const getTable = async () => {
+    setLoading(true);
     const message = await getCustomerTable();
     setTableList(message);
+    setLoading(false);
   }
   
   // select table number

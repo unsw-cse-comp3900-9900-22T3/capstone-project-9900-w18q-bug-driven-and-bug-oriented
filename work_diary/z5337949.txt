@@ -8,3 +8,9 @@ Discuss system architecture
 Configure development environment
 
 week 3:
+Work on proposal
+Draw flow Diagrams of pages
+Config backlog and roadmap on Jira, and assign tasks to teammates
+Build and config MySQL cloud database on AWS
+
+week 4:
