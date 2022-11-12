@@ -135,7 +135,7 @@ export default function OrderCard({
             <>
               <Button onClick={handleOpen} variant="contained" color='warning' sx={{ width: 190, borderRadius: 2, mr: 3 }}>
                 <Typography sx={{}}>
-                  Pay
+                Receive Payment
                 </Typography>
 
               </Button>
@@ -155,7 +155,7 @@ export default function OrderCard({
 
                   <Box sx={{ justifyContent: 'center', display: 'flex', mt: 3 }}>
                     <Typography variant="h4" sx={{ fontWeight: 'bold' }} >
-                      Confirm to Pay?
+                      Confirm to Receipt?
                     </Typography>
 
                   </Box>
