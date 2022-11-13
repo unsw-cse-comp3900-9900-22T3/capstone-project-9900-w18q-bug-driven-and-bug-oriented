@@ -15,3 +15,12 @@ I completed the layout of each item on the wait staff’s page and connected it 
 
 Week 6
 I finished the logic and layout of kitchen’s page and connected it to the back-end. Implement the communication between the kitchen, customer and wait staff. Kitchen can mark every item in each order.
+
+Week 7
+I completed the logic and layout of all manager’s pages, including category, items, order, key, service. Manager now can add new categories, items, keys and observe the service and order situation of the restaurant.
+
+Week 8
+I completed the sorting functions of category and item, now manager can use drag and drop to change the order of category and item. I also add background pictures to customer page to make it more beautiful.
+
+Week 9
+I add recommendation bar at customer page and connect it to the back-end, now customers can receive correspond recommendation dishes when they select any dishes. Also, I optimize some layout and design of UI to make web pages more elegant.
