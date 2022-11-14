@@ -334,13 +334,13 @@ const Customer: React.FC<{}> = () => {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'start',
-            backgroundImage: 'url(../../bgimg3.jpg)',
+            backgroundImage: 'url(../../Background4.png)',
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "right",
             flexDirection: 'column'
           }} >
-            <Box sx={{ backdropFilter: "blur(3px)", flexGrow: 1, height: 'calc(100%)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow: 'hidden' }}>
+            <Box sx={{ backdropFilter: "blur(1px)", flexGrow: 1, height: 'calc(100%)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', overflow: 'hidden' }}>
               {/* loading page */}
               {loading ? (
                 <Box
