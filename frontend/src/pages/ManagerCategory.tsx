@@ -47,7 +47,7 @@ const ManagerCategory: React.FC<{}> = () => {
   useEffect(() => {
     setLoading(true)
   }, []);
-  
+
   //for alert information when making a successful operation
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [alertInformation, setAlertInformation] = React.useState('');
@@ -247,7 +247,7 @@ const ManagerCategory: React.FC<{}> = () => {
                     zValue = 15;
                   }
                   return (
-                    <Box key={'cate' + index} sx={{ mt: -8, mb: -12, mx: 10, display: 'flex', alignItems: 'center' }}>
+                    <Box key={item.categoryId + 'cate' + index} sx={{ mt: -8, mb: -12, mx: 10, display: 'flex', alignItems: 'center' }}>
                       {/* drag card container */}
                       <Box sx={{
                         width: '100%',

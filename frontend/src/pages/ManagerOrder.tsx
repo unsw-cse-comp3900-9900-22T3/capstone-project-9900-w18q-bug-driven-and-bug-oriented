@@ -109,7 +109,7 @@ interface orderInterface {
                     )
                   })
                 }
-                {!order && (
+                {order?.orderList.length === 0 && (
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 50 }}>
                     <Typography variant="h3">
                       No order now......

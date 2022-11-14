@@ -136,7 +136,7 @@ const ManagerMenu: React.FC<{}> = () => {
     setTarget(null)
     setTimeout(() => setHide(false), 0);
   }
-  
+
   // reset list order by edit
   const modifyList = (input: itemListInterface): itemListInterface => {
     if (input.itemList) {
@@ -473,8 +473,8 @@ const ManagerMenu: React.FC<{}> = () => {
                       )
                     else
                       return (
-                        <>
-                        </>
+                        <React.Fragment key={'menu' + index}>
+                        </React.Fragment>
                       )
                   })}
                 {

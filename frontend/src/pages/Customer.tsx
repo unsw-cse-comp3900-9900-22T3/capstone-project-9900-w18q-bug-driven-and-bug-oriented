@@ -383,7 +383,7 @@ const Customer: React.FC<{}> = () => {
 
                       {menu.length === 0 && (
                         // no dish now
-                        <Grid item xs={12} sx={{ height: 'calc(100vh - 95px)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <Grid item sx={{ height: 'calc(100vh - 200px)', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
                           <Typography variant="h3" sx={{ color: '#ffffff' }}>
                             Upcoming......
                           </Typography>
