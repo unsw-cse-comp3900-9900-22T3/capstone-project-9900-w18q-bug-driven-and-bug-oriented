@@ -24,3 +24,6 @@ I completed the sorting functions of category and item, now manager can use drag
 
 Week 9
 I add recommendation bar at customer page and connect it to the back-end, now customers can receive correspond recommendation dishes when they select any dishes. Also, I optimize some layout and design of UI to make web pages more elegant.
+
+Week 10
+I format the code style, delete useless code, test the entire project, and fix bugs. Also, write report with my teammates and prepare for the demonstration 3.
