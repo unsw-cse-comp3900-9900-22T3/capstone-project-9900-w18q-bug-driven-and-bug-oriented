@@ -92,8 +92,8 @@ const ManagerKey: React.FC<{}> = () => {
     const message = await postManagerKey(e);
     if (message.message === 'success') {
       setKeyList({ keyList: message.keyList });
+      handleSuccessSubmit("New key has been added!");
     }
-    handleSuccessSubmit("New key has been added!");
     return (message.message);
   }
 

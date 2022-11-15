@@ -20,7 +20,7 @@ export default function CalorieTag({
       {Number(count) < Number(ceiling) && (
         <Box sx={{ backgroundColor: '#FFF1EC', color: '#FB6D3A', height: 40, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 'fit-content', borderRadius: 2 }}>
           <Typography variant="body1" sx={{ fontWeight: 'bold', marginLeft: 1.5, marginRight: 1.5 }} >
-            Calorie Deflicit:&nbsp;{Number(ceiling) - Number(count)}Cal
+            Calorie Deficit:&nbsp;{Number(ceiling) - Number(count)}Cal
           </Typography>
         </Box>
       )}
