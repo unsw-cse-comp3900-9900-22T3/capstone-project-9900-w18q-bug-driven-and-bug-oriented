@@ -35,23 +35,23 @@ interface orderInterface {
         price?: number;
         status?: string;
       }]
-    }[]
-  };
-  
-  const ManagerOrder: React.FC<{}> = () => {
-    document.title = 'Manager';
-    const [order, setOrder] = useState<orderInterface | any>() // total order list
-    // loading
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-      setLoading(true)
-    }, []);
-    
-    // get and set total order
-    const getOrder = async () => {
-      const message = await getWaitOrder();
-      setOrder(message);
-      setLoading(false);
+  }[]
+};
+
+const ManagerOrder: React.FC<{}> = () => {
+  document.title = 'Manager';
+  const [order, setOrder] = useState<orderInterface | any>() // total order list
+  // loading
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true)
+  }, []);
+
+  // get and set total order
+  const getOrder = async () => {
+    const message = await getWaitOrder();
+    setOrder(message);
+    setLoading(false);
   };
 
   // init
@@ -86,13 +86,13 @@ interface orderInterface {
             <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column', width: '100%', overflowX: 'hidden' }}>
             <Box sx={{ display: 'flex', width: '100%', }}>
               <Typography sx={{ m: 5, ml: 15 }} variant='h3'>
                 Now order:
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', overflow: "auto", ml: 15, flexGrow: 1, height: '100%', width: '100%' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'start', overflow: "auto", ml: 15, flexGrow: 1, height: '100%', width: '100%', }}>
               <Grid container alignItems={!order ? 'cneter' : 'flex-start'} justifyContent="flex-start" spacing={{ xs: 2, sm: 3, md: 5, lg: 8 }} >
                 {
                   order?.orderList.map((item: any) => {
