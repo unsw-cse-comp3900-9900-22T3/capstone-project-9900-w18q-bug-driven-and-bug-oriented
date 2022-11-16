@@ -38,7 +38,7 @@ const ManagerService: React.FC<{}> = () => {
   useEffect(() => {
     setLoading(true)
   }, []);
-  
+
   // get and set request
   const getRequest = async () => {
     const message = await getWaitRequest();
@@ -79,7 +79,7 @@ const ManagerService: React.FC<{}> = () => {
             <PacmanLoader size={100} color={"#503E9D"} loading={loading} />
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center', mt: 10, flexDirection: 'column', overflowX: 'hidden' }}>
             <Box sx={{ display: 'flex', width: '100%', }}>
               <Typography sx={{ m: 5, ml: 15 }} variant='h3'>
                 Now request:
