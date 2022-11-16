@@ -94,6 +94,7 @@ export default function ManagerAddKey({
           handleClose();
         } else {
           setOpenNoticeWin(true);
+          setHaveKey(false);
         }
       });
   }

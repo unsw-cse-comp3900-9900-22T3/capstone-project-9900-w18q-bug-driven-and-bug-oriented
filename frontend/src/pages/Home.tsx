@@ -207,8 +207,8 @@ const Home: React.FC<{}> = () => {
 
                     else
                       return (
-                        <>
-                        </>
+                        <React.Fragment key={'no' + index}>
+                        </React.Fragment>
                       )
                   })}
                 </Grid>

@@ -123,15 +123,31 @@ export default function ManagerKeyCard({
                   <Typography sx={{ fontSize: 20, textAlign: 'center' }} >
                     Do you want to delete this key?
                   </Typography>
-                  <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
-                    Role: {role}
-                  </Typography>
-                  <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
-                    Name: {name}
-                  </Typography>
-                  <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
-                    Key: {keyValue}
-                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'left', ml: 15 }}>
+                    <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
+                      Role:
+                    </Typography>
+                    <Typography sx={{ fontSize: 20, textAlign: 'center' }} >
+                      {role}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'left', ml: 15 }}>
+                    <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
+                      Name:
+                    </Typography>
+                    <Typography sx={{ fontSize: 20, textAlign: 'center' }} >
+                      {name}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'left', ml: 15 }}>
+                    <Typography sx={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }} >
+                      Key:
+                    </Typography>
+                    <Typography sx={{ fontSize: 20, textAlign: 'center' }} >
+                      {keyValue}
+                    </Typography>
+                  </Box>
+
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
