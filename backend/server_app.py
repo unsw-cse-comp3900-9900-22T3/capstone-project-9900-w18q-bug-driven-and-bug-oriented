@@ -364,7 +364,7 @@ def recommend_items(order_id):
     associationRule.sort_values(by='lift', ascending=False, inplace=True)
     associationRule  # 规则是：antecedents->consequents
 
-    # Select 2-frequent-item set
+    # Select 2-item frequent setS
     frequentItem2sets = frequentItemsets[frequentItemsets.itemsets.apply(lambda x: len(x)) == 2]
 
     currentItems = []
@@ -374,7 +374,7 @@ def recommend_items(order_id):
 
     recommendItems = []
 
-    # Traversal. 2 frequent item sets ranked from highest to lowest support
+    # Traversal. 2-item frequent setS ranked from highest to lowest support
     for i in frequentItem2sets.itemsets:
         for j in reversed(currentItems):
             if j in i:
