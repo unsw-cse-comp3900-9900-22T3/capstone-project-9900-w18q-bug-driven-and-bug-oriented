@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home"
 import Customer from "./pages/Customer"
 import CustomerBill from './pages/CustomerBill';
@@ -14,11 +14,10 @@ import ManagerMenu from './pages/ManagerMenu';
 import ManagerOrder from './pages/ManagerOrder';
 import ManagerService from './pages/ManagerService';
 import KitchenOrder from './pages/KitchenOrder';
-import { Box, Button } from '@mui/material';
+
 
 
 function App() {
-  const navigate = useNavigate();
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <Routes>
