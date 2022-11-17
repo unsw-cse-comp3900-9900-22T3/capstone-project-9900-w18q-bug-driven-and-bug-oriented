@@ -334,7 +334,7 @@ def ask_help(order_id):
 
 @app.route('/customer/<int:order_id>/recommend', methods=["POST"])
 def recommend_items(order_id):
-    # Conduct correlation analysis for all items in historical orders
+    # Conduct correlation analysis for all items in historical and current orders
     res = db.session.query(Orderitem.dishId, Orderitem.orderId).join(Menuitem,
                                                                      Menuitem.dishId == Orderitem.dishId).order_by(
         Orderitem.dishId).distinct().all()
