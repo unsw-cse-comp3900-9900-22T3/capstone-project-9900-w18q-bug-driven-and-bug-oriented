@@ -14,7 +14,7 @@ python3 server_app.py
 
 Amazon RDS for MySQL
 ~~~~~
-terminal node: bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com
+terminal node: bug-team.cmucxb4zjleo.ap-southeast-2.rds.amazonaws.com
 port: 3306
 user name: admin
 password: z12345678
