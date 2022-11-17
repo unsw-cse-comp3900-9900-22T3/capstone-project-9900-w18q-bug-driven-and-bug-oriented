@@ -4,7 +4,7 @@ capstone-project-9900-w18q-bug-driven-and-bug-oriented created by GitHub Classro
 Hi. We are team Bug-driven and Bug-oriented, this is our wait management system project.
 
 We have uploaded our final submission to our team’s GitHub classroom account on time, at 17 November 2022 at 09:00 PM. 
-Here is the link: https://github.com/unsw-cse-comp3900-9900-22T3/capstone-project-9900-w18q-bug-driven-and-bug-oriented.git
+Here is the link: https://github.com/unsw-cse-comp3900-9900-22T3/capstone-project-9900-w18q-bug-driven-and-bug-oriented/blob/2426fdf36cefa027361d5b451b1e3b16106c62a8/bug-driven-and-bug-oriented_FinalSoftwareQuality.zip
 
 
 Please follow the following steps to run our project:
