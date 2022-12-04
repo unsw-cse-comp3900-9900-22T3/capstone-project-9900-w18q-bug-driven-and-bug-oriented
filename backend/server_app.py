@@ -21,9 +21,13 @@ CORS(app, resources=r'/*')  # solve the problem of cross-domain
 
 class Config(object):
     # connect to the local database for test
-    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:hyt135565@localhost:3306/test_database"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:pang123@localhost:3306/wait_management"
     # connect to the cloud database
+<<<<<<< Updated upstream
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management"  # 连接数据库方式，连云数据库的方式
+=======
+    # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://admin:z12345678@bug-team.cmucxb4zjleo.ap-southeast-2.rds.amazonaws.com:3306/wait_management"  # 连接数据库方式，连云数据库的方式
+>>>>>>> Stashed changes
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = False
 
@@ -137,7 +141,12 @@ def model_to_dict(result):
 
 
 engine = create_engine(
+<<<<<<< Updated upstream
     'mysql+pymysql://admin:z12345678@bug-team.cxba7lq9tfkj.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
+=======
+    # 'mysql+pymysql://admin:z12345678@bug-team.cmucxb4zjleo.ap-southeast-2.rds.amazonaws.com:3306/wait_management')
+    'mysql+pymysql://root:pang123@localhost:3306/wait_management')
+>>>>>>> Stashed changes
 
 
 ########################################################################################################################
